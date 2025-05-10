@@ -1,5 +1,5 @@
 import {Collection, Db, MongoClient} from "mongodb";
-import {Blog} from "../blogs/types/blog";
+import {Blog} from "../blogs/domain/blog";
 import {SETTINGS} from "../core/settings/settings";
 import {Post} from "../posts/types/post";
 

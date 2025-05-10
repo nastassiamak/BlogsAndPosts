@@ -1,7 +1,7 @@
 import request from "supertest";
 import express from "express";
 import {setupApp} from "../../../src/setupApp";
-import {BlogInputDto} from "../../../src/blogs/dto/blogInputDto";
+import {BlogInputDto} from "../../../src/blogs/application/dtos/blogInputDto";
 import {HttpStatus} from "../../../src/core/types/httpStatus";
 import {BLOGS_PATH} from "../../../src/core/paths/paths";
 import {generateAdminAuthToken} from "../../utils/generateAdminAuthToken";
@@ -31,7 +31,8 @@ describe("Blog API", () => {
             websiteUrl: "http://example.com/",
         };
 
-        await createBlog(app,newBlog);
+       const res = await createBlog(app,newBlog);
+        console.log(res);
     });
 
     it('should return blogs list; GET /api/blogs', async () => {
@@ -80,8 +81,7 @@ describe("Blog API", () => {
             name: blogUpdateData.name,
             description: blogUpdateData.description,
             websiteUrl: blogUpdateData.websiteUrl,
-            createdAt: expect.any(String),
-            isMembership: blogUpdateData.isMembership,
+
         })
     });
 

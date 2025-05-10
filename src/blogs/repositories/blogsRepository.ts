@@ -1,6 +1,6 @@
-import {Blog} from "../types/blog";
+import {Blog} from "../domain/blog";
 import {db} from "../../db/inMemoryDb";
-import {BlogInputDto} from "../dto/blogInputDto";
+import {BlogInputDto} from "../application/dtos/blogInputDto";
 import { ObjectId, WithId } from 'mongodb';
 import {blogCollection} from "../../db/mongoDb";
 

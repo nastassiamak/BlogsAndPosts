@@ -1,5 +1,5 @@
 import {Response, Request} from 'express';
-import {BlogInputDto} from "../../dto/blogInputDto";
+import {BlogInputDto} from "../../application/dtos/blogInputDto";
 import {db} from "../../../db/inMemoryDb";
 import {HttpStatus} from "../../../core/types/httpStatus";
 import {createErrorMessages} from "../../../core/utils/errorUtils";

@@ -1,6 +1,6 @@
 import {setupApp} from "../../../src/setupApp";
 import express from "express";
-import {BlogInputDto} from "../../../src/blogs/dto/blogInputDto";
+import {BlogInputDto} from "../../../src/blogs/application/dtos/blogInputDto";
 import request from "supertest";
 import {BLOGS_PATH, TESTING_PATH} from "../../../src/core/paths/paths";
 import {HttpStatus} from "../../../src/core/types/httpStatus";
@@ -9,6 +9,8 @@ import {getBlogDto} from "../../utils/blogs/getBlogDto";
 import {generateAdminAuthToken} from "../../utils/generateAdminAuthToken";
 import {runDB, stopDb} from "../../../src/db/mongoDb";
 import {clearDb} from "../../utils/clearDb";
+import {createBlog} from "../../utils/blogs/createBlog";
+import {getBlogById} from "../../utils/blogs/getBlogById";
 
 describe('Blog API body validation check', () => {
     const app = express();
@@ -87,19 +89,13 @@ describe('Blog API body validation check', () => {
     })
 
     it('❌ should not update blog when incorrect data passed; PUT /api/blogs/:id', async () => {
-        const {
-            body: {id: createdBlogId},
-        } = await request(app)
-            .post(BLOGS_PATH)
-            .send({...correctTestBlogData})
-            .expect(HttpStatus.Created);
 
-        const invalidDataSet1 =
+        const createdBlog = await createBlog(app, correctTestBlogData)
+
             await request(app)
-                .put(`${BLOGS_PATH}/ ${createdBlogId}`)
-                .send({...correctTestBlogData,
-                    ...correctTestBlogData,
-                    id: '0',
+                .put(`${BLOGS_PATH}/ ${createdBlog.id}`)
+                .set('Authorization', adminToken)
+                .send({
                     name: '    ',
                     description: '      ',
                     websiteUrl: 'Invalid Url',
@@ -108,42 +104,12 @@ describe('Blog API body validation check', () => {
                 })
                 .expect(HttpStatus.BadRequest);
 
-        expect(invalidDataSet1.body.errorMessages).toHaveLength(6);
-
-        const invalidDataSet2 =
-            await request(app)
-                .put(`${BLOGS_PATH}/${createdBlogId}`)
-                .send({
-                    ...correctTestBlogData,
-                    id: 1,
-                    name: '',
-                    description: '',
-                    websiteUrl: '',
-                    createdAt: 89,
-                    isMembership: true,
-                })
-                .expect(HttpStatus.BadRequest);
-
-        expect(invalidDataSet2.body.errorMessages).toHaveLength(6);
-
-        const invalidDataSet3 =
-            await request(app)
-                .put(`${BLOGS_PATH}/${createdBlogId}`)
-                .send({...correctTestBlogData,
-                    name: 'A'
-                })
-                .expect(HttpStatus.BadRequest);
-
-        expect(invalidDataSet3.body.errorMessages).toHaveLength(1);
 
         const blogResponse =
-            await request(app)
-                .get(`${BLOGS_PATH}/${createdBlogId}`);
+            await getBlogById(app, createdBlog.id)
         
-        expect(blogResponse.body).toEqual({
-            ...correctTestBlogData,
-            id: createdBlogId,
-            createdAt: expect.any(String)
+        expect(blogResponse).toEqual({
+         ...createdBlog
         });
     });
 

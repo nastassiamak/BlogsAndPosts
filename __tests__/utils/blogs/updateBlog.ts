@@ -1,4 +1,4 @@
-import {BlogInputDto} from "../../../src/blogs/dto/blogInputDto";
+import {BlogInputDto} from "../../../src/blogs/application/dtos/blogInputDto";
 import {Express} from "express";
 import {getBlogDto} from "./getBlogDto";
 import {BLOGS_PATH} from "../../../src/core/paths/paths";

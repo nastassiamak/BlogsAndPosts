@@ -1,11 +1,11 @@
-import {BlogInputDto} from "../../../src/blogs/dto/blogInputDto";
+import {BlogInputDto} from "../../../src/blogs/application/dtos/blogInputDto";
 
 export function getBlogDto(): BlogInputDto {
     return {
-        name: "N1",
-        description: 'D1',
-        websiteUrl: "W1",
+        name: "N11",
+        description: 'D11',
+        websiteUrl: "http://example.com/",
         createdAt: new Date().toISOString(),
-        isMembership: false,
+        isMembership: false
     }
 }

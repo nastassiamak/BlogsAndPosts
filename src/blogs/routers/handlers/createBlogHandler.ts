@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import {BlogInputDto} from "../../dto/blogInputDto";
-import {Blog} from "../../types/blog";
+import {BlogInputDto} from "../../application/dtos/blogInputDto";
+import {Blog} from "../../domain/blog";
 import {db} from "../../../db/inMemoryDb";
 import {HttpStatus} from "../../../core/types/httpStatus";
 import {blogCollection} from "../../../db/mongoDb";

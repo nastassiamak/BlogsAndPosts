@@ -1,4 +1,4 @@
-import {Blog} from "../blogs/types/blog";
+import {Blog} from "../blogs/domain/blog";
 
 export const db = {
     blogs: <Blog[]> [
