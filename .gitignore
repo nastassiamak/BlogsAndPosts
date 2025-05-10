@@ -9,3 +9,22 @@ yarn-error.log*
 .pnp.js
 
 .vscode/*
+/.idea/
+/dist/blogs/types/blog.js
+/dist/blogs/dto/blogInputDto.js
+/dist/blogs/validation/blogInputDtoValidation.js
+/dist/blogs/routers/blogsRouter.js
+/dist/blogs/routers/handlers/createBlogHandler.js
+/dist/blogs/routers/handlers/deleteBlogHandler.js
+/dist/blogs/routers/handlers/getBlogHandler.js
+/dist/blogs/routers/handlers/getBlogListHandler.js
+/dist/core/types/httpStatus.js
+/dist/index.js
+/dist/db/inMemoryDb.js
+/package-lock.json
+/dist/core/paths/paths.js
+/dist/setup-app.js
+/dist/setupApp.js
+/dist/testing/routers/testingRouter.js
+/dist/blogs/routers/handlers/updateBlogHandler.js
+/dist/blogs/types/validationError.js
