@@ -1,6 +1,6 @@
-import {BlogInputDto} from "../../../src/blogs/application/dtos/blogInputDto";
+import {BlogAttributes} from "../../../src/blogs/application/dtos/blogAttributes";
 
-export function getBlogDto(): BlogInputDto {
+export function getBlogDto(): BlogAttributes {
     return {
         name: "N11",
         description: 'D11',

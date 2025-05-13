@@ -1,22 +1,31 @@
-import {BlogInputDto} from "../../../src/blogs/application/dtos/blogInputDto";
-import {Express} from "express";
-import {getBlogDto} from "./getBlogDto";
+// @ts-ignore
+import request from 'supertest';
+import {Express} from 'express';
+import {BlogAttributes} from "../../../src/blogs/application/dtos/blogAttributes";
 import {BLOGS_PATH} from "../../../src/core/paths/paths";
 import {generateAdminAuthToken} from "../generateAdminAuthToken";
 import {HttpStatus} from "../../../src/core/types/httpStatus";
-import request from "supertest";
+import {BlogUpdateInput} from "../../../src/blogs/routers/input/blogUpdateInput";
+import {ResourceType} from "../../../src/core/types/resourceType";
+import {getBlogDto} from "./getBlogDto";
 
 export async function updateBlog(
     app: Express,
     blogId: string,
-    blogDto: BlogInputDto,
+    blogDto?: BlogAttributes,
     ): Promise<void> {
-    const defaultBlogData: BlogInputDto = getBlogDto();
 
-    const testBlogData = {
-        ...defaultBlogData,
-        ...blogDto,
+    const testBlogData: BlogUpdateInput = {
+        data: {
+            type: ResourceType.Blog,
+            id: blogId,
+            attributes: {
+                ...getBlogDto(),
+                ...blogDto,
+            },
+        },
     };
+    console.log('Sending update request with data:', JSON.stringify(testBlogData, null, 2));
 
     const updateBlogResponse =
         await request(app)

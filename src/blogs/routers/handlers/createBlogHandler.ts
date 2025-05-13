@@ -1,37 +1,31 @@
 import { Request, Response } from 'express';
-import {BlogInputDto} from "../../application/dtos/blogInputDto";
-import {Blog} from "../../domain/blog";
-import {db} from "../../../db/inMemoryDb";
 import {HttpStatus} from "../../../core/types/httpStatus";
-import {blogCollection} from "../../../db/mongoDb";
-import {blogsRepository} from "../../repositories/blogsRepository";
-import {mapToBlogViewModelUtil} from "../mappers/mapToBlogViewModelUtil";
-import {truncate} from "node:fs";
+import {mapToBlogOutput} from "../mappers/mapToBlogOutput";
+import {BlogCreateInput} from "../input/blogCreateInput";
+import {blogService} from "../../application/blogService";
+import {errorsHandler} from "../../../core/errors/errorsHandler";
 
 
 export async function createBlogHandler(
-    req: Request<{}, {}, BlogInputDto>,
+    req: Request<{}, {}, BlogCreateInput>,
     res: Response) {
 
     try {
 
-        const newBlog: Blog = {
-            name: req.body.name,
-            description: req.body.description,
-            websiteUrl: req.body.websiteUrl,
-            createdAt: new Date().toISOString(),
-            isMembership: false
-        }
-        const createdBlog =
-            await blogsRepository.create(newBlog);
+        const createdBlogId =
+            await blogService.create(
+                req.body.data.attributes,
+            );
 
-        const blogViewModel = mapToBlogViewModelUtil(createdBlog)
+        const createdBlog =
+            await blogService.findByIdOrFail(createdBlogId);
+
+        const blogOutput = mapToBlogOutput(createdBlog)
 
         res
-            .status(HttpStatus.Created).send(blogViewModel);
+            .status(HttpStatus.Created).send(blogOutput);
 
     } catch (e: unknown) {
-        res
-            .sendStatus(HttpStatus.InternalServerError);
+        errorsHandler(e, res);
     }
 }
