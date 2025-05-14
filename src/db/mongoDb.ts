@@ -1,7 +1,7 @@
 import {Collection, Db, MongoClient} from "mongodb";
 import {Blog} from "../blogs/domain/blog";
 import {SETTINGS} from "../core/settings/settings";
-import {Post} from "../posts/types/post";
+import {Post} from "../posts/domain/post";
 
 const BLOG_COLLECTION_NAME = "blogs";
 const POST_COLLECTION_NAME = "posts";

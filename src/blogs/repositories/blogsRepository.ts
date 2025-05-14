@@ -76,8 +76,8 @@ export const blogsRepository = {
                         name: dto.name,
                         description: dto.description,
                         websiteUrl: dto.websiteUrl,
-                        createdAt: dto.createdAt,
-                        isMembership: dto.isMembership,
+                        // createdAt: dto.createdAt,
+                        // isMembership: dto.isMembership,
                     }
                 });
 
