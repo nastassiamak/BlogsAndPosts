@@ -5,6 +5,7 @@ import {runDB} from "./db/mongoDb";
 
 const bootstrap = async () =>{//cоздание приложения
     const app = express();
+
     setupApp(app);
 
 //порт приложения

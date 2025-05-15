@@ -7,7 +7,7 @@ export const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'qwerty';
 export const superAdminGuardMiddleware = (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
 ) => {
     const auth = req.headers['authorization'] as string; //Basic xxx
 

@@ -3,8 +3,9 @@ import {Post} from "../../domain/post";
 import {PostOutput} from "../output/postOutput";
 import {ResourceType} from "../../../core/types/resourceType";
 
-export function mapToPostOutput(post: WithId<Post>): PostOutput {
+export function mapToPostOutputUtil(post: WithId<Post>): PostOutput {
     return {
+
         data: {
             type: ResourceType.Post,
             id: post._id.toString(),

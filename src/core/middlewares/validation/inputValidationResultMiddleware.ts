@@ -18,7 +18,9 @@ export const createErrorMessages = (
     };
 };
 
-const formaValidationError = (error: ValidationError): ValidationErrorType => {
+const formaValidationError = (
+    error: ValidationError
+): ValidationErrorType => {
     const expressError = error as unknown as FieldValidationError;
 
     return {

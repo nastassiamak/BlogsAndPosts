@@ -5,4 +5,5 @@ export type BlogQueryInput = PaginationAndSorting<BlogSortField> &
     Partial<{
     searchBlogNameTerm: string;
     searchBlogDescriptionTerm: string;
+    searchCreatedAtTerm: string;
     }>

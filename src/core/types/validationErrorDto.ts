@@ -7,4 +7,5 @@ type ValidationErrorOutput = {
     code: string | null,
 };
 
-export type ValidationErrorListOutput = { errors: ValidationErrorOutput[] };
+export type ValidationErrorListOutput =
+    { errors: ValidationErrorOutput[] };

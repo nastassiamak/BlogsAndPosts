@@ -3,7 +3,7 @@ import {ObjectId, WithId} from "mongodb";
 import {Post} from "../domain/post";
 import {blogCollection, postCollection} from "../../db/mongoDb";
 import {RepositoryNotFoundError} from "../../core/errors/repositoryNotFoundError";
-import {PostAttributes} from "../application/dtos/postInputDto";
+import {PostAttributes} from "../application/dtos/postAttributes";
 import {blogsRepository} from "../../blogs/repositories/blogsRepository";
 import {blogService} from "../../blogs/application/blogService";
 
@@ -52,7 +52,7 @@ export const postsRepository = {
         return postCollection.findOne({_id: new Object(id)});
     },
 
-    async findByIdOrFail(id: string): Promise<WithId<Post> | null> {
+    async findByIdOrFail(id: string): Promise<WithId<Post>> {
         const res = await postCollection.findOne({_id: new Object(id)});
 
         if (!res) {
@@ -61,7 +61,7 @@ export const postsRepository = {
         return res;
     },
 
-    async createPost(blogId: string, newPost: Post): Promise<string> {
+    async createPost(newPost: Post): Promise<string> {
         // const blog = await blogService.findByIdOrFail(blogId)
         //
         // if (!blog) {
