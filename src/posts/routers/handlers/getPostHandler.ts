@@ -1,0 +1,23 @@
+import { Request, Response } from "express";
+import {postService} from "../../application/postService";
+import {mapToPostOutput} from "../mappers/mapToPostOutput";
+import {HttpStatus} from "../../../core/types/httpStatus";
+import {errorsHandler} from "../../../core/errors/errorsHandler";
+
+export async function getPostHandler(
+    req: Request<{id: string}>,
+    res: Response,
+) {
+    try {
+        const id = req.params.id;
+        const post = await postService.findByIdOrFail(id);
+
+        const postOutput = mapToPostOutput(post);
+
+        res
+            .status(HttpStatus.Ok)
+            .send(postOutput);
+    } catch (e: unknown) {
+        errorsHandler(e, res);
+    }
+}

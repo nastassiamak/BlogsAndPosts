@@ -9,11 +9,14 @@ export async function getBlogListHandler(
     req: Request<{}, {}, {}, BlogQueryInput>,
     res: Response) {
    try {
-       const queryInput = setDefaultSortAndPaginationIfNotExist(req.query);
+       const queryInput =
+           setDefaultSortAndPaginationIfNotExist(req.query);
 
-       const {items, totalCount} = await blogService.findMany(queryInput);
+       const {items, totalCount} = await blogService
+           .findMany(queryInput);
 
-       const blogsListOutput = mapToBlogListPaginatedOutput(
+       const blogsListOutput =
+           mapToBlogListPaginatedOutput(
            items, {
                pageNumber: queryInput.pageNumber,
                pageSize: queryInput.pageSize,

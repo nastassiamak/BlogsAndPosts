@@ -1,8 +1,7 @@
+import { Request, Response } from "express";
 import {PostCreateInput} from "../input/postCreateInput";
 import {postService} from "../../application/postService";
-import { Request, Response } from 'express';
-import {mapToBlogOutput} from "../../../blogs/routers/mappers/mapToBlogOutput";
-import {mapToPostOutputUtil} from "../mappers/mapToPostOutputUtil";
+import {mapToPostOutput} from "../mappers/mapToPostOutput";
 import {HttpStatus} from "../../../core/types/httpStatus";
 import {errorsHandler} from "../../../core/errors/errorsHandler";
 
@@ -12,23 +11,21 @@ export async function createPostHandler(
 ) {
     try {
         const createdPostId =
-            await postService.create(req.body.data.attributes);
+            await postService.create(
+                req.body.data.attributes,
+            );
 
         const createdPost =
             await postService.findByIdOrFail(createdPostId);
-        // Периодическая проверка на null (если ваша функция все еще возвращает null)
-        if (createdPost === null) {
-            // Обработка ситуации, когда пост не найден
-            return res.status(HttpStatus.NotFound).send({ error: 'Post not found' });
-        }
-
 
         const postOutput =
-            mapToPostOutputUtil(createdPost);
+            mapToPostOutput(createdPost);
+
         res
             .status(HttpStatus.Created)
-            .send(postOutput)
+            .send(postOutput);
+
     } catch (e: unknown) {
-        errorsHandler(e, res)
+        errorsHandler(e, res);
     }
 }

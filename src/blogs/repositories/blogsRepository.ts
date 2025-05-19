@@ -40,7 +40,8 @@ export const blogsRepository = {
             .limit(pageSize)
             .toArray();
 
-        const  totalCount = await blogCollection.countDocuments(filter);
+        const  totalCount = await blogCollection
+            .countDocuments(filter);
 
         return {items, totalCount};
     },
@@ -50,7 +51,8 @@ export const blogsRepository = {
     },
 
     async findByIdOrFail(id: string): Promise<WithId<Blog>> {
-        const res = await blogCollection.findOne({_id: new ObjectId(id)});
+        const res = await blogCollection
+            .findOne({_id: new ObjectId(id)});
 
         if (!res) {
             throw new RepositoryNotFoundError('Blog not exists');

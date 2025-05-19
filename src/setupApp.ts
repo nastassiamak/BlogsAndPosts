@@ -5,6 +5,11 @@ import {testingRouter} from "./testing/routers/testingRouter";
 import {postRouter} from "./posts/routers/postRouter";
 import {setupSwagger} from "./core/swagger/setupSwagger";
 
+/**
+ * Настраиваем routes, cors, swagger
+ * @param app
+ */
+
 export const setupApp = (app: Express) => {
     app.use(express.json()); // middleware для парсинга JSON в теле запроса
 

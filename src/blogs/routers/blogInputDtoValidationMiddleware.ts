@@ -1,6 +1,4 @@
 import {body} from "express-validator";
-import {NextFunction, Request, Response} from "express";
-import {HttpStatus} from "../../core/types/httpStatus";
 import {resourceTypeValidation} from "../../core/middlewares/validation/resourceTypeValidationMiddleware";
 import {ResourceType} from "../../core/types/resourceType";
 import {dataIdMatchValidator} from "../../core/middlewares/validation/paramsIdValidationMiddleware";
@@ -34,14 +32,6 @@ export const isMembershipValidator = body('data.attributes.isMembership')
     .isBoolean().withMessage('must be a boolean')
     .toBoolean(); // Опционально, чтобы преобразовать входное значение в булевый тип
 
-export const findBlogValidator = async (req: Request<{id: string}>,
-                                        res: Response, next: NextFunction) => {
-    const {id} = req.params;
-    if (typeof id !== "string" || id.trim().length === 0) {
-        res.sendStatus(HttpStatus.BadRequest);
-    }
-    next()
-}
 
 export const blogCreateInputValidation = [
     resourceTypeValidation(ResourceType.Blog),
@@ -50,7 +40,6 @@ export const blogCreateInputValidation = [
     websiteUrlValidator,
     createdAtValidator,
     isMembershipValidator,
-    //findBlogValidator,
 ];
 
 export const blogUpdateInputValidation = [
@@ -61,47 +50,6 @@ export const blogUpdateInputValidation = [
     websiteUrlValidator,
     createdAtValidator,
     isMembershipValidator,
-    //findBlogValidator,
 ];
 
 
-
-
-
-// const urlPattern = /^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$/;
-//
-//
-// export const blogInputDtoValidation = (data: BlogInputDto): ValidationErrorType[] => {
-//     const errors: ValidationErrorType[] = [];
-//
-//     if (
-//         !data.name ||
-//         typeof data.name !== "string" ||
-//         data.name.trim().length < 2 ||
-//         data.name.trim().length > 15
-//     ) {
-//         errors.push({field: 'name', message: 'Invalid name'});
-//     }
-//
-//     if(
-//         !data.description ||
-//         typeof data.description !== "string" ||
-//         data.description.trim().length < 2 ||
-//         data.description.trim().length > 500
-//     ){
-//         errors.push({field: 'description', message: 'Invalid description'});
-//     }
-//
-//     if (
-//         !data.websiteUrl ||
-//         typeof data.websiteUrl !== "string" ||
-//         data.websiteUrl.trim().length < 2 ||
-//         data.websiteUrl.trim().length > 100 ||
-//         !urlPattern.test(data.websiteUrl.trim())
-//     )
-//     {
-//         errors.push({field: 'websiteUrl', message: 'Invalid websiteUrl'});
-//     }
-//
-//     return errors;
-// }

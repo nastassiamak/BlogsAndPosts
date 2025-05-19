@@ -3,11 +3,11 @@ import {paginationAndSortingValidation} from "../../core/middlewares/validation/
 import {PostSortField} from "./input/postSortField";
 import {inputValidationResultMiddleware} from "../../core/middlewares/validation/inputValidationResultMiddleware";
 
-export const postRouter = Router({});
+export const postsRouter = Router({});
 
-postRouter
-    .get(
-        '',
+postsRouter
+    .get('',
         paginationAndSortingValidation(PostSortField),
         inputValidationResultMiddleware,
-        );
+
+    )

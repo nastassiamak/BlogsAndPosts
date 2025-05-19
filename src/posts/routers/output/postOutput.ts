@@ -1,5 +1,5 @@
 import {PostDataOutput} from "./postDataOutput";
 
-export type PostOutput = {
+export type PostOutput ={
     data: PostDataOutput;
 }

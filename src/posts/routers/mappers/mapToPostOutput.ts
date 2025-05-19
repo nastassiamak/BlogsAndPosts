@@ -1,11 +1,10 @@
 import {WithId} from "mongodb";
-import {Post} from "../../domain/post";
 import {PostOutput} from "../output/postOutput";
+import {Post} from "../../domain/post";
 import {ResourceType} from "../../../core/types/resourceType";
 
-export function mapToPostOutputUtil(post: WithId<Post>): PostOutput {
+export function mapToPostOutput(post: WithId<Post>): PostOutput {
     return {
-
         data: {
             type: ResourceType.Post,
             id: post._id.toString(),
@@ -16,7 +15,7 @@ export function mapToPostOutputUtil(post: WithId<Post>): PostOutput {
                 blogId: post.blogId,
                 blogName: post.blogName,
                 createdAt: post.createdAt,
-            },
-        },
-    };
+            }
+        }
+    }
 }

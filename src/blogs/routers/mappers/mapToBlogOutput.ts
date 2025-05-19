@@ -1,6 +1,5 @@
 import {WithId} from "mongodb";
 import {Blog} from "../../domain/blog";
-import {BlogDataOutput} from "../output/blogDataOutput";
 import {ResourceType} from "../../../core/types/resourceType";
 import {BlogOutput} from "../output/blogOutput";
 
