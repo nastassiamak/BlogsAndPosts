@@ -10,6 +10,8 @@ import {superAdminGuardMiddleware} from "../../auth/middlewares/superAdminGuardM
 import {paginationAndSortingValidation} from "../../core/middlewares/validation/queryPaginationSortingValidation";
 import {BlogSortField} from "./input/blogSortField";
 import {blogCreateInputValidation, blogUpdateInputValidation} from "./blogInputDtoValidationMiddleware";
+import {PostSortField} from "../../posts/routers/input/postSortField";
+import {getBlogPostListHandler} from "./handlers/getBlogPostListHandler";
 
 
 export const blogsRouter = Router({});
@@ -47,5 +49,11 @@ blogsRouter
         inputValidationResultMiddleware,
         deleteBlogHandler
     )
+    .get('/:id/posts',
+        idValidation,
+        paginationAndSortingValidation(PostSortField),
+        inputValidationResultMiddleware,
+        getBlogPostListHandler,
+        )
 
 

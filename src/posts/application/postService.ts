@@ -12,6 +12,15 @@ export const postService = {
         return postsRepository.findMany(queryDto);
     },
 
+    async findPostsByBlog(
+        queryDto: PostQueryInput,
+        blogId: string,
+    ): Promise<{ items: WithId<Post>[]; totalCount: number }> {
+        await postsRepository.findByIdOrFail(blogId);
+
+        return postsRepository.findPostsByBlog(queryDto, blogId);
+    },
+
     async findByIdOrFail(id: string): Promise<WithId<Post>> {
         return postsRepository.findByIdOrFail(id);
     },
@@ -27,16 +36,16 @@ export const postService = {
             blogName: blogName,
             createdAt: new Date().toISOString(),
         }
-         return await postsRepository.create(newPost);
+         return await postsRepository.createPost(newPost);
     },
 
     async update(id: string,dto: PostAttributes): Promise<void> {
-        await postsRepository.update(id, dto);
+        await postsRepository.updatePost(id, dto);
         return;
     },
 
     async delete(id: string): Promise<void> {
-        await postsRepository.delete(id);
+        await postsRepository.deletePost(id);
         return;
     }
 }

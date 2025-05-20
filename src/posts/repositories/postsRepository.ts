@@ -47,6 +47,27 @@ export const postsRepository = {
         return { items, totalCount };
     },
 
+    async findPostsByBlog(
+        queryDto: PostQueryInput,
+        blogId: string,
+    ): Promise<{ items: WithId<Post>[]; totalCount: number }> {
+        const { pageNumber, pageSize, sortBy, sortDirection } = queryDto;
+        const filter: any = {'blog.id': blogId};
+        const skip = (pageNumber - 1) * pageSize;
+
+        const [items, totalCount] = await Promise.all([
+            postCollection
+            .find(filter)
+            .sort({[sortBy]: sortDirection})
+            .skip(skip)
+            .limit(pageSize)
+            .toArray(),
+            postCollection.countDocuments(filter),
+        ]);
+
+        return { items, totalCount };
+    },
+
     async findById(id: string): Promise<WithId<Post> | null> {
         return postCollection.findOne({_id: new ObjectId(id)});
     },
@@ -61,14 +82,14 @@ export const postsRepository = {
         return res;
     },
 
-    async create(newPost: Post): Promise<string>{
+    async createPost(newPost: Post): Promise<string>{
         const insertResult = await postCollection
             .insertOne(newPost);
 
         return insertResult.insertedId.toString();
     },
 
-    async update(id: string, dto: PostAttributes): Promise<void> {
+    async updatePost(id: string, dto: PostAttributes): Promise<void> {
         const updateResult = await postCollection
             .updateOne(
                 {
@@ -89,7 +110,7 @@ export const postsRepository = {
         return;
     },
 
-    async delete(id: string): Promise<void> {
+    async deletePost(id: string): Promise<void> {
         const deleteResult = await postCollection
         .deleteOne({_id: new ObjectId(id)});
 

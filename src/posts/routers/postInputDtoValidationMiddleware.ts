@@ -1,5 +1,8 @@
 import {body} from "express-validator";
 import {blogsRepository} from "../../blogs/repositories/blogsRepository";
+import {resourceTypeValidation} from "../../core/middlewares/validation/resourceTypeValidationMiddleware";
+import {ResourceType} from "../../core/types/resourceType";
+import {dataIdMatchValidator} from "../../core/middlewares/validation/paramsIdValidationMiddleware";
 
 export const titleValidator = body("title").isString().withMessage('not string')
     .trim().isLength({min: 1, max: 30}).withMessage('more then 30 or 0')
@@ -43,7 +46,18 @@ export const blogIdValidator = body("blogId").isString().withMessage('not string
 //     next()
 // }
 
-export const postValidators = [
+export const postCreateInputValidation = [
+    resourceTypeValidation(ResourceType.Post),
+    titleValidator,
+    shortDescriptionValidator,
+    contentValidator,
+    blogIdValidator,
+    createdAtValidator,
+];
+
+export const postUpdateInputValidation = [
+    resourceTypeValidation(ResourceType.Post),
+    dataIdMatchValidator,
     titleValidator,
     shortDescriptionValidator,
     contentValidator,
