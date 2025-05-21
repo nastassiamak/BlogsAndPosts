@@ -4,6 +4,7 @@ import {Post} from "../domain/post";
 import {postCollection} from "../../db/mongoDb";
 import {RepositoryNotFoundError} from "../../core/errors/repositoryNotFoundError";
 import {PostAttributes} from "../application/dtos/postAttributes";
+import {blogService} from "../../blogs/application/blogService";
 
 export const postsRepository = {
     async findMany(
@@ -86,6 +87,19 @@ export const postsRepository = {
         const insertResult = await postCollection
             .insertOne(newPost);
 
+        return insertResult.insertedId.toString();
+    },
+
+    async createPostByBlogId(
+        newPost: Post,
+        blogId: string,
+    ): Promise<string> {
+        const blog = await blogService.findByIdOrFail(blogId);
+        if (!blog) {
+            throw new RepositoryNotFoundError('Blog not found');
+        }
+        const insertResult = await postCollection
+            .insertOne(newPost);
         return insertResult.insertedId.toString();
     },
 

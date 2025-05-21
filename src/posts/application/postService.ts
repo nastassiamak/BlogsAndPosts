@@ -4,6 +4,7 @@ import {Post} from "../domain/post";
 import {postsRepository} from "../repositories/postsRepository";
 import {PostAttributes} from "./dtos/postAttributes";
 import {blogService} from "../../blogs/application/blogService";
+import {blogsRepository} from "../../blogs/repositories/blogsRepository";
 
 export const postService = {
     async findMany(
@@ -16,9 +17,17 @@ export const postService = {
         queryDto: PostQueryInput,
         blogId: string,
     ): Promise<{ items: WithId<Post>[]; totalCount: number }> {
-        await postsRepository.findByIdOrFail(blogId);
+        await blogsRepository.findByIdOrFail(blogId);
 
         return postsRepository.findPostsByBlog(queryDto, blogId);
+    },
+
+    async createPostByBlogId(
+        newPost: Post,
+        blogId: string,
+    ): Promise<string> {
+        await blogsRepository.findByIdOrFail(blogId);
+        return  postsRepository.createPostByBlogId(newPost, blogId);
     },
 
     async findByIdOrFail(id: string): Promise<WithId<Post>> {

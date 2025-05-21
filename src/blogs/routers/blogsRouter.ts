@@ -28,26 +28,26 @@ blogsRouter
     .get('/:id',
         idValidation,
         inputValidationResultMiddleware,
-        getBlogHandler
+        getBlogHandler,
     )
     .post('/',
         superAdminGuardMiddleware,
         blogCreateInputValidation,
         inputValidationResultMiddleware,
-        createBlogHandler
+        createBlogHandler,
     )
     .put('/:id',
         superAdminGuardMiddleware,
         idValidation,
         blogUpdateInputValidation,
         inputValidationResultMiddleware,
-        updateBlogHandler
+        updateBlogHandler,
     )
     .delete('/:id',
         superAdminGuardMiddleware,
         idValidation,
         inputValidationResultMiddleware,
-        deleteBlogHandler
+        deleteBlogHandler,
     )
     .get('/:id/posts',
         idValidation,
