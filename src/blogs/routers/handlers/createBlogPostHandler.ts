@@ -3,19 +3,22 @@ import {PostCreateInput} from "../../../posts/routers/input/postCreateInput";
 import {blogService} from "../../application/blogService";
 import {mapToPostOutput} from "../../../posts/routers/mappers/mapToPostOutput";
 import {postService} from "../../../posts/application/postService";
-import {mapToBlogPostOutput} from "../mappers/mapToBlogPostOutput";
+
 import {HttpStatus} from "../../../core/types/httpStatus";
 import {errorsHandler} from "../../../core/errors/errorsHandler";
+import {mapToBlogPostOutput} from "../mappers/mapToBlogPostOutput";
 
 export async function createBlogPostHandler(
     req: Request< {id: string}, {}, PostCreateInput>,
     res: Response,
-) {
+): Promise<void> {
     try {
         const {id} = req.params;
+
         const postCreateData = req.body.data.attributes;
         const blog = await blogService
             .findByIdOrFail(id)
+
 
         const postDataWithBlog = {
             ...postCreateData,
@@ -23,14 +26,13 @@ export async function createBlogPostHandler(
             blogName: blog.name || "",
         };
 
-        const createdPost = await postService.create(postCreateData);
+        const createdPostId = await postService
+            .create(postDataWithBlog);
+        const createdPost = await postService.findByIdOrFail(createdPostId)
 
-       // const createBlogPost = await postService
-       //     .createPostByBlogId(createdPost, blog)
+        const postOutput = mapToBlogPostOutput(blog, createdPost)
 
-        const blogPostOutput = mapToPostOutput(postDataWithBlog);
-
-        return res.status(HttpStatus.Created).send(blogPostOutput);
+         res.status(HttpStatus.Created).send(postOutput);
     } catch (e: unknown) {
         errorsHandler(e, res)
     }

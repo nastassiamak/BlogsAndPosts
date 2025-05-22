@@ -1,5 +1,5 @@
 export type BlogPostOutput = {
-    id: string;
+    //id: string;
     title: string;
     shortDescription: string;
     content: string;

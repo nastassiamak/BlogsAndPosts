@@ -8,7 +8,7 @@ export function mapToBlogPostOutput(
     post: WithId<Post>,
 ): BlogPostOutput {
     return {
-        id: blog._id.toString(),
+        //id: post._id.toString(),
         title: post.title,
         shortDescription: post.shortDescription,
         content: post.content,
