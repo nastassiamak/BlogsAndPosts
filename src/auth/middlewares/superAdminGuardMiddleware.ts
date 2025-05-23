@@ -1,41 +1,35 @@
-import { Request, Response, NextFunction} from "express";
-import {HttpStatus} from "../../core/types/httpStatus";
+import { Request, Response, NextFunction } from "express";
+import { HttpStatus } from "../../core/types/httpStatus";
 
-export const ADMIN_USERNAME = process.env.ADMIN_USERNAME || 'admin';
-export const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'qwerty';
+export const ADMIN_USERNAME = process.env.ADMIN_USERNAME || "admin";
+export const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "qwerty";
 
 export const superAdminGuardMiddleware = (
-    req: Request,
-    res: Response,
-    next: NextFunction,
+  req: Request,
+  res: Response,
+  next: NextFunction,
 ) => {
-    const auth = req.headers['authorization'] as string; //Basic xxx
+  const auth = req.headers["authorization"] as string; //Basic xxx
 
-    if (!auth) {
-        res
-            .sendStatus(HttpStatus.Unauthorized);
-        return;
-    }
+  if (!auth) {
+    res.sendStatus(HttpStatus.Unauthorized);
+    return;
+  }
 
-    const [authType, token] = auth.split(' '); //admin:qwerty
+  const [authType, token] = auth.split(" "); //admin:qwerty
 
-    if (authType !== 'Basic') {
-        res
-            .sendStatus(HttpStatus.Unauthorized);
-        return;
-    }
+  if (authType !== "Basic") {
+    res.sendStatus(HttpStatus.Unauthorized);
+    return;
+  }
 
-    const credentials = Buffer.from(token, 'base64').toString('utf-8');
-    const [username, password] = credentials.split(':');
+  const credentials = Buffer.from(token, "base64").toString("utf-8");
+  const [username, password] = credentials.split(":");
 
-    if (username !== ADMIN_USERNAME || password !== ADMIN_PASSWORD) {
-        res
-            .sendStatus(HttpStatus.Unauthorized);
-        return;
-    }
+  if (username !== ADMIN_USERNAME || password !== ADMIN_PASSWORD) {
+    res.sendStatus(HttpStatus.Unauthorized);
+    return;
+  }
 
-    next(); //успешная авторизация, продожаем
-
-
-
-}
+  next(); //успешная авторизация, продожаем
+};

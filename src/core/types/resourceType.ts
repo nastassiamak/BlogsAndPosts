@@ -1,4 +1,4 @@
 export enum ResourceType {
-    Blog = 'blog',
-    Post = 'post',
+  Blog = "blog",
+  Post = "post",
 }

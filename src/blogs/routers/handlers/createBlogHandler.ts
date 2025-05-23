@@ -1,31 +1,23 @@
-import { Request, Response } from 'express';
-import {HttpStatus} from "../../../core/types/httpStatus";
-import {mapToBlogOutput} from "../mappers/mapToBlogOutput";
-import {BlogCreateInput} from "../input/blogCreateInput";
-import {blogService} from "../../application/blogService";
-import {errorsHandler} from "../../../core/errors/errorsHandler";
-
+import { Request, Response } from "express";
+import { HttpStatus } from "../../../core/types/httpStatus";
+import { mapToBlogOutput } from "../mappers/mapToBlogOutput";
+import { BlogCreateInput } from "../input/blogCreateInput";
+import { blogService } from "../../application/blogService";
+import { errorsHandler } from "../../../core/errors/errorsHandler";
 
 export async function createBlogHandler(
-    req: Request<{}, {}, BlogCreateInput>,
-    res: Response) {
+  req: Request<{}, {}, BlogCreateInput>,
+  res: Response,
+) {
+  try {
+    const createdBlogId = await blogService.create(req.body.data.attributes);
 
-    try {
+    const createdBlog = await blogService.findByIdOrFail(createdBlogId);
 
-        const createdBlogId =
-            await blogService.create(
-                req.body.data.attributes,
-            );
+    const blogOutput = mapToBlogOutput(createdBlog);
 
-        const createdBlog =
-            await blogService.findByIdOrFail(createdBlogId);
-
-        const blogOutput = mapToBlogOutput(createdBlog)
-
-        res
-            .status(HttpStatus.Created).send(blogOutput);
-
-    } catch (e: unknown) {
-        errorsHandler(e, res);
-    }
+    res.status(HttpStatus.Created).send(blogOutput);
+  } catch (e: unknown) {
+    errorsHandler(e, res);
+  }
 }

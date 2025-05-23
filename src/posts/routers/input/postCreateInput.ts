@@ -1,9 +1,9 @@
-import {ResourceType} from "../../../core/types/resourceType";
-import {PostAttributes} from "../../application/dtos/postAttributes";
+import { ResourceType } from "../../../core/types/resourceType";
+import { PostAttributes } from "../../application/dtos/postAttributes";
 
 export type PostCreateInput = {
-    data: {
-        type: ResourceType.Post,
-        attributes: PostAttributes,
-    }
-}
+  data: {
+    type: ResourceType.Post;
+    attributes: PostAttributes;
+  };
+};

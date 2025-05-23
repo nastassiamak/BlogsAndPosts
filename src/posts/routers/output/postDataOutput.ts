@@ -1,14 +1,14 @@
-import {ResourceType} from "../../../core/types/resourceType";
+import { ResourceType } from "../../../core/types/resourceType";
 
 export type PostDataOutput = {
-    type: ResourceType.Post;
-    id: string;
-    attributes: {
-        title: string;
-        shortDescription: string;
-        content: string;
-        blogId: string;
-        blogName?: string;
-        createdAt?: string;
-    }
-}
+  type: ResourceType.Post;
+  id: string;
+  attributes: {
+    title: string;
+    shortDescription: string;
+    content: string;
+    blogId: string;
+    blogName?: string;
+    createdAt?: string;
+  };
+};

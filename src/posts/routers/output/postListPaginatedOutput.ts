@@ -1,7 +1,7 @@
-import {PaginatedOutput} from "../../../core/types/paginatedOutput";
-import {PostDataOutput} from "./postDataOutput";
+import { PaginatedOutput } from "../../../core/types/paginatedOutput";
+import { PostDataOutput } from "./postDataOutput";
 
 export type PostListPaginatedOutput = {
-    meta: PaginatedOutput;
-    data: PostDataOutput[];
-}
+  meta: PaginatedOutput;
+  data: PostDataOutput[];
+};
