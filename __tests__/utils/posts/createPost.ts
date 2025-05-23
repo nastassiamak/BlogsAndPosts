@@ -8,17 +8,19 @@ import request from "supertest";
 import {POSTS_PATH} from "../../../src/core/paths/paths";
 import {generateAdminAuthToken} from "../generateAdminAuthToken";
 import {HttpStatus} from "../../../src/core/types/httpStatus";
+import {createBlog} from "../blogs/createBlog";
 
 export async function createPost(
     app: Express,
     postDto?: PostAttributes,
 ): Promise<PostOutput> {
-    const blog = await createPost(app);
-    const defaultPostData = getPostDto(blog.data.id)
+   const blog = await createBlog(app);
+
+   const defaultPostData = getPostDto(blog.data.id);
     const testPostData = {
         data: {
             type: ResourceType.Post,
-            attributes: {...defaultPostData,
+            attributes: { ...defaultPostData,
             ...postDto,}
         },
     };

@@ -6,7 +6,7 @@ export function getPostDto(blogId: string): PostAttributes{
         title: "title1",
         shortDescription: "shortDescription1",
         content: "content1",
-        blogName: "blogName",
-        createdAt: "createdAt",
+        // blogName: "blogId",
+        // createdAt: new Date().toISOString(),
     }
 }

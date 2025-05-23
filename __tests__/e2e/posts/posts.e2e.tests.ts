@@ -38,6 +38,7 @@ describe('Posts API', () => {
                 .set('Authorization', adminToken)
                 .expect(HttpStatus.Ok);
 
+        console.log(postListResponse.body.data);
         expect(postListResponse.body.data).toBeInstanceOf(Array);
         expect(postListResponse.body.data).toHaveLength(2);
     });

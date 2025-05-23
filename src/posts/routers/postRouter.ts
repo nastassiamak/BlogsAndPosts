@@ -26,7 +26,6 @@ postsRouter
     )
     .post('/',
         superAdminGuardMiddleware,
-        idValidation,
         postCreateInputValidation,
         inputValidationResultMiddleware,
         createPostHandler,

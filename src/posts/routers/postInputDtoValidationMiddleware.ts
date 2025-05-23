@@ -4,16 +4,16 @@ import {resourceTypeValidation} from "../../core/middlewares/validation/resource
 import {ResourceType} from "../../core/types/resourceType";
 import {dataIdMatchValidator} from "../../core/middlewares/validation/paramsIdValidationMiddleware";
 
-export const titleValidator = body("title").isString().withMessage('not string')
+export const titleValidator = body("data.attributes.title").isString().withMessage('not string')
     .trim().isLength({min: 1, max: 30}).withMessage('more then 30 or 0')
 
-export const shortDescriptionValidator = body("shortDescription").isString().withMessage('not string')
+export const shortDescriptionValidator = body("data.attributes.shortDescription").isString().withMessage('not string')
     .trim().isLength({min: 1, max: 100}).withMessage('more then 100 or 0')
 
-export const contentValidator = body("content").isString().withMessage('not string')
+export const contentValidator = body("data.attributes.content").isString().withMessage('not string')
     .trim().isLength({min: 1, max: 1000}).withMessage('more then 1000 or 0')
 
-export const createdAtValidator = body('createdAt')
+export const createdAtValidator = body('data.attributes.createdAt')
     .optional() // Делает поле необязательным
     .isString()
     .withMessage('not string')
@@ -22,7 +22,7 @@ export const createdAtValidator = body('createdAt')
     .withMessage('not valid date format');
 
 
-export const blogIdValidator = body("blogId").isString().withMessage('not string')
+export const blogIdValidator = body("data.attributes.blogId").isString().withMessage('not string')
     .trim()
     .custom(async (blogId: string) => {
         const blog = await blogsRepository.findByIdOrFail(blogId);
