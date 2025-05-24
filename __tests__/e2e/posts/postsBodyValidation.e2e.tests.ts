@@ -53,7 +53,7 @@ describe("Posts API body validation check", () => {
       .set("Authorization", adminToken)
       .send({
         data: {
-          type: ResourceType.Post,
+          type: ResourceType.Posts,
 
           attributes: {
             title: 21,

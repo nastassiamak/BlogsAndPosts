@@ -22,7 +22,7 @@ export function mapToBlogListPaginatedOutput(
 
     data: blogs.map(
       (blog): BlogDataOutput => ({
-        type: ResourceType.Blog,
+        type: ResourceType.Blogs,
         id: blog._id.toString(),
         attributes: {
           name: blog.name,

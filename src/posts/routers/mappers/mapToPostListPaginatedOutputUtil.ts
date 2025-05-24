@@ -22,7 +22,7 @@ export function mapToPostListPaginatedOutput(
 
     data: posts.map(
       (post): PostDataOutput => ({
-        type: ResourceType.Post,
+        type: ResourceType.Posts,
         id: post._id.toString(),
         attributes: {
           title: post.title,

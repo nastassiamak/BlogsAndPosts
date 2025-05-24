@@ -3,7 +3,7 @@ import { PostAttributes } from "../../application/dtos/postAttributes";
 
 export type PostCreateInput = {
   data: {
-    type: ResourceType.Post;
+    type: ResourceType.Posts;
     attributes: PostAttributes;
   };
 };

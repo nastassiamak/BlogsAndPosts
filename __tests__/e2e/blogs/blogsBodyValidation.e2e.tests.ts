@@ -36,7 +36,7 @@ describe("Blog API body validation check", () => {
   it("❌ should not create blog when incorrect body passed; POST /api/blogs", async () => {
     const correctTestBlogData: BlogCreateInput = {
       data: {
-        type: ResourceType.Blog,
+        type: ResourceType.Blogs,
         attributes: correctTestBlogAttributes,
       },
     };
@@ -95,7 +95,7 @@ describe("Blog API body validation check", () => {
 
     const correctTestBlogData: BlogUpdateInput = {
       data: {
-        type: ResourceType.Blog,
+        type: ResourceType.Blogs,
         id: createdBlogId,
         attributes: correctTestBlogAttributes,
       },

@@ -16,7 +16,7 @@ export async function updatePost(
 ): Promise<void> {
   const testPostData: PostUpdateInput = {
     data: {
-      type: ResourceType.Post,
+      type: ResourceType.Posts,
       id: postId,
       attributes: {
         ...getPostDto(blogId),

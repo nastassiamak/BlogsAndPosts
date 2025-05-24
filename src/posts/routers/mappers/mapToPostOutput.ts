@@ -6,7 +6,7 @@ import { ResourceType } from "../../../core/types/resourceType";
 export function mapToPostOutput(post: WithId<Post>): PostOutput {
   return {
     data: {
-      type: ResourceType.Post,
+      type: ResourceType.Posts,
       id: post._id.toString(),
       attributes: {
         title: post.title,

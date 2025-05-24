@@ -64,7 +64,7 @@ export const blogIdValidator = body("data.attributes.blogId")
 // }
 
 export const postCreateInputValidation = [
-  resourceTypeValidation(ResourceType.Post),
+  resourceTypeValidation(ResourceType.Posts),
   titleValidator,
   shortDescriptionValidator,
   contentValidator,
@@ -73,7 +73,7 @@ export const postCreateInputValidation = [
 ];
 
 export const postUpdateInputValidation = [
-  resourceTypeValidation(ResourceType.Post),
+  resourceTypeValidation(ResourceType.Posts),
   dataIdMatchValidator,
   titleValidator,
   shortDescriptionValidator,

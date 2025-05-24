@@ -43,7 +43,7 @@ export const isMembershipValidator = body("data.attributes.isMembership")
   .toBoolean(); // Опционально, чтобы преобразовать входное значение в булевый тип
 
 export const blogCreateInputValidation = [
-  resourceTypeValidation(ResourceType.Blog),
+  resourceTypeValidation(ResourceType.Blogs),
   nameValidator,
   descriptionValidator,
   websiteUrlValidator,
@@ -52,7 +52,7 @@ export const blogCreateInputValidation = [
 ];
 
 export const blogUpdateInputValidation = [
-  resourceTypeValidation(ResourceType.Blog),
+  resourceTypeValidation(ResourceType.Blogs),
   dataIdMatchValidator,
   nameValidator,
   descriptionValidator,

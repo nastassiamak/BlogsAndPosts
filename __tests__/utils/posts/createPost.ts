@@ -19,7 +19,7 @@ export async function createPost(
   const defaultPostData = getPostDto(blog.data.id);
   const testPostData = {
     data: {
-      type: ResourceType.Post,
+      type: ResourceType.Posts,
       attributes: { ...defaultPostData, ...postDto },
     },
   };

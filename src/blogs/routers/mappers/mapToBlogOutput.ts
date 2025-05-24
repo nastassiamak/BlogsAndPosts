@@ -6,7 +6,7 @@ import { BlogOutput } from "../output/blogOutput";
 export function mapToBlogOutput(blog: WithId<Blog>): BlogOutput {
   return {
     data: {
-      type: ResourceType.Blog,
+      type: ResourceType.Blogs,
       id: blog._id.toString(),
       attributes: {
         name: blog.name,
