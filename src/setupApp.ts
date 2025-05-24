@@ -13,6 +13,9 @@ import { postsRouter } from "./posts/routers/postRouter";
 export const setupApp = (app: Express) => {
   app.use(express.json()); // middleware для парсинга JSON в теле запроса
 
+  app.get('/', (req, res) => {
+    res.send('Hello from API');
+  });
   app.use(BLOGS_PATH, blogsRouter);
   app.use(POSTS_PATH, postsRouter);
   app.use(TESTING_PATH, testingRouter);

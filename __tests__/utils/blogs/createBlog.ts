@@ -27,5 +27,7 @@ export async function createBlog(
     .send(testBlogData)
     .expect(HttpStatus.Created);
 
+  console.log(createdBlogResponse.body);
+
   return createdBlogResponse.body;
 }
