@@ -25,7 +25,8 @@ export async function getBlogPostListHandler(
       pageNumber: queryInput.pageNumber,
       pageSize: queryInput.pageSize,
       totalCount,
-    });
+    },
+        blogId);
     res.send(postListOutput);
   } catch (e: unknown) {
     errorsHandler(e, res);

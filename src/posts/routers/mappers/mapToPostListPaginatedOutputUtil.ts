@@ -11,6 +11,7 @@ export function mapToPostListPaginatedOutput(
     pageSize: number;
     totalCount: number;
   },
+  blogId: string,
 ): PostListPaginatedOutput {
   return {
     meta: {
@@ -28,7 +29,7 @@ export function mapToPostListPaginatedOutput(
           title: post.title,
           shortDescription: post.shortDescription,
           content: post.content,
-          blogId: post.blogId,
+          blogId: blogId,
           blogName: post.blogName,
           createdAt: post.createdAt,
         },
