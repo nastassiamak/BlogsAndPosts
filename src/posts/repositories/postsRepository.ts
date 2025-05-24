@@ -54,8 +54,8 @@ export const postsRepository = {
   },
 
   async findPostsByBlog(
-    blogId: string,
     queryDto: PostQueryInput,
+    blogId: string,
   ): Promise<{ items: WithId<Post>[]; totalCount: number }> {
     const { pageNumber, pageSize, sortBy, sortDirection } = queryDto;
     const filter: any = { "blog.id": blogId };

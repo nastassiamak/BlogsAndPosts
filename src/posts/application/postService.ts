@@ -14,8 +14,8 @@ export const postService = {
   },
 
   async findPostsByBlog(
-    blogId: string,
     queryDto: PostQueryInput,
+    blogId: string,
   ): Promise<{ items: WithId<Post>[]; totalCount: number }> {
 
     await blogsRepository.findByIdOrFail(blogId);

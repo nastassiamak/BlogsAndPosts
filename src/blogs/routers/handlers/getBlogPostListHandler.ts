@@ -17,8 +17,8 @@ export async function getBlogPostListHandler(
 
 
     const { items, totalCount } = await postService.findPostsByBlog(
+      queryInput,
       blogId,
-        queryInput,
     );
 
     const postListOutput = mapToPostListPaginatedOutput(items, {
