@@ -5,6 +5,7 @@ import { postCollection } from "../../db/mongoDb";
 import { RepositoryNotFoundError } from "../../core/errors/repositoryNotFoundError";
 import { PostAttributes } from "../application/dtos/postAttributes";
 import { blogService } from "../../blogs/application/blogService";
+import {blogsRepository} from "../../blogs/repositories/blogsRepository";
 
 export const postsRepository = {
   async findMany(
@@ -15,44 +16,46 @@ export const postsRepository = {
       pageSize,
       sortBy,
       sortDirection,
-      searchPostTitleTerm,
-      searchPostShortDescriptionTerm,
-      searchPostContentTerm,
+      // searchPostTitleTerm,
+      // searchPostShortDescriptionTerm,
+      // searchPostContentTerm,
     } = queryDto;
 
     const skip = (pageNumber - 1) * pageSize;
     const filter: any = {};
 
-    if (searchPostTitleTerm) {
-      filter.title = { $regex: searchPostTitleTerm, $options: "i" };
-    }
+    // if (searchPostTitleTerm) {
+    //   filter.title = { $regex: searchPostTitleTerm, $options: "i" };
+    // }
+    //
+    // if (searchPostShortDescriptionTerm) {
+    //   filter.description = {
+    //     $regex: searchPostShortDescriptionTerm,
+    //     $options: "i",
+    //   };
+    // }
+    //
+    // if (searchPostContentTerm) {
+    //   filter.content = { $regex: searchPostContentTerm, $options: "i" };
+    // }
 
-    if (searchPostShortDescriptionTerm) {
-      filter.description = {
-        $regex: searchPostShortDescriptionTerm,
-        $options: "i",
-      };
-    }
+    const [items, totalCount] = await Promise.all([
+        postCollection
+          .find(filter)
+          .sort({ [sortBy]: sortDirection })
+          .skip(skip)
+          .limit(pageSize)
+          .toArray(),
 
-    if (searchPostContentTerm) {
-      filter.content = { $regex: searchPostContentTerm, $options: "i" };
-    }
-
-    const items = await postCollection
-      .find(filter)
-      .sort({ [sortBy]: sortDirection })
-      .skip(skip)
-      .limit(pageSize)
-      .toArray();
-
-    const totalCount = await postCollection.countDocuments(filter);
+        postCollection.countDocuments(filter)
+    ])
 
     return { items, totalCount };
   },
 
   async findPostsByBlog(
-    queryDto: PostQueryInput,
     blogId: string,
+    queryDto: PostQueryInput,
   ): Promise<{ items: WithId<Post>[]; totalCount: number }> {
     const { pageNumber, pageSize, sortBy, sortDirection } = queryDto;
     const filter: any = { "blog.id": blogId };
@@ -70,6 +73,7 @@ export const postsRepository = {
 
     return { items, totalCount };
   },
+
 
   async findById(id: string): Promise<WithId<Post> | null> {
     return postCollection.findOne({ _id: new ObjectId(id) });

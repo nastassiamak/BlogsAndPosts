@@ -14,17 +14,13 @@ export const postService = {
   },
 
   async findPostsByBlog(
-    queryDto: PostQueryInput,
     blogId: string,
+    queryDto: PostQueryInput,
   ): Promise<{ items: WithId<Post>[]; totalCount: number }> {
+
     await blogsRepository.findByIdOrFail(blogId);
 
     return postsRepository.findPostsByBlog(queryDto, blogId);
-  },
-
-  async createPostByBlogId(newPost: Post, blogId: string): Promise<string> {
-    await blogsRepository.findByIdOrFail(blogId);
-    return postsRepository.createPostByBlogId(newPost, blogId);
   },
 
   async findByIdOrFail(id: string): Promise<WithId<Post>> {
