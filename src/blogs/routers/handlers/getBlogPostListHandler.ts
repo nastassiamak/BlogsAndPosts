@@ -20,6 +20,7 @@ export async function getBlogPostListHandler(
 
     console.log(`Найдено постов: ${items.length}, из них всего: ${totalCount}`);  // вывод результата из БД
 
+
     const postListOutput = mapToPostListPaginatedOutput(items, {
       pageNumber: queryInput.pageNumber,
       pageSize: queryInput.pageSize,
