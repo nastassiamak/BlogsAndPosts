@@ -4,7 +4,6 @@ import { postService } from "../../../posts/application/postService";
 import { mapToPostListPaginatedOutput } from "../../../posts/routers/mappers/mapToPostListPaginatedOutputUtil";
 import { errorsHandler } from "../../../core/errors/errorsHandler";
 import {setDefaultSortAndPaginationIfNotExist} from "../../../core/helpers/setDefaultSortAndPagination";
-import {RepositoryNotFoundError} from "../../../core/errors/repositoryNotFoundError";
 
 export async function getBlogPostListHandler(
   req: Request<{ id: string }, {}, {}, PostQueryInput>,
@@ -13,7 +12,7 @@ export async function getBlogPostListHandler(
   try {
     const blogId = req.params.id;
 
-    const queryInput =  setDefaultSortAndPaginationIfNotExist(req.query);
+    const queryInput = (req.query);
 
 
     const { items, totalCount } = await postService.findPostsByBlog(
@@ -25,8 +24,7 @@ export async function getBlogPostListHandler(
       pageNumber: queryInput.pageNumber,
       pageSize: queryInput.pageSize,
       totalCount,
-    },
-        blogId);
+    },);
     res.send(postListOutput);
   } catch (e: unknown) {
     errorsHandler(e, res);
