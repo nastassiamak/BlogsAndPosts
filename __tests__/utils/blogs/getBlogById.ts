@@ -15,5 +15,6 @@ export async function getBlogById(
     //.set("Authorization", generateAdminAuthToken())
     .expect(HttpStatus.Ok);
 
+  console.log('Sending POST with body:', JSON.stringify(blogResponse.body, null, 2));
   return blogResponse.body;
 }

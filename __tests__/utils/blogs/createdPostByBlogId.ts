@@ -25,6 +25,7 @@ export async function createPostByBlogId(
             },
         },
     };
+    console.log('Sending POST with body:', JSON.stringify(testPostData, null, 2));
 
     const createdPostResponse =
         await request(app)

@@ -48,7 +48,7 @@ describe("Blog API", () => {
 
     const response = await request(app)
       .get(BLOGS_PATH)
-      //.set("Authorization", adminToken)
+      .set("Authorization", adminToken)
       .expect(HttpStatus.Ok);
 
     console.log(response.body.data);
