@@ -21,6 +21,7 @@ export async function createBlog(
       attributes: { ...getBlogDto(), ...blogDto },
     },
   };
+  console.log("Request body:", JSON.stringify(testBlogData, null, 2));  // Здесь
 
   const createdBlogResponse = await request(app)
     .post(BLOGS_PATH)
