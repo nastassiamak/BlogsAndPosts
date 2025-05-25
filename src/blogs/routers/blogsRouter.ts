@@ -24,12 +24,15 @@ export const blogsRouter = Router({});
 
 blogsRouter
   .get(
-    "",
+    "/",
     paginationAndSortingValidation(BlogSortField),
     inputValidationResultMiddleware,
     getBlogListHandler,
   )
-  .get("/:id", idValidation, inputValidationResultMiddleware, getBlogHandler)
+  .get("/:id",
+      idValidation,
+      inputValidationResultMiddleware,
+      getBlogHandler)
   .post(
     "/",
     superAdminGuardMiddleware,
