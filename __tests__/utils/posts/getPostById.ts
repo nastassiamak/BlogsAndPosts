@@ -11,7 +11,7 @@ export async function getPostById(
 ): Promise<PostOutput> {
   const getResponse = await request(app)
     .get(`${POSTS_PATH}/${postId}`)
-    .set("Authorization", generateAdminAuthToken())
+    //.set("Authorization", generateAdminAuthToken())
     .expect(HttpStatus.Ok);
 
   return getResponse.body;

@@ -14,6 +14,8 @@ import { getBlogDto } from "../../utils/blogs/getBlogDto";
 import { createBlog } from "../../utils/blogs/createBlog";
 import { getBlogById } from "../../utils/blogs/getBlogById";
 import { updateBlog } from "../../utils/blogs/updateBlog";
+import {createPostByBlogId} from "../../utils/blogs/createdPostByBlogId";
+import {getPostsByBlogId} from "../../utils/blogs/getPostsByBlogId";
 
 describe("Blog API", () => {
   const app = express();
@@ -30,7 +32,7 @@ describe("Blog API", () => {
     await stopDb();
   });
 
-  it("should create a blog; POST /api/blogs", async () => {
+  it("should create a blog; POST /blogs", async () => {
     await createBlog(app, {
       ...getBlogDto(),
       name: "Name2",
@@ -39,19 +41,20 @@ describe("Blog API", () => {
     });
   });
 
-  it("should return blogs list; GET /api/blogs", async () => {
+  it("should return blogs list; GET /blogs", async () => {
     await Promise.all([createBlog(app), createBlog(app)]);
 
     const response = await request(app)
       .get(BLOGS_PATH)
-      .set("Authorization", adminToken)
+      //.set("Authorization", adminToken)
       .expect(HttpStatus.Ok);
 
+    console.log(response.body.data);
     expect(response.body.data).toBeInstanceOf(Array);
     expect(response.body.data.length).toBeGreaterThanOrEqual(2);
   });
 
-  it("should return blog by id; GET /api/blogs/:id", async () => {
+  it("should return blog by id; GET /blogs/:id", async () => {
     const createdBlog = await createBlog(app);
     const createdBlogId = createdBlog.data.id;
 
@@ -62,7 +65,27 @@ describe("Blog API", () => {
     });
   });
 
-  it("should update blog; PUT /api/blogs/:id", async () => {
+  it('should create post by blogId; POST /blogs/{blogId}/posts', async () => {
+    const createdBlog = await createBlog(app);
+    const createdBlogId = createdBlog.data.id;
+
+    await createPostByBlogId(app, createdBlogId);
+
+  })
+
+  it('should return posts by blogId; GET /blogs/{blogId}/posts', async () => {
+    const createdBlog = await createBlog(app);
+    const createdBlogId = createdBlog.data.id;
+    await Promise.all([await createPostByBlogId(app, createdBlogId),
+      await createPostByBlogId(app, createdBlogId)]);
+
+
+    await getPostsByBlogId(app, createdBlogId);
+
+
+  })
+
+  it("should update blog; PUT /blogs/:id", async () => {
     const createdBlog = await createBlog(app);
     const createdBlogId = createdBlog.data.id;
 
@@ -86,7 +109,7 @@ describe("Blog API", () => {
     });
   });
 
-  it('should delete blog and check after "NOT FOUND"; DELETE /api/blogs/:id', async () => {
+  it('should delete blog and check after "NOT FOUND"; DELETE /blogs/:id', async () => {
     const createdBlog = await createBlog(app);
     const createdBlogId = createdBlog.data.id;
 
@@ -97,7 +120,6 @@ describe("Blog API", () => {
 
     await request(app)
       .get(`${BLOGS_PATH}/${createdBlogId}`)
-      .set("Authorization", adminToken)
       .expect(HttpStatus.NotFound);
   });
 });

@@ -30,5 +30,6 @@ export async function createPost(
     .send(testPostData)
     .expect(HttpStatus.Created);
 
+  console.log(createdPostResponse.body);
   return createdPostResponse.body;
 }

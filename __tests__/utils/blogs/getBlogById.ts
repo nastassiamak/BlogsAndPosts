@@ -12,7 +12,7 @@ export async function getBlogById(
 ): Promise<BlogOutput> {
   const blogResponse = await request(app)
     .get(`${BLOGS_PATH}/${blogId}`)
-    .set("Authorization", generateAdminAuthToken())
+    //.set("Authorization", generateAdminAuthToken())
     .expect(HttpStatus.Ok);
 
   return blogResponse.body;

@@ -69,7 +69,7 @@ describe("Posts API body validation check", () => {
 
     const postListResponse = await request(app)
       .get(POSTS_PATH)
-      .set("Authorization", adminToken);
+      //.set("Authorization", adminToken);
 
     expect(postListResponse.body.data).toHaveLength(0);
   });

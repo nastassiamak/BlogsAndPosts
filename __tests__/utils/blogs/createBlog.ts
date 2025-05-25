@@ -14,6 +14,7 @@ export async function createBlog(
   app: Express,
   blogDto?: BlogAttributes,
 ): Promise<BlogOutput> {
+
   const testBlogData: BlogCreateInput = {
     data: {
       type: ResourceType.Blogs,
