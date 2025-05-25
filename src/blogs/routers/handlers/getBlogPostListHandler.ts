@@ -15,6 +15,7 @@ export async function getBlogPostListHandler(
     console.log("Получен запрос на blogId:", id);  // вывод параметра пути
 
     const blogId = await blogService.findByIdOrFail(id);
+
     const queryInput = setDefaultSortAndPaginationIfNotExist(req.query);
     console.log("Параметры запроса:", queryInput);    // вывод параметров пагинации и сортировки
 
