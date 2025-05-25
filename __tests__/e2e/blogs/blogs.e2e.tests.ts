@@ -33,6 +33,7 @@ describe("Blog API", () => {
   });
 
   it("should create a blog; POST /blogs", async () => {
+    await clearDb(app);
     await createBlog(app, {
       ...getBlogDto(),
       name: "Name2",
@@ -42,6 +43,7 @@ describe("Blog API", () => {
   });
 
   it("should return blogs list; GET /blogs", async () => {
+    await clearDb(app);
     await Promise.all([createBlog(app), createBlog(app)]);
 
     const response = await request(app)
@@ -55,6 +57,7 @@ describe("Blog API", () => {
   });
 
   it("should return blog by id; GET /blogs/:id", async () => {
+    await clearDb(app);
     const createdBlog = await createBlog(app);
     const createdBlogId = createdBlog.data.id;
 
@@ -66,6 +69,7 @@ describe("Blog API", () => {
   });
 
   it('should create post by blogId; POST /blogs/{blogId}/posts', async () => {
+    await clearDb(app);
     const createdBlog = await createBlog(app);
     const createdBlogId = createdBlog.data.id;
 
@@ -74,7 +78,8 @@ describe("Blog API", () => {
   })
 
   it('should return posts by blogId; GET /blogs/{blogId}/posts', async () => {
-    const createdBlog = await createBlog(app);
+
+    await clearDb(app); const createdBlog = await createBlog(app);
     const createdBlogId = createdBlog.data.id;
     await Promise.all([await createPostByBlogId(app, createdBlogId),
       await createPostByBlogId(app, createdBlogId)]);
