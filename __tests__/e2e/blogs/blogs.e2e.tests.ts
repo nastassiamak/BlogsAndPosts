@@ -24,8 +24,15 @@ describe("Blog API", () => {
   const adminToken = generateAdminAuthToken();
 
   beforeAll(async () => {
-    await runDB("mongodb://localhost:27017/test");
-    await clearDb(app);
+    try {
+      await runDB("mongodb://localhost:27017/test");
+      console.log("Connected to test DB");
+      await clearDb(app);
+      console.log("Database cleared");
+    } catch (error) {
+      console.error("Error in beforeAll:", error);
+      throw error; // повторно выбрасываем, чтобы тест падал с ошибкой
+    }
   });
 
   afterAll(async () => {
