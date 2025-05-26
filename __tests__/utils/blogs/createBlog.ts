@@ -25,6 +25,7 @@ export async function createBlog(
 
   const createdBlogResponse = await request(app)
     .post(BLOGS_PATH)
+      .set('Content-Type', 'application/json')
     .set("Authorization", generateAdminAuthToken())
     .send(testBlogData)
     .expect(HttpStatus.Created);

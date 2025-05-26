@@ -55,6 +55,7 @@ describe("Blog API", () => {
 
     const response = await request(app)
       .get(BLOGS_PATH)
+        .set('Content-Type', 'application/json')
       .set("Authorization", adminToken)
       .expect(HttpStatus.Ok);
 
