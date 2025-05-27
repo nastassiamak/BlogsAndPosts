@@ -20,8 +20,6 @@ describe("Blog API body validation check", () => {
   const app = express();
   setupApp(app);
 
-  const correctTestBlogAttributes: BlogAttributes = getBlogDto();
-
   const adminToken = generateAdminAuthToken();
 
   beforeAll(async () => {
@@ -34,6 +32,7 @@ describe("Blog API body validation check", () => {
   });
 
   it("❌ should not create blog when incorrect body passed; POST /api/blogs", async () => {
+    const correctTestBlogAttributes: BlogAttributes = getBlogDto();
     const correctTestBlogData: BlogCreateInput = {
       data: {
         type: ResourceType.Blogs,
@@ -90,6 +89,7 @@ describe("Blog API body validation check", () => {
   });
 
   it("❌ should not update blog when incorrect data passed; PUT /api/blogs/:id", async () => {
+    const correctTestBlogAttributes: BlogAttributes = getBlogDto();
     const createdBlog = await createBlog(app, correctTestBlogAttributes);
     const createdBlogId = createdBlog.data.id;
 

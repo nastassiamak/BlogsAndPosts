@@ -14,24 +14,19 @@ export async function createBlog(
   app: Express,
   blogDto?: BlogAttributes,
 ): Promise<BlogOutput> {
-  // const testBlogData: BlogCreateInput = {
-  //   data: {
-  //     type: ResourceType.Blogs,
-  //     attributes: { ...getBlogDto(), ...blogDto },
-  //   },
-  // };
-  // console.log("Request body:", JSON.stringify(testBlogData, null, 2)); // Здесь
+  const testBlogData: BlogCreateInput = {
+    data: {
+      type: ResourceType.Blogs,
+      attributes: { ...getBlogDto(), ...blogDto },
+    },
+  };
+  console.log("Request body:", JSON.stringify(testBlogData, null, 2)); // Здесь
 
   const createdBlogResponse = await request(app)
     .post(BLOGS_PATH)
     .set("Content-Type", "application/json")
     .set("Authorization", generateAdminAuthToken())
-    .send({
-      data: {
-        type: ResourceType.Blogs,
-        attributes: {...getBlogDto(), ...blogDto},
-      },
-    })
+    .send(testBlogData)
     .expect(HttpStatus.Created);
 
   console.log(createdBlogResponse.body);
