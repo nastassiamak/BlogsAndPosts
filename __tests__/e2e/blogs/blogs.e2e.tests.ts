@@ -16,7 +16,7 @@ import { getBlogById } from "../../utils/blogs/getBlogById";
 import { updateBlog } from "../../utils/blogs/updateBlog";
 import { createPostByBlogId } from "../../utils/blogs/createdPostByBlogId";
 import { getPostsByBlogId } from "../../utils/blogs/getPostsByBlogId";
-import { blogsRepository } from "../../../src/blogs/repositories/blogsRepository";
+
 
 describe("Blog API", () => {
   const app = express();
