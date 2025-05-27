@@ -43,9 +43,6 @@ describe("Blog API", () => {
 
     await createBlog(app, {
       ...getBlogDto(),
-      name: "Name2",
-      description: "Description 2",
-      websiteUrl: "http://example.com/",
     });
   });
 
