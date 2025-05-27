@@ -8,15 +8,15 @@ import { BlogAttributes } from "../../../src/blogs/application/dtos/blogAttribut
 import { HttpStatus } from "../../../src/core/types/httpStatus";
 import { BLOGS_PATH } from "../../../src/core/paths/paths";
 import { generateAdminAuthToken } from "../../utils/generateAdminAuthToken";
-import {blogCollection, runDB, stopDb} from "../../../src/db/mongoDb";
+import { blogCollection, runDB, stopDb } from "../../../src/db/mongoDb";
 import { clearDb } from "../../utils/clearDb";
 import { getBlogDto } from "../../utils/blogs/getBlogDto";
 import { createBlog } from "../../utils/blogs/createBlog";
 import { getBlogById } from "../../utils/blogs/getBlogById";
 import { updateBlog } from "../../utils/blogs/updateBlog";
-import {createPostByBlogId} from "../../utils/blogs/createdPostByBlogId";
-import {getPostsByBlogId} from "../../utils/blogs/getPostsByBlogId";
-import {blogsRepository} from "../../../src/blogs/repositories/blogsRepository";
+import { createPostByBlogId } from "../../utils/blogs/createdPostByBlogId";
+import { getPostsByBlogId } from "../../utils/blogs/getPostsByBlogId";
+import { blogsRepository } from "../../../src/blogs/repositories/blogsRepository";
 
 describe("Blog API", () => {
   const app = express();
@@ -39,14 +39,13 @@ describe("Blog API", () => {
   afterAll(async () => {
     await stopDb();
   });
-  beforeEach(async () => {
-    await blogCollection.deleteMany({}); // Очищаем коллекцию перед каждым тестом
-  });
+
   it("should create a blog; POST /blogs", async () => {
-    await blogCollection.deleteMany({});
-    const  blog = await createBlog(app, {
-      ...getBlogDto(),
-    });
+    const [blog] = await Promise.all([
+      createBlog(app, {
+        ...getBlogDto(),
+      }),
+    ]);
     expect(blog).toHaveProperty("data");
     expect(blog.data).toHaveProperty("id");
     expect(blog.data.type).toBe("blogs"); // <- здесь проверяем именно строку
@@ -55,11 +54,9 @@ describe("Blog API", () => {
     expect(attributes).toHaveProperty("name");
     expect(attributes).toHaveProperty("description");
     expect(attributes).toHaveProperty("websiteUrl");
-
   });
 
   it("should return blogs list; GET /blogs", async () => {
-
     await Promise.all([createBlog(app), createBlog(app)]);
 
     const response = await request(app)
@@ -73,7 +70,6 @@ describe("Blog API", () => {
   });
 
   it("should return blog by id; GET /blogs/:id", async () => {
-
     const createdBlog = await createBlog(app);
     const createdBlogId = createdBlog.data.id;
 
@@ -84,25 +80,23 @@ describe("Blog API", () => {
     });
   });
 
-  it('should create post by blogId; POST /blogs/{blogId}/posts', async () => {
-
+  it("should create post by blogId; POST /blogs/{blogId}/posts", async () => {
     const createdBlog = await createBlog(app);
     const createdBlogId = createdBlog.data.id;
 
     await createPostByBlogId(app, createdBlogId);
+  });
 
-  })
-
-  it('should return posts by blogId; GET /blogs/{blogId}/posts', async () => {
+  it("should return posts by blogId; GET /blogs/{blogId}/posts", async () => {
     const createdBlog = await createBlog(app);
     const createdBlogId = createdBlog.data.id;
-    await Promise.all([await createPostByBlogId(app, createdBlogId),
+    await Promise.all([
+      await createPostByBlogId(app, createdBlogId),
 
-      await createPostByBlogId(app, createdBlogId)]);
+      await createPostByBlogId(app, createdBlogId),
+    ]);
     await getPostsByBlogId(app, createdBlogId);
-
-
-  })
+  });
 
   it("should update blog; PUT /blogs/:id", async () => {
     const createdBlog = await createBlog(app);

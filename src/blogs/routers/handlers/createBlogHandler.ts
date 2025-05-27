@@ -10,7 +10,10 @@ export async function createBlogHandler(
   res: Response,
 ) {
   try {
-    console.log('createBlogHandler req.body:', JSON.stringify(req.body, null, 2));
+    console.log(
+      "createBlogHandler req.body:",
+      JSON.stringify(req.body, null, 2),
+    );
     const createdBlogId = await blogService.create(req.body.data.attributes);
 
     const createdBlog = await blogService.findByIdOrFail(createdBlogId);

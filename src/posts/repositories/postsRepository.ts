@@ -5,7 +5,7 @@ import { postCollection } from "../../db/mongoDb";
 import { RepositoryNotFoundError } from "../../core/errors/repositoryNotFoundError";
 import { PostAttributes } from "../application/dtos/postAttributes";
 import { blogService } from "../../blogs/application/blogService";
-import {blogsRepository} from "../../blogs/repositories/blogsRepository";
+import { blogsRepository } from "../../blogs/repositories/blogsRepository";
 
 export const postsRepository = {
   async findMany(
@@ -40,15 +40,15 @@ export const postsRepository = {
     // }
 
     const [items, totalCount] = await Promise.all([
-        postCollection
-          .find(filter)
-          .sort({ [sortBy]: sortDirection })
-          .skip(skip)
-          .limit(pageSize)
-          .toArray(),
+      postCollection
+        .find(filter)
+        .sort({ [sortBy]: sortDirection })
+        .skip(skip)
+        .limit(pageSize)
+        .toArray(),
 
-        postCollection.countDocuments(filter)
-    ])
+      postCollection.countDocuments(filter),
+    ]);
 
     return { items, totalCount };
   },
@@ -58,7 +58,7 @@ export const postsRepository = {
     blogId: string,
   ): Promise<{ items: WithId<Post>[]; totalCount: number }> {
     const { pageNumber, pageSize, sortBy, sortDirection } = queryDto;
-    const filter: any = {  blogId };
+    const filter: any = { blogId };
     const skip = (pageNumber - 1) * pageSize;
 
     const [items, totalCount] = await Promise.all([
@@ -73,7 +73,6 @@ export const postsRepository = {
 
     return { items, totalCount };
   },
-
 
   async findById(id: string): Promise<WithId<Post> | null> {
     return postCollection.findOne({ _id: new ObjectId(id) });

@@ -14,18 +14,17 @@ export async function createBlog(
   app: Express,
   blogDto?: BlogAttributes,
 ): Promise<BlogOutput> {
-
   const testBlogData: BlogCreateInput = {
     data: {
       type: ResourceType.Blogs,
       attributes: { ...getBlogDto(), ...blogDto },
     },
   };
-  console.log("Request body:", JSON.stringify(testBlogData, null, 2));  // Здесь
+  console.log("Request body:", JSON.stringify(testBlogData, null, 2)); // Здесь
 
   const createdBlogResponse = await request(app)
     .post(BLOGS_PATH)
-      .set('Content-Type', 'application/json')
+    .set("Content-Type", "application/json")
     .set("Authorization", generateAdminAuthToken())
     .send(testBlogData)
     .expect(HttpStatus.Created);

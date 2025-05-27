@@ -9,10 +9,10 @@ import request from "supertest";
 import { POSTS_PATH } from "../../../src/core/paths/paths";
 import { HttpStatus } from "../../../src/core/types/httpStatus";
 import { getPostById } from "../../utils/posts/getPostById";
-import {ResourceType} from "../../../src/core/types/resourceType";
-import {PostAttributes} from "../../../src/posts/application/dtos/postAttributes";
-import {createBlog} from "../../utils/blogs/createBlog";
-import {updatePost} from "../../utils/posts/updatePost";
+import { ResourceType } from "../../../src/core/types/resourceType";
+import { PostAttributes } from "../../../src/posts/application/dtos/postAttributes";
+import { createBlog } from "../../utils/blogs/createBlog";
+import { updatePost } from "../../utils/posts/updatePost";
 
 describe("Posts API", () => {
   const app = express();
@@ -91,15 +91,15 @@ describe("Posts API", () => {
   });
 
   it('should delete post and check after "NOT FOUND"; DELETE /posts/:id', async () => {
-      const createdPost = await createPost(app);
-      const createdPostId = createdPost.data.id;
-       await request(app)
-           .delete(`${POSTS_PATH}/${createdPostId}`)
-           .set("Authorization", adminToken)
-           .expect(HttpStatus.NoContent);
+    const createdPost = await createPost(app);
+    const createdPostId = createdPost.data.id;
+    await request(app)
+      .delete(`${POSTS_PATH}/${createdPostId}`)
+      .set("Authorization", adminToken)
+      .expect(HttpStatus.NoContent);
 
-       await request(app)
-           .get(`${POSTS_PATH}/${createdPostId}`)
-           .expect(HttpStatus.NotFound);
+    await request(app)
+      .get(`${POSTS_PATH}/${createdPostId}`)
+      .expect(HttpStatus.NotFound);
   });
 });

@@ -67,9 +67,8 @@ describe("Posts API body validation check", () => {
     console.log(invalidDataSet2.body.errors);
     expect(invalidDataSet2.body.errors).toHaveLength(3);
 
-    const postListResponse = await request(app)
-      .get(POSTS_PATH)
-      //.set("Authorization", adminToken);
+    const postListResponse = await request(app).get(POSTS_PATH);
+    //.set("Authorization", adminToken);
 
     expect(postListResponse.body.data).toHaveLength(0);
   });

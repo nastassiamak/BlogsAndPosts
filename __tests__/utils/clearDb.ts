@@ -8,6 +8,6 @@ import { Express } from "express";
 export async function clearDb(app: Express) {
   await request(app)
     .delete(`${TESTING_PATH}/all-data`)
-      .set('Content-Type', 'application/json')
+    .set("Content-Type", "application/json")
     .expect(HttpStatus.NoContent);
 }
