@@ -8,7 +8,7 @@ import { BlogAttributes } from "../../../src/blogs/application/dtos/blogAttribut
 import { HttpStatus } from "../../../src/core/types/httpStatus";
 import { BLOGS_PATH } from "../../../src/core/paths/paths";
 import { generateAdminAuthToken } from "../../utils/generateAdminAuthToken";
-import { runDB, stopDb } from "../../../src/db/mongoDb";
+import {blogCollection, runDB, stopDb} from "../../../src/db/mongoDb";
 import { clearDb } from "../../utils/clearDb";
 import { getBlogDto } from "../../utils/blogs/getBlogDto";
 import { createBlog } from "../../utils/blogs/createBlog";
@@ -16,6 +16,7 @@ import { getBlogById } from "../../utils/blogs/getBlogById";
 import { updateBlog } from "../../utils/blogs/updateBlog";
 import {createPostByBlogId} from "../../utils/blogs/createdPostByBlogId";
 import {getPostsByBlogId} from "../../utils/blogs/getPostsByBlogId";
+import {blogsRepository} from "../../../src/blogs/repositories/blogsRepository";
 
 describe("Blog API", () => {
   const app = express();
@@ -38,12 +39,23 @@ describe("Blog API", () => {
   afterAll(async () => {
     await stopDb();
   });
-
+  beforeEach(async () => {
+    await blogCollection.deleteMany({}); // Очищаем коллекцию перед каждым тестом
+  });
   it("should create a blog; POST /blogs", async () => {
 
-    await createBlog(app, {
+    const  blog = await createBlog(app, {
       ...getBlogDto(),
     });
+    expect(blog).toHaveProperty("data");
+    expect(blog.data).toHaveProperty("id");
+    expect(blog.data.type).toBe("blogs"); // <- здесь проверяем именно строку
+
+    const attributes = blog.data.attributes;
+    expect(attributes).toHaveProperty("name");
+    expect(attributes).toHaveProperty("description");
+    expect(attributes).toHaveProperty("websiteUrl");
+
   });
 
   it("should return blogs list; GET /blogs", async () => {
@@ -52,7 +64,6 @@ describe("Blog API", () => {
 
     const response = await request(app)
       .get(BLOGS_PATH)
-        .set('Content-Type', 'application/json')
       .set("Authorization", adminToken)
       .expect(HttpStatus.Ok);
 
@@ -86,9 +97,8 @@ describe("Blog API", () => {
     const createdBlog = await createBlog(app);
     const createdBlogId = createdBlog.data.id;
     await Promise.all([await createPostByBlogId(app, createdBlogId),
+
       await createPostByBlogId(app, createdBlogId)]);
-
-
     await getPostsByBlogId(app, createdBlogId);
 
 
