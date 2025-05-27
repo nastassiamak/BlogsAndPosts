@@ -43,7 +43,7 @@ describe("Blog API", () => {
     await blogCollection.deleteMany({}); // Очищаем коллекцию перед каждым тестом
   });
   it("should create a blog; POST /blogs", async () => {
-
+    await blogCollection.deleteMany({});
     const  blog = await createBlog(app, {
       ...getBlogDto(),
     });
