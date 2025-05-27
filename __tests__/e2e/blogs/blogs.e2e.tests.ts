@@ -8,7 +8,7 @@ import { BlogAttributes } from "../../../src/blogs/application/dtos/blogAttribut
 import { HttpStatus } from "../../../src/core/types/httpStatus";
 import { BLOGS_PATH } from "../../../src/core/paths/paths";
 import { generateAdminAuthToken } from "../../utils/generateAdminAuthToken";
-import { blogCollection, runDB, stopDb } from "../../../src/db/mongoDb";
+import { runDB, stopDb } from "../../../src/db/mongoDb";
 import { clearDb } from "../../utils/clearDb";
 import { getBlogDto } from "../../utils/blogs/getBlogDto";
 import { createBlog } from "../../utils/blogs/createBlog";
