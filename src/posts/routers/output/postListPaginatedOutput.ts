@@ -3,5 +3,5 @@ import { PostDataOutput } from "./postDataOutput";
 
 export type PostListPaginatedOutput = {
   meta: PaginatedOutput;
-  data: PostDataOutput[];
+  items: PostDataOutput[];
 };

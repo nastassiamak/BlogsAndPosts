@@ -15,14 +15,14 @@ export async function updateBlog(
   blogDto?: BlogAttributes,
 ): Promise<void> {
   const testBlogData: BlogUpdateInput = {
-    data: {
-      type: ResourceType.Blogs,
+    //data: {
+     // type: ResourceType.Blogs,
       id: blogId,
-      attributes: {
+      //attributes: {
         ...getBlogDto(),
         ...blogDto,
-      },
-    },
+     // },
+    //},
   };
   console.log(
     "Sending update request with data:",

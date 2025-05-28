@@ -8,7 +8,7 @@ export const idValidation = param("id")
   .isMongoId()
   .withMessage("Incorrect format of ObjectId");
 
-export const dataIdMatchValidator = body("data.id")
+export const dataIdMatchValidator = body("id")
   .exists()
   .withMessage("ID in body is required")
   .custom((value, { req }) => {

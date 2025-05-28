@@ -1,5 +1,5 @@
 import { BlogDataOutput } from "./blogDataOutput";
 
-export type BlogOutput = {
-  data: BlogDataOutput;
-};
+// export type BlogOutput = {
+//   data: BlogDataOutput;
+// };

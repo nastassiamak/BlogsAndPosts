@@ -3,5 +3,5 @@ import { BlogDataOutput } from "./blogDataOutput";
 
 export type BlogListPaginatedOutput = {
   meta: PaginatedOutput;
-  data: BlogDataOutput[];
+  items: BlogDataOutput[];
 };

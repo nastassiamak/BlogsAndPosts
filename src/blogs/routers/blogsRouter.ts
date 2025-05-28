@@ -29,7 +29,12 @@ blogsRouter
     inputValidationResultMiddleware,
     getBlogListHandler,
   )
-  .get("/:id", idValidation, inputValidationResultMiddleware, getBlogHandler)
+  .get(
+      "/:id",
+      idValidation,
+      inputValidationResultMiddleware,
+      getBlogHandler
+  )
   .post(
     "/",
     superAdminGuardMiddleware,

@@ -14,7 +14,7 @@ export async function createBlogHandler(
       "createBlogHandler req.body:",
       JSON.stringify(req.body, null, 2),
     );
-    const createdBlogId = await blogService.create(req.body.data.attributes);
+    const createdBlogId = await blogService.create(req.body);
 
     const createdBlog = await blogService.findByIdOrFail(createdBlogId);
 

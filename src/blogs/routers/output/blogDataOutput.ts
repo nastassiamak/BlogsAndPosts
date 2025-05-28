@@ -1,13 +1,13 @@
 import { ResourceType } from "../../../core/types/resourceType";
 
 export type BlogDataOutput = {
-  type: ResourceType.Blogs;
+  //type: ResourceType.Blogs;
   id: string;
-  attributes: {
+  //attributes: {
     name: string;
     description: string;
     websiteUrl: string;
     createdAt?: string;
     isMembership?: boolean;
-  };
+  //};
 };

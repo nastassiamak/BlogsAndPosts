@@ -15,14 +15,12 @@ export async function updatePost(
   postDto?: PostAttributes,
 ): Promise<void> {
   const testPostData: PostUpdateInput = {
-    data: {
-      type: ResourceType.Posts,
+
       id: postId,
-      attributes: {
+
         ...getPostDto(blogId),
         ...postDto,
-      },
-    },
+
   };
   console.log(
     "Sending update request with data:",

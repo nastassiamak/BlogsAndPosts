@@ -15,7 +15,7 @@ export async function createBlogPostHandler(
   try {
     const { id } = req.params;
 
-    const postCreateData = req.body.data.attributes;
+    const postCreateData = req.body;
     const blog = await blogService.findByIdOrFail(id);
 
     const postDataWithBlog = {

@@ -20,6 +20,7 @@ describe("Blog API body validation check", () => {
   const app = express();
   setupApp(app);
 
+  const correctTestBlogAttributes: BlogAttributes = getBlogDto();
   const adminToken = generateAdminAuthToken();
 
   beforeAll(async () => {
@@ -31,32 +32,23 @@ describe("Blog API body validation check", () => {
     await stopDb();
   });
 
-  it("❌ should not create blog when incorrect body passed; POST /api/blogs", async () => {
-    const correctTestBlogAttributes: BlogAttributes = getBlogDto();
-    const correctTestBlogData: BlogCreateInput = {
-      data: {
-        type: ResourceType.Blogs,
-        attributes: correctTestBlogAttributes,
-      },
-    };
+  it("❌ should not create blog when incorrect body passed; POST /blogs", async () => {
+
     await request(app)
       .post(BLOGS_PATH)
-      .send(correctTestBlogData)
+      .send(correctTestBlogAttributes)
       .expect(HttpStatus.Unauthorized);
 
     const invalidDataSet1 = await request(app)
       .post(BLOGS_PATH)
       .set("Authorization", adminToken)
       .send({
-        data: {
-          ...correctTestBlogData.data,
-          attributes: {
+
             name: "    ",
             description: "      ",
             websiteUrl: "Invalid Url",
             createdAt: "12",
-          },
-        },
+
       })
       .expect(HttpStatus.BadRequest);
 
@@ -66,15 +58,11 @@ describe("Blog API body validation check", () => {
       .post(BLOGS_PATH)
       .set("Authorization", adminToken)
       .send({
-        data: {
-          ...correctTestBlogData.data,
-          attributes: {
             name: "",
             description: "",
             websiteUrl: "",
             createdAt: 89,
-          },
-        },
+
       })
       .expect(HttpStatus.BadRequest);
 
@@ -88,32 +76,21 @@ describe("Blog API body validation check", () => {
     expect(blogListResponse.body.data).toHaveLength(0);
   });
 
-  it("❌ should not update blog when incorrect data passed; PUT /api/blogs/:id", async () => {
-    const correctTestBlogAttributes: BlogAttributes = getBlogDto();
-    const createdBlog = await createBlog(app, correctTestBlogAttributes);
-    const createdBlogId = createdBlog.data.id;
+  it("❌ should not update blog when incorrect data passed; PUT /blogs/:id", async () => {
 
-    const correctTestBlogData: BlogUpdateInput = {
-      data: {
-        type: ResourceType.Blogs,
-        id: createdBlogId,
-        attributes: correctTestBlogAttributes,
-      },
-    };
+    const createdBlog = await createBlog(app, correctTestBlogAttributes);
+    const createdBlogId = createdBlog.id;
+
 
     const invalidDataSet1 = await request(app)
       .put(`${BLOGS_PATH}/${createdBlogId}`)
       .set("Authorization", adminToken)
       .send({
-        data: {
-          ...correctTestBlogData.data,
-          attributes: {
             name: "    ",
             description: "      ",
             websiteUrl: "Invalid Url",
             createdAt: "12",
-          },
-        },
+
       })
       .expect(HttpStatus.BadRequest);
 
@@ -123,14 +100,10 @@ describe("Blog API body validation check", () => {
       .put(`${BLOGS_PATH}/${createdBlogId}`)
       .set("Authorization", adminToken)
       .send({
-        data: {
-          ...correctTestBlogData.data,
-          attributes: {
             name: "A",
             description: "      ",
             websiteUrl: "http://exp.com/",
-          },
-        },
+
       })
       .expect(HttpStatus.BadRequest);
 

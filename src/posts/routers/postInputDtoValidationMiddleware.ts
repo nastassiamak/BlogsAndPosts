@@ -4,7 +4,7 @@ import { resourceTypeValidation } from "../../core/middlewares/validation/resour
 import { ResourceType } from "../../core/types/resourceType";
 import { dataIdMatchValidator } from "../../core/middlewares/validation/paramsIdValidationMiddleware";
 
-export const titleValidator = body("data.attributes.title")
+export const titleValidator = body("title")
   .isString()
   .withMessage("not string")
   .trim()
@@ -12,7 +12,7 @@ export const titleValidator = body("data.attributes.title")
   .withMessage("more then 30 or 0");
 
 export const shortDescriptionValidator = body(
-  "data.attributes.shortDescription",
+  "shortDescription",
 )
   .isString()
   .withMessage("not string")
@@ -20,14 +20,14 @@ export const shortDescriptionValidator = body(
   .isLength({ min: 1, max: 100 })
   .withMessage("more then 100 or 0");
 
-export const contentValidator = body("data.attributes.content")
+export const contentValidator = body("content")
   .isString()
   .withMessage("not string")
   .trim()
   .isLength({ min: 1, max: 1000 })
   .withMessage("more then 1000 or 0");
 
-export const createdAtValidator = body("data.attributes.createdAt")
+export const createdAtValidator = body("createdAt")
   .optional() // Делает поле необязательным
   .isString()
   .withMessage("not string")
@@ -37,7 +37,7 @@ export const createdAtValidator = body("data.attributes.createdAt")
   )
   .withMessage("not valid date format");
 
-export const blogIdValidator = body("data.attributes.blogId")
+export const blogIdValidator = body("blogId")
   .isString()
   .withMessage("not string")
   .trim()
@@ -64,7 +64,7 @@ export const blogIdValidator = body("data.attributes.blogId")
 // }
 
 export const postCreateInputValidation = [
-  resourceTypeValidation(ResourceType.Posts),
+  //resourceTypeValidation(ResourceType.Posts),
   titleValidator,
   shortDescriptionValidator,
   contentValidator,
@@ -73,7 +73,7 @@ export const postCreateInputValidation = [
 ];
 
 export const postUpdateInputValidation = [
-  resourceTypeValidation(ResourceType.Posts),
+ // resourceTypeValidation(ResourceType.Posts),
   dataIdMatchValidator,
   titleValidator,
   shortDescriptionValidator,

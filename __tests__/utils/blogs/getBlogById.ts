@@ -4,12 +4,13 @@ import { Express } from "express";
 import { BLOGS_PATH } from "../../../src/core/paths/paths";
 import { generateAdminAuthToken } from "../generateAdminAuthToken";
 import { HttpStatus } from "../../../src/core/types/httpStatus";
-import { BlogOutput } from "../../../src/blogs/routers/output/blogOutput";
+
+import {BlogDataOutput} from "../../../src/blogs/routers/output/blogDataOutput";
 
 export async function getBlogById(
   app: Express,
   blogId: string,
-): Promise<BlogOutput> {
+): Promise<BlogDataOutput> {
   const blogResponse = await request(app)
     .get(`${BLOGS_PATH}/${blogId}`)
     .set("Content-Type", "application/json")

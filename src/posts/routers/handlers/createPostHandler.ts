@@ -10,7 +10,7 @@ export async function createPostHandler(
   res: Response,
 ) {
   try {
-    const createdPostId = await postService.create(req.body.data.attributes);
+    const createdPostId = await postService.create(req.body);
 
     const createdPost = await postService.findByIdOrFail(createdPostId);
 

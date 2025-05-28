@@ -1,28 +1,26 @@
 import request from "supertest";
 import { Express } from "express";
 import { PostAttributes } from "../../../src/posts/application/dtos/postAttributes";
-import { PostOutput } from "../../../src/posts/routers/output/postOutput";
+
 import { getPostDto } from "../posts/getPostDto";
 import { ResourceType } from "../../../src/core/types/resourceType";
 import { BLOGS_PATH, POSTS_PATH } from "../../../src/core/paths/paths";
 import { generateAdminAuthToken } from "../generateAdminAuthToken";
 import { HttpStatus } from "../../../src/core/types/httpStatus";
+import {PostDataOutput} from "../../../src/posts/routers/output/postDataOutput";
 
 export async function createPostByBlogId(
   app: Express,
   blogId: string,
   postDto?: PostAttributes,
-): Promise<PostOutput> {
+): Promise<PostDataOutput> {
   const defaultPostData = getPostDto(blogId);
 
   const testPostData = {
-    data: {
-      type: ResourceType.Posts,
-      attributes: {
+
         ...defaultPostData,
         ...postDto,
-      },
-    },
+
   };
   console.log("Sending POST with body:", JSON.stringify(testPostData, null, 2));
 

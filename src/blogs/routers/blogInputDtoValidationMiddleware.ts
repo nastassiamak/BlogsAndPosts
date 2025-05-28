@@ -1,23 +1,21 @@
 import { body } from "express-validator";
-import { resourceTypeValidation } from "../../core/middlewares/validation/resourceTypeValidationMiddleware";
-import { ResourceType } from "../../core/types/resourceType";
 import { dataIdMatchValidator } from "../../core/middlewares/validation/paramsIdValidationMiddleware";
 
-export const nameValidator = body("data.attributes.name")
+export const nameValidator = body("name")
   .isString()
   .withMessage("not string")
   .trim()
   .isLength({ min: 2, max: 15 })
   .withMessage("more then 15 or 0");
 
-export const descriptionValidator = body("data.attributes.description")
+export const descriptionValidator = body("description")
   .isString()
   .withMessage("not string")
   .trim()
   .isLength({ min: 1, max: 500 })
   .withMessage("more then 500 or 0");
 
-export const websiteUrlValidator = body("data.attributes.websiteUrl")
+export const websiteUrlValidator = body("websiteUrl")
   .isString()
   .withMessage("not string")
   .trim()
@@ -26,7 +24,7 @@ export const websiteUrlValidator = body("data.attributes.websiteUrl")
   .isLength({ min: 1, max: 100 })
   .withMessage("more then 100 or 0");
 
-export const createdAtValidator = body("data.attributes.createdAt")
+export const createdAtValidator = body("createdAt")
   .optional() // Делает поле необязательным
   .isString()
   .withMessage("not string")
@@ -36,14 +34,14 @@ export const createdAtValidator = body("data.attributes.createdAt")
   )
   .withMessage("not valid date format");
 
-export const isMembershipValidator = body("data.attributes.isMembership")
+export const isMembershipValidator = body("isMembership")
   .optional() // Делает поле необязательным
   .isBoolean()
   .withMessage("must be a boolean")
   .toBoolean(); // Опционально, чтобы преобразовать входное значение в булевый тип
 
 export const blogCreateInputValidation = [
-  resourceTypeValidation(ResourceType.Blogs),
+ // resourceTypeValidation(ResourceType.Blogs),
   nameValidator,
   descriptionValidator,
   websiteUrlValidator,
@@ -52,7 +50,7 @@ export const blogCreateInputValidation = [
 ];
 
 export const blogUpdateInputValidation = [
-  resourceTypeValidation(ResourceType.Blogs),
+  //resourceTypeValidation(ResourceType.Blogs),
   dataIdMatchValidator,
   nameValidator,
   descriptionValidator,

@@ -20,17 +20,17 @@ export function mapToBlogListPaginatedOutput(
       totalCount: meta.totalCount,
     },
 
-    data: blogs.map(
+    items: blogs.map(
       (blog): BlogDataOutput => ({
-        type: ResourceType.Blogs,
+       // type: ResourceType.Blogs,
         id: blog._id.toString(),
-        attributes: {
+       // attributes: {
           name: blog.name,
           description: blog.description,
           websiteUrl: blog.websiteUrl,
           createdAt: blog.createdAt,
           isMembership: blog.isMembership,
-        },
+       // },
       }),
     ),
   };

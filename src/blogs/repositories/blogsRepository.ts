@@ -57,7 +57,6 @@ export const blogsRepository = {
 
   async create(newBlog: Blog): Promise<string> {
     const insertResult = await blogCollection.insertOne(newBlog);
-
     return insertResult.insertedId.toString();
   },
 

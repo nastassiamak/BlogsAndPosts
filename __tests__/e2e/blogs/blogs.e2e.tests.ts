@@ -16,7 +16,7 @@ import { getBlogById } from "../../utils/blogs/getBlogById";
 import { updateBlog } from "../../utils/blogs/updateBlog";
 import { createPostByBlogId } from "../../utils/blogs/createdPostByBlogId";
 import { getPostsByBlogId } from "../../utils/blogs/getPostsByBlogId";
-
+import { blogsRepository } from "../../../src/blogs/repositories/blogsRepository";
 
 describe("Blog API", () => {
   const app = express();
@@ -46,11 +46,8 @@ describe("Blog API", () => {
         ...getBlogDto(),
       }),
     ]);
-    expect(blog).toHaveProperty("data");
-    expect(blog.data).toHaveProperty("id");
-    expect(blog.data.type).toBe("blogs"); // <- здесь проверяем именно строку
 
-    const attributes = blog.data.attributes;
+    const attributes = blog;
     expect(attributes).toHaveProperty("name");
     expect(attributes).toHaveProperty("description");
     expect(attributes).toHaveProperty("websiteUrl");
@@ -65,13 +62,14 @@ describe("Blog API", () => {
       .expect(HttpStatus.Ok);
 
     console.log(response.body.data);
-    expect(response.body.data).toBeInstanceOf(Array);
-    expect(response.body.data.length).toBeGreaterThanOrEqual(2);
+    // Пример если поле называется items:
+    expect(Array.isArray(response.body.items)).toBe(true);
+    expect(response.body.items.length).toBeGreaterThanOrEqual(2);
   });
 
   it("should return blog by id; GET /blogs/:id", async () => {
     const createdBlog = await createBlog(app);
-    const createdBlogId = createdBlog.data.id;
+    const createdBlogId = createdBlog.id;
 
     const blog = await getBlogById(app, createdBlogId);
 
@@ -82,14 +80,14 @@ describe("Blog API", () => {
 
   it("should create post by blogId; POST /blogs/{blogId}/posts", async () => {
     const createdBlog = await createBlog(app);
-    const createdBlogId = createdBlog.data.id;
+    const createdBlogId = createdBlog.id;
 
     await createPostByBlogId(app, createdBlogId);
   });
 
   it("should return posts by blogId; GET /blogs/{blogId}/posts", async () => {
     const createdBlog = await createBlog(app);
-    const createdBlogId = createdBlog.data.id;
+    const createdBlogId = createdBlog.id;
     await Promise.all([
       await createPostByBlogId(app, createdBlogId),
 
@@ -100,7 +98,7 @@ describe("Blog API", () => {
 
   it("should update blog; PUT /blogs/:id", async () => {
     const createdBlog = await createBlog(app);
-    const createdBlogId = createdBlog.data.id;
+    const createdBlogId = createdBlog.id;
 
     const blogUpdateData: BlogAttributes = {
       name: "Updated Blog",
@@ -112,8 +110,8 @@ describe("Blog API", () => {
 
     const blogResponse = await getBlogById(app, createdBlogId);
 
-    expect(blogResponse.data.id).toBe(createdBlogId);
-    expect(blogResponse.data.attributes).toEqual({
+    expect(blogResponse).toEqual({
+      id: createdBlogId,
       name: blogUpdateData.name,
       description: blogUpdateData.description,
       websiteUrl: blogUpdateData.websiteUrl,
@@ -124,7 +122,7 @@ describe("Blog API", () => {
 
   it('should delete blog and check after "NOT FOUND"; DELETE /blogs/:id', async () => {
     const createdBlog = await createBlog(app);
-    const createdBlogId = createdBlog.data.id;
+    const createdBlogId = createdBlog.id;
 
     await request(app)
       .delete(`${BLOGS_PATH}/${createdBlogId}`)

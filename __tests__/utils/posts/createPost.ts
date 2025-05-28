@@ -1,5 +1,5 @@
 import { PostAttributes } from "../../../src/posts/application/dtos/postAttributes";
-import { PostOutput } from "../../../src/posts/routers/output/postOutput";
+
 import { PostCreateInput } from "../../../src/posts/routers/input/postCreateInput";
 import { ResourceType } from "../../../src/core/types/resourceType";
 import { Express } from "express";
@@ -9,19 +9,17 @@ import { POSTS_PATH } from "../../../src/core/paths/paths";
 import { generateAdminAuthToken } from "../generateAdminAuthToken";
 import { HttpStatus } from "../../../src/core/types/httpStatus";
 import { createBlog } from "../blogs/createBlog";
+import {PostDataOutput} from "../../../src/posts/routers/output/postDataOutput";
 
 export async function createPost(
   app: Express,
   postDto?: PostAttributes,
-): Promise<PostOutput> {
+): Promise<PostDataOutput> {
   const blog = await createBlog(app);
 
-  const defaultPostData = getPostDto(blog.data.id);
+  const defaultPostData = getPostDto(blog.id);
   const testPostData = {
-    data: {
-      type: ResourceType.Posts,
-      attributes: { ...defaultPostData, ...postDto },
-    },
+    ...defaultPostData, ...postDto
   };
 
   const createdPostResponse = await request(app)

@@ -21,18 +21,18 @@ export function mapToPostListPaginatedOutput(
       totalCount: meta.totalCount,
     },
 
-    data: posts.map(
+    items: posts.map(
       (post): PostDataOutput => ({
-        type: ResourceType.Posts,
+       // type: ResourceType.Posts,
         id: post._id.toString(),
-        attributes: {
+       // attributes: {
           title: post.title,
           shortDescription: post.shortDescription,
           content: post.content,
           blogId: post.blogId,
           blogName: post.blogName,
           createdAt: post.createdAt,
-        },
+       // },
       }),
     ),
   };

@@ -5,20 +5,18 @@ import { BlogAttributes } from "../../../src/blogs/application/dtos/blogAttribut
 import { BLOGS_PATH } from "../../../src/core/paths/paths";
 import { generateAdminAuthToken } from "../generateAdminAuthToken";
 import { HttpStatus } from "../../../src/core/types/httpStatus";
-import { BlogOutput } from "../../../src/blogs/routers/output/blogOutput";
+
 import { BlogCreateInput } from "../../../src/blogs/routers/input/blogCreateInput";
 import { ResourceType } from "../../../src/core/types/resourceType";
 import { getBlogDto } from "./getBlogDto";
+import {BlogDataOutput} from "../../../src/blogs/routers/output/blogDataOutput";
 
 export async function createBlog(
   app: Express,
   blogDto?: BlogAttributes,
-): Promise<BlogOutput> {
+): Promise<BlogDataOutput> {
   const testBlogData: BlogCreateInput = {
-    data: {
-      type: ResourceType.Blogs,
-      attributes: { ...getBlogDto(), ...blogDto },
-    },
+     ...getBlogDto(), ...blogDto
   };
   console.log("Request body:", JSON.stringify(testBlogData, null, 2)); // Здесь
 
