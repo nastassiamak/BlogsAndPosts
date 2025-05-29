@@ -7,6 +7,7 @@ import { postService } from "../../../posts/application/postService";
 import { HttpStatus } from "../../../core/types/httpStatus";
 //import { errorsHandler } from "../../../core/errors/errorsHandler";
 import { mapToBlogPostOutput } from "../mappers/mapToBlogPostOutput";
+import {RepositoryNotFoundError} from "../../../core/errors/repositoryNotFoundError";
 
 export async function createBlogPostHandler(
   req: Request<{ id: string }, {}, PostCreateInput>,
@@ -31,8 +32,11 @@ try {
 
     res.status(HttpStatus.Created).send(postOutput);
 } catch (error) {
+    if (error instanceof RepositoryNotFoundError) {
+        res.status(HttpStatus.NotFound).send({ message: "Blog not found" });
+    }
     console.error("Error in createBlogPostHandler:", error);
-    res.status(HttpStatus.InternalServerError).send("Internal Server Error");
+     res.status(HttpStatus.InternalServerError).send("Internal Server Error");
 }
 
 }
