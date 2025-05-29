@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 //import { errorsHandler } from "../../../core/errors/errorsHandler";
 import { postService } from "../../application/postService";
 import { HttpStatus } from "../../../core/types/httpStatus";
+import {RepositoryNotFoundError} from "../../../core/errors/repositoryNotFoundError";
 
 export async function deletePostHandler(
   req: Request<{ id: string }>,
@@ -14,7 +15,9 @@ export async function deletePostHandler(
         res.sendStatus(HttpStatus.NoContent);
 
     } catch (error) {
-        console.error("Error in deletePostHandler:", error);
-        res.status(HttpStatus.InternalServerError);
+        if (error instanceof RepositoryNotFoundError) {
+            return res.status(HttpStatus.NotFound).send({ message: "Post not found" });
+        }
+        res.status(HttpStatus.InternalServerError).send({ message: "Internal Server Error" });
     }
 }
