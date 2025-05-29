@@ -7,7 +7,7 @@ import {RepositoryNotFoundError} from "../../../core/errors/repositoryNotFoundEr
 export async function deletePostHandler(
   req: Request<{ id: string }>,
   res: Response,
-) {
+): Promise<void> {
     try {
         const id = req.params.id;
         await postService.delete(id);
@@ -16,7 +16,7 @@ export async function deletePostHandler(
 
     } catch (error) {
         if (error instanceof RepositoryNotFoundError) {
-            return res.status(HttpStatus.NotFound).send({ message: "Post not found" });
+             res.status(HttpStatus.NotFound).send({ message: "Post not found" });
         }
         res.status(HttpStatus.InternalServerError).send({ message: "Internal Server Error" });
     }
