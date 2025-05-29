@@ -28,48 +28,41 @@ describe("Posts API body validation check", () => {
       .send({})
       .expect(HttpStatus.Unauthorized);
 
-    // const invalidDataSet1 =
-    //     await request(app)
-    //         .post(POSTS_PATH)
-    //         .set("Authorization", adminToken)
-    //         .send({
-    //             data: {
-    //                 type: ResourceType.Post,
-    //                 attributes: {
-    //                     title: "   ",
-    //                    shortDescription: "",
-    //                    content: "",
-    //                    blogId: true
-    //                },
-    //            },
-    //        })
-    //        .expect(HttpStatus.BadRequest);
-    // console.log(invalidDataSet1.body.errors);
-    //
-    // expect(invalidDataSet1.body.errors).toHaveLength(4);
+    const invalidDataSet1 =
+        await request(app)
+            .post(POSTS_PATH)
+            .set("Authorization", adminToken)
+            .send({
+
+                        title: "   ",
+                       shortDescription: "",
+                       content: "",
+                       blogId: true
+
+           })
+           .expect(HttpStatus.BadRequest);
+
+    expect(invalidDataSet1.body.errorsMessages).toHaveLength(4);
 
     const invalidDataSet2 = await request(app)
       .post(POSTS_PATH)
       .set("Authorization", adminToken)
       .send({
-        data: {
-          type: ResourceType.Posts,
 
-          attributes: {
             title: 21,
             shortDescription: "   ",
             content: "2vgg",
             blogId: true,
-          },
-        },
+
       })
       .expect(HttpStatus.BadRequest);
-    console.log(invalidDataSet2.body.errors);
-    expect(invalidDataSet2.body.errors).toHaveLength(3);
+    console.log(invalidDataSet2.body.errorsMessages);
+    expect(invalidDataSet2.body.errorsMessages).toHaveLength(3);
 
-    const postListResponse = await request(app).get(POSTS_PATH);
+    const postListResponse = await request(app)
+        .get(POSTS_PATH);
     //.set("Authorization", adminToken);
 
-    expect(postListResponse.body.data).toHaveLength(0);
+    expect(postListResponse.body.items).toHaveLength(0);
   });
 });

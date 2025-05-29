@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { errorsHandler } from "../../../core/errors/errorsHandler";
+//import { errorsHandler } from "../../../core/errors/errorsHandler";
 import { PostUpdateInput } from "../input/postUpdateInput";
 import { postService } from "../../application/postService";
 import { HttpStatus } from "../../../core/types/httpStatus";
@@ -8,13 +8,16 @@ export async function updatePostHandler(
   req: Request<{ id: string }, {}, PostUpdateInput>,
   res: Response,
 ) {
-  try {
-    const id = req.params.id;
+    try {
 
-    await postService.update(id, req.body);
+        const id = req.params.id;
 
-    res.sendStatus(HttpStatus.NoContent);
-  } catch (e: unknown) {
-    errorsHandler(e, res);
-  }
+        await postService.update(id, req.body);
+
+        res.sendStatus(HttpStatus.NoContent);
+    } catch (error) {
+        console.error("Error in updatePostHandler:", error);
+        res.status(HttpStatus.InternalServerError).send("Internal Server Error");
+    }
+
 }

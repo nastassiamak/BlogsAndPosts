@@ -43,7 +43,6 @@ describe("Blog API body validation check", () => {
       .post(BLOGS_PATH)
       .set("Authorization", adminToken)
       .send({
-
             name: "    ",
             description: "      ",
             websiteUrl: "Invalid Url",
@@ -52,7 +51,7 @@ describe("Blog API body validation check", () => {
       })
       .expect(HttpStatus.BadRequest);
 
-    expect(invalidDataSet1.body.errors).toHaveLength(4);
+      expect(invalidDataSet1.body.errorsMessages).toHaveLength(4);
 
     const invalidDataSet2 = await request(app)
       .post(BLOGS_PATH)
@@ -66,14 +65,14 @@ describe("Blog API body validation check", () => {
       })
       .expect(HttpStatus.BadRequest);
 
-    expect(invalidDataSet2.body.errors).toHaveLength(4);
+    expect(invalidDataSet2.body.errorsMessages).toHaveLength(4);
 
     // check что никто не создался
     const blogListResponse = await request(app)
       .get(BLOGS_PATH)
-      .set("Authorization", adminToken);
+      //.set("Authorization", adminToken);
 
-    expect(blogListResponse.body.data).toHaveLength(0);
+    expect(blogListResponse.body.items).toHaveLength(0);
   });
 
   it("❌ should not update blog when incorrect data passed; PUT /blogs/:id", async () => {
@@ -86,6 +85,7 @@ describe("Blog API body validation check", () => {
       .put(`${BLOGS_PATH}/${createdBlogId}`)
       .set("Authorization", adminToken)
       .send({
+          id: createdBlogId,
             name: "    ",
             description: "      ",
             websiteUrl: "Invalid Url",
@@ -94,12 +94,13 @@ describe("Blog API body validation check", () => {
       })
       .expect(HttpStatus.BadRequest);
 
-    expect(invalidDataSet1.body.errors).toHaveLength(4);
+    expect(invalidDataSet1.body.errorsMessages).toHaveLength(4);
 
     const invalidDataSet2 = await request(app)
       .put(`${BLOGS_PATH}/${createdBlogId}`)
       .set("Authorization", adminToken)
       .send({
+          id: createdBlogId,
             name: "A",
             description: "      ",
             websiteUrl: "http://exp.com/",
@@ -107,7 +108,7 @@ describe("Blog API body validation check", () => {
       })
       .expect(HttpStatus.BadRequest);
 
-    expect(invalidDataSet2.body.errors).toHaveLength(2);
+    expect(invalidDataSet2.body.errorsMessages).toHaveLength(2);
 
     const blogResponse = await getBlogById(app, createdBlogId);
 

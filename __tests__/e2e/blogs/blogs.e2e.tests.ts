@@ -58,10 +58,10 @@ describe("Blog API", () => {
 
     const response = await request(app)
       .get(BLOGS_PATH)
-      .set("Authorization", adminToken)
+     // .set("Authorization", adminToken)
       .expect(HttpStatus.Ok);
 
-    console.log(response.body.data);
+    console.log(response.body);
     // Пример если поле называется items:
     expect(Array.isArray(response.body.items)).toBe(true);
     expect(response.body.items.length).toBeGreaterThanOrEqual(2);

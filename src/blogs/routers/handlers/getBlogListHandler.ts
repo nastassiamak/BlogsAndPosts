@@ -1,27 +1,43 @@
-import { Request, Response } from "express";
-import { BlogQueryInput } from "../input/blogQueryInput";
-import { setDefaultSortAndPaginationIfNotExist } from "../../../core/helpers/setDefaultSortAndPagination";
-import { blogService } from "../../application/blogService";
-import { mapToBlogListPaginatedOutput } from "../mappers/mapToBlogListPaginatedOutputUtil";
-import { errorsHandler } from "../../../core/errors/errorsHandler";
+import {Request, Response} from "express";
+import {BlogQueryInput} from "../input/blogQueryInput";
+import {setDefaultSortAndPaginationIfNotExist} from "../../../core/helpers/setDefaultSortAndPagination";
+import {blogService} from "../../application/blogService";
+import {mapToBlogListPaginatedOutput} from "../mappers/mapToBlogListPaginatedOutputUtil";
+import {ParsedQs} from "qs";
+import {BlogSortField} from "../input/blogSortField";
+import {SortDirection} from "../../../core/types/sortDirection";
+
+//import { errorsHandler } from "../../../core/errors/errorsHandler";
 
 export async function getBlogListHandler(
-  req: Request<{}, {}, {}, BlogQueryInput>,
+  req: Request<{}, {}, {}, ParsedQs>,
   res: Response,
 ) {
-  try {
-    const queryInput = setDefaultSortAndPaginationIfNotExist(req.query);
+    function parseBlogQuery(query: ParsedQs): BlogQueryInput {
+        return {
+            pageNumber: Number(query.pageNumber) || 1,
+            pageSize: Number(query.pageSize) || 10,
+            sortBy: BlogSortField.CreatedAt,
+            sortDirection: SortDirection.Desc
+        };
+    }
 
-    const { items, totalCount } = await blogService.findMany(queryInput);
+    try {
+        const queryInput = parseBlogQuery(req.query);
+        const queryWithDefaults = setDefaultSortAndPaginationIfNotExist(queryInput);
 
-    const blogsListOutput = mapToBlogListPaginatedOutput(items, {
-      pageNumber: queryInput.pageNumber,
-      pageSize: queryInput.pageSize,
-      totalCount,
-    });
+        const { items, totalCount } = await blogService.findMany(queryWithDefaults);
 
-    res.send(blogsListOutput);
-  } catch (e: unknown) {
-    errorsHandler(e, res);
-  }
+        const blogsListOutput = mapToBlogListPaginatedOutput(items, {
+            pageNumber: queryWithDefaults.pageNumber,
+            pageSize: queryWithDefaults.pageSize,
+            totalCount,
+        });
+
+        res.send(blogsListOutput);
+    } catch (error) {
+        res.status(400).send({ message: (error as Error).message || "Invalid query" });
+    }
 }
+
+
