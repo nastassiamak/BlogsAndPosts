@@ -6,18 +6,18 @@ import { ResourceType } from "../../../core/types/resourceType";
 
 export function mapToBlogListPaginatedOutput(
   blogs: WithId<Blog>[],
-  meta: {
-    pageNumber: number;
-    pageSize: number;
-    totalCount: number;
-  },
+
+    pageNumber: number,
+    pageSize: number,
+    totalCount: number,
+
 ): BlogListPaginatedOutput {
   return {
 
-      page: meta.pageNumber,
-      pageSize: meta.pageSize,
-      pageCount: Math.ceil(meta.totalCount / meta.pageSize),
-      totalCount: meta.totalCount,
+      page: pageNumber,
+      pageSize: pageSize,
+      pageCount: Math.ceil(totalCount / pageSize),
+      totalCount: totalCount,
 
 
     items: blogs.map(

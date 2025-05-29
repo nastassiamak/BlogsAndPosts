@@ -83,6 +83,7 @@ describe("Blog API", () => {
     const createdBlogId = createdBlog.id;
 
     await createPostByBlogId(app, createdBlogId);
+
   });
 
   it("should return posts by blogId; GET /blogs/{blogId}/posts", async () => {

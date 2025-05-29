@@ -28,11 +28,11 @@ export async function getBlogListHandler(
 
         const { items, totalCount } = await blogService.findMany(queryWithDefaults);
 
-        const blogsListOutput = mapToBlogListPaginatedOutput(items, {
-            pageNumber: queryWithDefaults.pageNumber,
-            pageSize: queryWithDefaults.pageSize,
+        const blogsListOutput = mapToBlogListPaginatedOutput(items,
+            queryWithDefaults.pageNumber,
+            queryWithDefaults.pageSize,
             totalCount,
-        });
+        );
 
         res.send(blogsListOutput);
     } catch (error) {
