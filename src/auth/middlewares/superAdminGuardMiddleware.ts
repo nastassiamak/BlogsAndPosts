@@ -9,6 +9,7 @@ export const superAdminGuardMiddleware = (
   res: Response,
   next: NextFunction,
 ) => {
+  console.log("Auth Middleware called on:", req.method, req.path);
   const auth = req.headers["authorization"] as string; //Basic xxx
 
   if (!auth) {
