@@ -59,7 +59,6 @@ blogsRouter
   )
   .get(
     "/:id/posts",
-    superAdminGuardMiddleware,
     idValidation,
     paginationAndSortingValidation(PostSortField),
     inputValidationResultMiddleware,
