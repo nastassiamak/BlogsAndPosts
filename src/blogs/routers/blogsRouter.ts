@@ -59,6 +59,7 @@ blogsRouter
   )
   .get(
     "/:id/posts",
+    superAdminGuardMiddleware,
     idValidation,
     paginationAndSortingValidation(PostSortField),
     inputValidationResultMiddleware,
@@ -66,6 +67,7 @@ blogsRouter
   )
   .post(
     "/:id/posts",
+    superAdminGuardMiddleware,
     idValidation,
     // paginationAndSortingValidation(PostSortField),
     inputValidationResultMiddleware,
