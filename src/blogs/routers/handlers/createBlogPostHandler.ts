@@ -14,15 +14,18 @@ export async function createBlogPostHandler(
   res: Response,
 ): Promise<void> {
 try {
-    const {id} = req.params;
+    const blogId = req.params.id;
 
-    const postCreateData = req.body;
-    const blog = await blogService.findByIdOrFail(id);
+    const { title, shortDescription, content} = req.body;
+    const blog = await blogService.findByIdOrFail(blogId);
 
     const postDataWithBlog = {
-        ...postCreateData,
+        title,
+        shortDescription,
+        content,
         blogId: blog._id.toString(), // или blog.id, в зависимости от типа
-        blogName: blog.name || "",
+        blogName: blog.name,
+        createdAt: new Date().toISOString(),
     };
 
     const createdPostId = await postService.create(postDataWithBlog);

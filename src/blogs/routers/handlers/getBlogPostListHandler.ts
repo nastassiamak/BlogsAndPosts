@@ -9,6 +9,7 @@ import {ParsedQs} from "qs";
 import {SortDirection} from "../../../core/types/sortDirection";
 import {PostSortField} from "../../../posts/routers/input/postSortField";
 import {HttpStatus} from "../../../core/types/httpStatus";
+import {RepositoryNotFoundError} from "../../../core/errors/repositoryNotFoundError";
 
 
 export async function getBlogPostListHandler(
@@ -52,7 +53,9 @@ export async function getBlogPostListHandler(
 
     res.send(postListOutput);
   } catch (error) {
-    console.error("Error in getBlogPostListHandler:", error);
+    if (error instanceof RepositoryNotFoundError) {
+      res.status(HttpStatus.NotFound).send({ message: 'Blog not found' });
+    }
     res.status(HttpStatus.InternalServerError).send("Internal Server Error");
   }
 }

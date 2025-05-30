@@ -16,7 +16,7 @@ export async function deleteBlogHandler(
         res.sendStatus(HttpStatus.NoContent);
     } catch (error) {
         if (error instanceof RepositoryNotFoundError) {
-           res.status(404).send({ message: 'Blog not found' });
+           res.status(HttpStatus.NotFound).send({ message: 'Blog not found' });
         }
         console.error("Error in deletePostHandler:", error);
         res.status(HttpStatus.InternalServerError);

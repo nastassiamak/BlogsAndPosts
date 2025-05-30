@@ -134,4 +134,22 @@ describe("Blog API", () => {
       .get(`${BLOGS_PATH}/${createdBlogId}`)
       .expect(HttpStatus.NotFound);
   });
+
+  const nonExistentBlogId = "aaaaaaaaaaaaaaaaaaaaaaaa";
+
+  it("should return 404 for GET /blogs/:id when blog does not exist", async () => {
+    await request(app)
+        .get(`${BLOGS_PATH}/${nonExistentBlogId}`)
+        .set("Authorization", adminToken)
+        .expect(HttpStatus.NotFound);
+  });
+
+  it("should return 404 for DELETE /blogs/:id when blog does not exist", async () => {
+    await request(app)
+        .delete(`${BLOGS_PATH}/${nonExistentBlogId}`)
+        .set("Authorization", adminToken)
+        .expect(HttpStatus.NotFound);
+  });
+
+
 });

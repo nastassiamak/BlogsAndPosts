@@ -6,6 +6,8 @@ import {mapToBlogListPaginatedOutput} from "../mappers/mapToBlogListPaginatedOut
 import {ParsedQs} from "qs";
 import {BlogSortField} from "../input/blogSortField";
 import {SortDirection} from "../../../core/types/sortDirection";
+import {RepositoryNotFoundError} from "../../../core/errors/repositoryNotFoundError";
+import {HttpStatus} from "../../../core/types/httpStatus";
 
 //import { errorsHandler } from "../../../core/errors/errorsHandler";
 
@@ -36,6 +38,9 @@ export async function getBlogListHandler(
 
         res.send(blogsListOutput);
     } catch (error) {
+        if (error instanceof RepositoryNotFoundError) {
+            res.status(HttpStatus.NotFound).send({ message: 'Blog not found' });
+        }
         res.status(400).send({ message: (error as Error).message || "Invalid query" });
     }
 }

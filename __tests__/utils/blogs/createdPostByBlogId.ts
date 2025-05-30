@@ -16,20 +16,21 @@ export async function createPostByBlogId(
 ): Promise<PostDataOutput> {
   const defaultPostData = getPostDto(blogId);
 
-  const testPostData = {
+  const { blogId: _, ...postDataWithoutBlog} = {
 
         ...defaultPostData,
         ...postDto,
 
   };
-  console.log("Sending POST with body:", JSON.stringify(testPostData, null, 2));
+
+  console.log("Sending POST with body:", JSON.stringify(postDataWithoutBlog, null, 2));
 
   const createdPostResponse = await request(app)
     .post(`${BLOGS_PATH}/${blogId}${POSTS_PATH}`)
     .set("Authorization", generateAdminAuthToken())
-    .send(testPostData)
+    .send(postDataWithoutBlog)
     .expect(HttpStatus.Created);
 
-  console.log(createdPostResponse.body);
+  console.log("Response body:", createdPostResponse.body);
   return createdPostResponse.body;
 }
