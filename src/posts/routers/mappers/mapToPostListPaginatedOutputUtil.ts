@@ -6,20 +6,20 @@ import { ResourceType } from "../../../core/types/resourceType";
 
 export function mapToPostListPaginatedOutput(
   posts: WithId<Post>[],
-  meta: {
-    pageNumber: number;
-    pageSize: number;
-    totalCount: number;
-  },
-  // blogId: string,
+
+    pageNumber: number,
+    pageSize: number,
+    totalCount: number,
+
+
 ): PostListPaginatedOutput {
   return {
-    meta: {
-      page: meta.pageNumber,
-      pageSize: meta.pageSize,
-      pageCount: Math.ceil(meta.totalCount / meta.pageSize),
-      totalCount: meta.totalCount,
-    },
+
+      page: pageNumber,
+      pageSize: pageSize,
+      pageCount: Math.ceil(totalCount / pageSize),
+      totalCount: totalCount,
+
 
     items: posts.map(
       (post): PostDataOutput => ({

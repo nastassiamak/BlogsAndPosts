@@ -43,11 +43,11 @@ export async function getBlogPostListHandler(
 
     console.log(`Найдено постов: ${items.length}, из них всего: ${totalCount}`); // вывод результата из БД
 
-    const postListOutput = mapToPostListPaginatedOutput(items, {
-      pageNumber: queryWithDefaults.pageNumber,
-      pageSize: queryWithDefaults.pageSize,
+    const postListOutput = mapToPostListPaginatedOutput(items,
+      queryWithDefaults.pageNumber,
+      queryWithDefaults.pageSize,
       totalCount,
-    });
+    );
 
     console.log("Формируем ответ:", postListOutput);
 

@@ -14,7 +14,7 @@ export async function getPostListHandler(
   req: Request<{}, {}, {}, ParsedQs>,
   res: Response,
 ) {
-  function parseBlogPostQuery(query: ParsedQs): PostQueryInput {
+  function parsePostQuery(query: ParsedQs): PostQueryInput {
     return {
       pageNumber: Number(query.pageNumber) || 1,
       pageSize: Number(query.pageSize) || 10,
@@ -25,16 +25,16 @@ export async function getPostListHandler(
 
   try {
 
-    const queryInput = parseBlogPostQuery(req.query);
+    const queryInput = parsePostQuery(req.query);
     const queryWithDefaults = setDefaultSortAndPaginationIfNotExist(queryInput);
 
-    const {items, totalCount} = await postService.findMany(queryInput);
+    const {items, totalCount} = await postService.findMany(queryWithDefaults);
 
-    const postsListOutput = mapToPostListPaginatedOutput(items, {
-      pageNumber: queryWithDefaults.pageNumber,
-      pageSize: queryWithDefaults.pageSize,
-      totalCount,
-    });
+    const postsListOutput = mapToPostListPaginatedOutput(items,
+        queryWithDefaults.pageNumber,
+        queryWithDefaults.pageSize,
+        totalCount,
+    );
     res.send(postsListOutput);
   } catch (error) {
     console.error("Error in getPostListHandler:", error);
