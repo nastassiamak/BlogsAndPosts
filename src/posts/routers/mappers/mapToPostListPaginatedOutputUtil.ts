@@ -15,7 +15,7 @@ export function mapToPostListPaginatedOutput(
 ): PostListPaginatedOutput {
   return {
 
-      pageCount: Math.ceil(totalCount / pageSize),
+      pagesCount: Math.ceil(totalCount / pageSize),
       page: pageNumber,
       pageSize: pageSize,
       totalCount: totalCount,

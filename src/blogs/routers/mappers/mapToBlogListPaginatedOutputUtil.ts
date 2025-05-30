@@ -14,7 +14,7 @@ export function mapToBlogListPaginatedOutput(
 ): BlogListPaginatedOutput {
   return {
 
-      pageCount: Math.ceil(totalCount / pageSize),
+      pagesCount: Math.ceil(totalCount / pageSize),
       page: pageNumber,
       pageSize: pageSize,
       totalCount: totalCount,

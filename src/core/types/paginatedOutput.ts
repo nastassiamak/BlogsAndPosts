@@ -1,5 +1,5 @@
 export type PaginatedOutput = {
-  pageCount: number;
+  pagesCount: number;
   page: number;
   pageSize: number;
   totalCount: number;
