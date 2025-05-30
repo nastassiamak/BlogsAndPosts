@@ -84,6 +84,7 @@ describe("Blog API", () => {
 
     await createPostByBlogId(app, createdBlogId);
 
+
   });
 
   it("should return posts by blogId; GET /blogs/{blogId}/posts", async () => {
