@@ -16,7 +16,7 @@ export async function createPostByBlogId(
 ): Promise<PostDataOutput> {
   const defaultPostData = getPostDto(blogId);
 
-  const {blogId: _, ...postDataWithoutBlog} = {
+  const { ...postDataWithoutBlog} = {
         ...defaultPostData,
         ...postDto,
   };

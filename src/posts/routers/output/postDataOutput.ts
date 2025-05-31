@@ -2,7 +2,7 @@ import { ResourceType } from "../../../core/types/resourceType";
 
 export type PostDataOutput = {
   //type: ResourceType.Posts;
- // id: string;
+  id: string;
   //attributes: {
     title: string;
     shortDescription: string;

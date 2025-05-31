@@ -24,7 +24,7 @@ export function mapToPostListPaginatedOutput(
     items: posts.map(
       (post): PostDataOutput => ({
        // type: ResourceType.Posts,
-        //id: post._id.toString(),
+        id: post._id.toString(),
        // attributes: {
           title: post.title,
           shortDescription: post.shortDescription,
