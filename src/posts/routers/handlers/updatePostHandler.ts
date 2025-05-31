@@ -3,6 +3,7 @@ import { Request, Response } from "express";
 import { PostUpdateInput } from "../input/postUpdateInput";
 import { postService } from "../../application/postService";
 import { HttpStatus } from "../../../core/types/httpStatus";
+import {RepositoryNotFoundError} from "../../../core/errors/repositoryNotFoundError";
 
 export async function updatePostHandler(
   req: Request<{ id: string }, {}, PostUpdateInput>,
@@ -16,8 +17,10 @@ export async function updatePostHandler(
 
         res.sendStatus(HttpStatus.NoContent);
     } catch (error) {
-        console.error("Error in updatePostHandler:", error);
-        res.status(HttpStatus.InternalServerError).send("Internal Server Error");
+        if (error instanceof RepositoryNotFoundError) {
+            res.status(HttpStatus.NotFound).send({message: "Blog not found"});
+        } else {
+            res.status(HttpStatus.InternalServerError).send({message: "Internal Server Error"});
+        }
     }
-
 }
