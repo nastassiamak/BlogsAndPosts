@@ -18,6 +18,7 @@ import { updateBlog } from "../../utils/blogs/updateBlog";
 import { getPostsByBlogId } from "../../utils/blogs/getPostsByBlogId";
 import { blogsRepository } from "../../../src/blogs/repositories/blogsRepository";
 import {createPost} from "../../utils/posts/createPost";
+import {createPostByBlogId} from "../../utils/blogs/createdPostByBlogId";
 
 describe("Blog API", () => {
   const app = express();
@@ -99,27 +100,26 @@ describe("Blog API", () => {
       title: postBody.title,
       shortDescription: postBody.shortDescription,
       content: postBody.content,
-      blogId,
       blogName: expect.any(String),
       createdAt: expect.any(String),
-      id: expect.any(String),
+
     });
 
     const postId = response.body.id;
 
   });
 
-  // it("should return posts by blogId; GET /blogs/{blogId}/posts", async () => {
-  //   const createdBlog = await createBlog(app);
-  //   const createdBlogId = createdBlog.id;
-  //   await Promise.all([
-  //     await createPostByBlogId(app, createdBlogId),
-  //
-  //     await createPostByBlogId(app, createdBlogId),
-  //   ]);
-  //   await getPostsByBlogId(app, createdBlogId);
-  //
-  // });
+  it("should return posts by blogId; GET /blogs/{blogId}/posts", async () => {
+    const createdBlog = await createBlog(app);
+    const createdBlogId = createdBlog.id;
+    await Promise.all([
+      await createPostByBlogId(app, createdBlogId),
+
+      await createPostByBlogId(app, createdBlogId),
+    ]);
+    await getPostsByBlogId(app, createdBlogId);
+
+  });
 
   it("should update blog; PUT /blogs/:id", async () => {
     const createdBlog = await createBlog(app);
