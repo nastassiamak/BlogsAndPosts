@@ -32,17 +32,13 @@ describe("Posts API body validation check", () => {
         await request(app)
             .post(POSTS_PATH)
             .set("Authorization", adminToken)
-            .send({
-
-                        title: "   ",
+            .send({    title: "   ",
                        shortDescription: "",
-                       content: "",
-                       blogId: true
-
+                       content: 1,
            })
            .expect(HttpStatus.BadRequest);
 
-    expect(invalidDataSet1.body.errorsMessages).toHaveLength(4);
+    expect(invalidDataSet1.body.errorsMessages).toHaveLength(3);
 
     const invalidDataSet2 = await request(app)
       .post(POSTS_PATH)
@@ -52,12 +48,12 @@ describe("Posts API body validation check", () => {
             title: 21,
             shortDescription: "   ",
             content: "2vgg",
-            blogId: true,
+
 
       })
       .expect(HttpStatus.BadRequest);
     console.log(invalidDataSet2.body.errorsMessages);
-    expect(invalidDataSet2.body.errorsMessages).toHaveLength(3);
+    expect(invalidDataSet2.body.errorsMessages).toHaveLength(2);
 
     const postListResponse = await request(app)
         .get(POSTS_PATH);

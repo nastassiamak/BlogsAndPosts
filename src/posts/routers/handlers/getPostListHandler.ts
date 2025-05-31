@@ -9,6 +9,7 @@ import {PostSortField} from "../input/postSortField";
 import {SortDirection} from "../../../core/types/sortDirection";
 import {getPostHandler} from "./getPostHandler";
 import {HttpStatus} from "../../../core/types/httpStatus";
+import {BlogSortField} from "../../../blogs/routers/input/blogSortField";
 
 export async function getPostListHandler(
   req: Request<{}, {}, {}, ParsedQs>,
@@ -18,8 +19,10 @@ export async function getPostListHandler(
     return {
       pageNumber: Number(query.pageNumber) || 1,
       pageSize: Number(query.pageSize) || 10,
-      sortBy: PostSortField.CreatedAt,
-      sortDirection: SortDirection.Desc
+      sortBy: (query.sortBy as PostSortField) || PostSortField.CreatedAt,
+      sortDirection: (query.sortDirection === "asc" ? SortDirection.Asc : SortDirection.Desc),
+      searchPostTitleTerm: (query.searchPostTitleTerm as string) || undefined,
+      searchPostShortDescriptionTerm: (query.searchPostShortDescriptionTerm as string) || undefined,
     };
   }
 
