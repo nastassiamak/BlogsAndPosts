@@ -19,8 +19,10 @@ export async function getBlogListHandler(
         return {
             pageNumber: Number(query.pageNumber) || 1,
             pageSize: Number(query.pageSize) || 10,
-            sortBy: BlogSortField.CreatedAt,
-            sortDirection: SortDirection.Desc
+            sortBy: (query.sortBy as BlogSortField) || BlogSortField.CreatedAt,
+            sortDirection: (query.sortDirection === "asc" ? SortDirection.Asc : SortDirection.Desc),
+            searchBlogNameTerm: (query.searchBlogNameTerm as string) || undefined,
+            searchBlogDescriptionTerm: (query.searchBlogDescriptionTerm as string) || undefined,
         };
     }
 

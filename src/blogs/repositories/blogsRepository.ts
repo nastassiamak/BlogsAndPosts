@@ -30,9 +30,11 @@ export const blogsRepository = {
       filter.description = { $regex: searchBlogDescriptionTerm, $options: "i" };
     }
 
+    const direction = sortDirection === "asc" ? 1 : -1;
+
     const items = await blogCollection
       .find(filter)
-      .sort({ [sortBy]: sortDirection })
+      .sort({ [sortBy]: direction })
       .skip(skip)
       .limit(pageSize)
       .toArray();
