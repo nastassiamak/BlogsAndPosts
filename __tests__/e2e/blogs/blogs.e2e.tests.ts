@@ -95,7 +95,9 @@ describe("Blog API", () => {
 
       await createPostByBlogId(app, createdBlogId),
     ]);
+
     await getPostsByBlogId(app, createdBlogId);
+
 
   });
 
