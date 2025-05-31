@@ -66,9 +66,9 @@ blogsRouter
     getBlogPostListHandler,
   )
   .post(
-    "/:blogId/posts",
+    "/:id/posts",
     superAdminGuardMiddleware,
-      blogIdValidator,
+    idValidation,
     postCreateInputValidation,
     inputValidationResultMiddleware,
     createBlogPostHandler,

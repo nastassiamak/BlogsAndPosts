@@ -26,32 +26,33 @@ export async function getBlogPostListHandler(
   }
   try {
 
-    const queryInput = parseBlogPostQuery(req.query);
+
 
     const id = req.params.id;
     console.log("Получен запрос на blogId:", id); // вывод параметра пути
 
     const blogId = await blogService.findByIdOrFail(id);
-
+    const queryInput = parseBlogPostQuery(req.query);
     const queryWithDefaults = setDefaultSortAndPaginationIfNotExist(queryInput);
     console.log("Параметры запроса:", queryWithDefaults); // вывод параметров пагинации и сортировки
 
-    const {items, totalCount} = await postService.findPostsByBlog(
+    const paginatedPosts = await postService.findPostsByBlog(
         queryWithDefaults,
         blogId._id.toString(),
     );
 
-    console.log(`Найдено постов: ${items.length}, из них всего: ${totalCount}`); // вывод результата из БД
+    console.log(`Найдено постов: ${paginatedPosts.items.length}, 
+   из них всего: ${paginatedPosts.totalCount}`); // вывод результата из БД
 
-    const postListOutput = mapToPostListPaginatedOutput(items,
-      queryWithDefaults.pageNumber,
-      queryWithDefaults.pageSize,
-      totalCount,
-    );
+    // const postListOutput = mapToPostListPaginatedOutput(items,
+    //   queryWithDefaults.pageNumber,
+    //   queryWithDefaults.pageSize,
+    //   totalCount,
+    // );
 
-    console.log("Формируем ответ:", postListOutput);
+    console.log("Формируем ответ:", paginatedPosts);
 
-    res.send(postListOutput);
+    res.send(paginatedPosts);
   } catch (error) {
     if (error instanceof RepositoryNotFoundError) {
       res.status(HttpStatus.NotFound).send({ message: 'Blog not found' });

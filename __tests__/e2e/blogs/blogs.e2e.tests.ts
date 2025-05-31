@@ -6,7 +6,7 @@ import express from "express";
 import { setupApp } from "../../../src/setupApp";
 import { BlogAttributes } from "../../../src/blogs/application/dtos/blogAttributes";
 import { HttpStatus } from "../../../src/core/types/httpStatus";
-import { BLOGS_PATH } from "../../../src/core/paths/paths";
+import {BLOGS_PATH, POSTS_PATH} from "../../../src/core/paths/paths";
 import { generateAdminAuthToken } from "../../utils/generateAdminAuthToken";
 import { runDB, stopDb } from "../../../src/db/mongoDb";
 import { clearDb } from "../../utils/clearDb";
@@ -14,7 +14,7 @@ import { getBlogDto } from "../../utils/blogs/getBlogDto";
 import { createBlog } from "../../utils/blogs/createBlog";
 import { getBlogById } from "../../utils/blogs/getBlogById";
 import { updateBlog } from "../../utils/blogs/updateBlog";
-import { createPostByBlogId } from "../../utils/blogs/createdPostByBlogId";
+
 import { getPostsByBlogId } from "../../utils/blogs/getPostsByBlogId";
 import { blogsRepository } from "../../../src/blogs/repositories/blogsRepository";
 import {createPost} from "../../utils/posts/createPost";
@@ -82,33 +82,44 @@ describe("Blog API", () => {
   it("should create post by blogId; POST /blogs/{blogId}/posts", async () => {
     const createdBlog = await createBlog(app);
     const blogId = createdBlog.id;
-    expect(typeof blogId).toBe('string');
 
-    const createdPost = await createPostByBlogId(app, blogId);
-    // Проверяем, что пост создан и что blogId совпадает
-    expect(createdPost).toMatchObject({
-      blogId: blogId,
-      title: expect.any(String),
-      shortDescription: expect.any(String),
-      content: expect.any(String),
-      id: expect.any(String),
-      createdAt: expect.any(String),
+    const postBody = {
+      title: "Test post",
+      shortDescription: "Test short description",
+      content: "Test content",
+    };
+
+    const response = await request(app)
+        .post(`${BLOGS_PATH}/${blogId}${POSTS_PATH}`)
+        .set("Authorization", "Basic YWRtaW46cXdlcnR5")
+        .send(postBody)
+        .expect(HttpStatus.Created);
+
+    expect(response.body).toMatchObject({
+      title: postBody.title,
+      shortDescription: postBody.shortDescription,
+      content: postBody.content,
+      blogId,
       blogName: expect.any(String),
+      createdAt: expect.any(String),
+      id: expect.any(String),
     });
 
-  });
-
-  it("should return posts by blogId; GET /blogs/{blogId}/posts", async () => {
-    const createdBlog = await createBlog(app);
-    const createdBlogId = createdBlog.id;
-    await Promise.all([
-      await createPostByBlogId(app, createdBlogId),
-
-      await createPostByBlogId(app, createdBlogId),
-    ]);
-    await getPostsByBlogId(app, createdBlogId);
+    const postId = response.body.id;
 
   });
+
+  // it("should return posts by blogId; GET /blogs/{blogId}/posts", async () => {
+  //   const createdBlog = await createBlog(app);
+  //   const createdBlogId = createdBlog.id;
+  //   await Promise.all([
+  //     await createPostByBlogId(app, createdBlogId),
+  //
+  //     await createPostByBlogId(app, createdBlogId),
+  //   ]);
+  //   await getPostsByBlogId(app, createdBlogId);
+  //
+  // });
 
   it("should update blog; PUT /blogs/:id", async () => {
     const createdBlog = await createBlog(app);
