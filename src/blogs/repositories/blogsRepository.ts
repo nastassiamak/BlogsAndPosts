@@ -11,10 +11,10 @@ export const blogsRepository = {
     queryDto: BlogQueryInput,
   ): Promise<{ items: WithId<Blog>[]; totalCount: number }> {
     const {
-      pageNumber,
-      pageSize,
-      sortBy,
-      sortDirection,
+      pageNumber = 1,
+      pageSize = 10,
+      sortBy = "createdAt",
+      sortDirection = "desc",
       searchBlogNameTerm,
       searchBlogDescriptionTerm,
     } = queryDto;
@@ -32,6 +32,8 @@ export const blogsRepository = {
 
     const direction = sortDirection === "asc" ? 1 : -1;
 
+    const totalCount = await blogCollection.countDocuments(filter);
+
     const items = await blogCollection
       .find(filter)
       .sort({ [sortBy]: direction })
@@ -39,7 +41,7 @@ export const blogsRepository = {
       .limit(pageSize)
       .toArray();
 
-    const totalCount = await blogCollection.countDocuments(filter);
+
 
     return { items, totalCount };
   },
