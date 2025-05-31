@@ -1,4 +1,4 @@
-import { body } from "express-validator";
+import {body, param} from "express-validator";
 import { blogsRepository } from "../../blogs/repositories/blogsRepository";
 import { resourceTypeValidation } from "../../core/middlewares/validation/resourceTypeValidationMiddleware";
 import { ResourceType } from "../../core/types/resourceType";
@@ -37,7 +37,7 @@ export const createdAtValidator = body("createdAt")
   )
   .withMessage("not valid date format");
 
-export const blogIdValidator = body("blogId")
+export const blogIdValidator = param("blogId")
   .isString()
   .withMessage("not string")
   .trim()
@@ -68,7 +68,7 @@ export const postCreateInputValidation = [
   titleValidator,
   shortDescriptionValidator,
   contentValidator,
-  blogIdValidator,
+  //blogIdValidator,
   createdAtValidator,
 ];
 
@@ -78,6 +78,6 @@ export const postUpdateInputValidation = [
   titleValidator,
   shortDescriptionValidator,
   contentValidator,
-  blogIdValidator,
+  //blogIdValidator,
   createdAtValidator,
 ];

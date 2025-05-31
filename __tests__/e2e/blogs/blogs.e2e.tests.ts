@@ -17,6 +17,7 @@ import { updateBlog } from "../../utils/blogs/updateBlog";
 import { createPostByBlogId } from "../../utils/blogs/createdPostByBlogId";
 import { getPostsByBlogId } from "../../utils/blogs/getPostsByBlogId";
 import { blogsRepository } from "../../../src/blogs/repositories/blogsRepository";
+import {createPost} from "../../utils/posts/createPost";
 
 describe("Blog API", () => {
   const app = express();
@@ -80,10 +81,20 @@ describe("Blog API", () => {
 
   it("should create post by blogId; POST /blogs/{blogId}/posts", async () => {
     const createdBlog = await createBlog(app);
-    const createdBlogId = createdBlog.id;
+    const blogId = createdBlog.id;
+    expect(typeof blogId).toBe('string');
 
-    await createPostByBlogId(app, createdBlogId);
-
+    const createdPost = await createPostByBlogId(app, blogId);
+    // Проверяем, что пост создан и что blogId совпадает
+    expect(createdPost).toMatchObject({
+      blogId: blogId,
+      title: expect.any(String),
+      shortDescription: expect.any(String),
+      content: expect.any(String),
+      id: expect.any(String),
+      createdAt: expect.any(String),
+      blogName: expect.any(String),
+    });
 
   });
 

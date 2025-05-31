@@ -16,14 +16,10 @@ export async function createPostByBlogId(
 ): Promise<PostDataOutput> {
   const defaultPostData = getPostDto(blogId);
 
-  const { ...postDataWithoutBlog} = {
-
+  const {blogId: _, ...postDataWithoutBlog} = {
         ...defaultPostData,
         ...postDto,
-
-
   };
-
 
   console.log("Sending POST with body:", JSON.stringify(postDataWithoutBlog, null, 2));
 
