@@ -7,7 +7,11 @@ import { BlogAttributes } from "./dtos/blogAttributes";
 export const blogService = {
   async findMany(
     queryDto: BlogQueryInput,
-  ): Promise<{ items: WithId<Blog>[]; totalCount: number }> {
+  ): Promise<{    pagesCount: number;
+    page: number;
+    pageSize: number;
+    totalCount: number;
+    items: WithId<Blog>[];}> {
     return blogsRepository.findMany(queryDto);
   },
 
