@@ -12,21 +12,6 @@ export async function updateBlogHandler(
     try {
 
         const id = req.params.id;
-        const bodyId = req.body.id;
-
-        // Проверка наличия id в теле
-        if (!bodyId) {
-             res.status(HttpStatus.BadRequest).json({
-                errorsMessages: [{ field: "id", message: "ID in body is required" }],
-            });
-        }
-
-        // Проверка совпадения id из тела и из параметра
-        if (bodyId !== id) {
-             res.status(HttpStatus.BadRequest).json({
-                errorsMessages: [{ field: "id", message: "ID in URL and body must match" }],
-            });
-        }
 
         await blogService.update(id, req.body);
 
