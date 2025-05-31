@@ -2,7 +2,7 @@ import { body } from "express-validator";
 import { blogsRepository } from "../../blogs/repositories/blogsRepository";
 import { resourceTypeValidation } from "../../core/middlewares/validation/resourceTypeValidationMiddleware";
 import { ResourceType } from "../../core/types/resourceType";
-import { dataIdMatchValidator } from "../../core/middlewares/validation/paramsIdValidationMiddleware";
+//import { dataIdMatchValidator } from "../../core/middlewares/validation/paramsIdValidationMiddleware";
 
 export const titleValidator = body("title")
   .isString()

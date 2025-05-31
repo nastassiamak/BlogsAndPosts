@@ -1,5 +1,5 @@
 import { body } from "express-validator";
-import { dataIdMatchValidator } from "../../core/middlewares/validation/paramsIdValidationMiddleware";
+//import { dataIdMatchValidator } from "../../core/middlewares/validation/paramsIdValidationMiddleware";
 
 export const nameValidator = body("name")
   .isString()
