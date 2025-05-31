@@ -18,7 +18,7 @@ export async function getPostHandler(
     res.status(HttpStatus.Ok).send(postOutput);
 } catch (error) {
     if (error instanceof RepositoryNotFoundError) {
-        res.status(HttpStatus.NotFound).send({ message: "Blog not found" });
+        res.status(HttpStatus.NotFound).send({ message: "Post not found" });
     } else {
         res.status(HttpStatus.InternalServerError).send({ message: "Internal Server Error" });
     }

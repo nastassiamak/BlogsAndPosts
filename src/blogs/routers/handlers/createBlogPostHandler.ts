@@ -13,6 +13,7 @@ export async function createBlogPostHandler(
   req: Request<{ id: string }, {}, PostCreateInput>,
   res: Response,
 ): Promise<void> {
+
 try {
     const blogId = req.params.id;
 
@@ -24,7 +25,7 @@ try {
         shortDescription,
         content,
         blogId: blog._id.toString(), // или blog.id, в зависимости от типа
-        blogName: blog.name,
+        blogName: blogId.toString(),
         createdAt: new Date().toISOString(),
     };
 
