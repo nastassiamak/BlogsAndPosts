@@ -7,7 +7,7 @@ export function mapToPostOutput(post: WithId<Post>): PostDataOutput {
   return {
     // data: {
     //   type: ResourceType.Posts,
-      id: post._id.toString(),
+     // id: post._id.toString(),
       //attributes: {
         title: post.title,
         shortDescription: post.shortDescription,
