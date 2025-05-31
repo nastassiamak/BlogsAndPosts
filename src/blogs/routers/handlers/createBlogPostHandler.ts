@@ -40,6 +40,9 @@ try {
 
     res.status(HttpStatus.Created).send(createdPost);
 } catch (error) {
+    if (error instanceof RepositoryNotFoundError) {
+        res.status(HttpStatus.NotFound).send({ message: 'Blog not found' });
+    }
 
     console.error("Error in createBlogPostHandler:", error);
      res.status(HttpStatus.InternalServerError).send("Internal Server Error");
