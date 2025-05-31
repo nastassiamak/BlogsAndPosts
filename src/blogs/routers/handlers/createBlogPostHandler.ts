@@ -25,7 +25,7 @@ try {
         shortDescription,
         content,
         blogId: blog._id.toString(), // или blog.id, в зависимости от типа
-        blogName: blogId.toString(),
+        blogName: blog.name,
         createdAt: new Date().toISOString(),
     };
 

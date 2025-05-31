@@ -69,7 +69,7 @@ blogsRouter
     "/:id/posts",
     superAdminGuardMiddleware,
     idValidation,
-    postCreateInputValidation,
+   // postCreateInputValidation,
     inputValidationResultMiddleware,
     createBlogPostHandler,
   );
