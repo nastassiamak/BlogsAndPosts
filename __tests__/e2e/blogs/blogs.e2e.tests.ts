@@ -95,12 +95,9 @@ describe("Blog API", () => {
 
       await createPostByBlogId(app, createdBlogId),
     ]);
-
     await getPostsByBlogId(app, createdBlogId);
 
-
   });
-
 
   it("should update blog; PUT /blogs/:id", async () => {
     const createdBlog = await createBlog(app);
