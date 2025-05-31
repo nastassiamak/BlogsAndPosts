@@ -51,7 +51,7 @@ export const blogCreateInputValidation = [
 
 export const blogUpdateInputValidation = [
   //resourceTypeValidation(ResourceType.Blogs),
-  dataIdMatchValidator,
+  //dataIdMatchValidator,
   nameValidator,
   descriptionValidator,
   websiteUrlValidator,

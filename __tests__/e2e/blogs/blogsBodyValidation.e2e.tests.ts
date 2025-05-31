@@ -85,7 +85,7 @@ describe("Blog API body validation check", () => {
       .put(`${BLOGS_PATH}/${createdBlogId}`)
       .set("Authorization", adminToken)
       .send({
-          id: createdBlogId,
+
             name: "    ",
             description: "      ",
             websiteUrl: "Invalid Url",
@@ -100,7 +100,7 @@ describe("Blog API body validation check", () => {
       .put(`${BLOGS_PATH}/${createdBlogId}`)
       .set("Authorization", adminToken)
       .send({
-          id: createdBlogId,
+
             name: "A",
             description: "      ",
             websiteUrl: "http://exp.com/",
