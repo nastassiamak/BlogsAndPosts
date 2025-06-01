@@ -3,61 +3,23 @@ import { PostCreateInput } from "../input/postCreateInput";
 import { postService } from "../../application/postService";
 import { mapToPostOutput } from "../mappers/mapToPostOutput";
 import { HttpStatus } from "../../../core/types/httpStatus";
-import {RepositoryNotFoundError} from "../../../core/errors/repositoryNotFoundError";
-import {blogService} from "../../../blogs/application/blogService";
 //import { errorsHandler } from "../../../core/errors/errorsHandler";
 
-
 export async function createPostHandler(
-    req: Request<{ id: string }, {}, PostCreateInput>,
-    res: Response,
-): Promise<void> {
-    try {
-        const blogId = req.params.id;
-        const blog = await blogService.findByIdOrFail(blogId);
-        if (!blog) {
-            res.status(404).send({ message: "Blog not found" });
-            return;
-        }
-        const dataToCreate = {
-            ...req.body,
-            blogId, // добавляем blogId из URL в данные поста
-            createdAt: new Date().toISOString(),
-        };
+  req: Request<{}, {}, PostCreateInput>,
+  res: Response,
+) {
 
-        const createdPostId = await postService.create(dataToCreate);
+    try {
+        const createdPostId = await postService.create(req.body);
+
         const createdPost = await postService.findByIdOrFail(createdPostId);
 
         const postOutput = mapToPostOutput(createdPost);
 
         res.status(HttpStatus.Created).send(postOutput);
     } catch (error) {
-        if (error instanceof RepositoryNotFoundError) {
-            res.status(HttpStatus.NotFound).send({ message: "Blog or Post not found" });
-        } else {
-            console.error(error);
-            res.status(HttpStatus.InternalServerError).send({ message: "Internal Server Error" });
-        }
+        console.error("Error in createPostHandler:", error);
+        res.status(HttpStatus.InternalServerError).send({ message: "Internal Server Error" });
     }
 }
-// export async function createPostHandler(
-//   req: Request<{}, {}, PostCreateInput>,
-//   res: Response,
-// ) {
-//
-//     try {
-//         const createdPostId = await postService.create(req.body);
-//
-//         const createdPost = await postService.findByIdOrFail(createdPostId);
-//
-//         const postOutput = mapToPostOutput(createdPost);
-//
-//         res.status(HttpStatus.Created).send(postOutput);
-//     } catch (error) {
-//         if (error instanceof RepositoryNotFoundError) {
-//             res.status(HttpStatus.NotFound).send({ message: "Post not found" });
-//         } else {
-//             res.status(HttpStatus.InternalServerError).send({ message: "Internal Server Error" });
-//         }
-//     }
-// }

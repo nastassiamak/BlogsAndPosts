@@ -20,7 +20,6 @@ import { blogsRepository } from "../../../src/blogs/repositories/blogsRepository
 import {createPost} from "../../utils/posts/createPost";
 import {createPostByBlogId} from "../../utils/blogs/createdPostByBlogId";
 
-
 describe("Blog API", () => {
   const app = express();
   setupApp(app);
@@ -81,6 +80,34 @@ describe("Blog API", () => {
     });
   });
 
+  it("should create post by blogId; POST /blogs/{blogId}/posts", async () => {
+    const createdBlog = await createBlog(app);
+    const blogId = createdBlog.id;
+
+    const postBody = {
+      title: "Test post",
+      shortDescription: "Test short description",
+      content: "Test content",
+    };
+
+    const response = await request(app)
+        .post(`${BLOGS_PATH}/${blogId}${POSTS_PATH}`)
+        .set("Authorization", "Basic YWRtaW46cXdlcnR5")
+        .send(postBody)
+        .expect(HttpStatus.Created);
+
+    expect(response.body).toMatchObject({
+      title: postBody.title,
+      shortDescription: postBody.shortDescription,
+      content: postBody.content,
+      blogName: expect.any(String),
+      createdAt: expect.any(String),
+
+    });
+
+    const postId = response.body.id;
+
+  });
 
   it("should update blog; PUT /blogs/:id", async () => {
     const createdBlog = await createBlog(app);
@@ -124,12 +151,35 @@ describe("Blog API", () => {
     const createdBlog = await createBlog(app);
     const blogId = createdBlog.id;
 
-    const createdPost = await createPost(app, blogId);
 
-    expect(createdPost).toHaveProperty('id');
+    const postData = {
+      title: 'Test post title',
+      shortDescription: 'Test short description',
+      content: 'Test content',
+    };
 
+    const response = await request(app)
+        .post(`${BLOGS_PATH}/${blogId}${POSTS_PATH}`)
+        .set('Authorization', generateAdminAuthToken())
+        .send(postData)
+        .expect(HttpStatus.Created);
 
+    // Подстрахуемся: если пришло _id, то преобразуем в id для стабильности теста
+    const responseBody = {
+      ...response.body,
+      id: response.body.id ?? response.body._id,
+    };
+   delete responseBody._id;
 
+    expect(responseBody).toMatchObject({
+      id: expect.any(String),
+      blogId: blogId,
+      blogName: expect.any(String),
+      title: postData.title,
+      shortDescription: postData.shortDescription,
+      content: postData.content,
+      createdAt: expect.any(String)
+    });
   })
 
 
