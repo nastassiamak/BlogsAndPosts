@@ -4,15 +4,21 @@ import { postService } from "../../application/postService";
 import { mapToPostOutput } from "../mappers/mapToPostOutput";
 import { HttpStatus } from "../../../core/types/httpStatus";
 import {RepositoryNotFoundError} from "../../../core/errors/repositoryNotFoundError";
+import {blogService} from "../../../blogs/application/blogService";
 //import { errorsHandler } from "../../../core/errors/errorsHandler";
 
 
 export async function createPostHandler(
-    req: Request<{ blogId: string }, {}, PostCreateInput>,
+    req: Request<{ id: string }, {}, PostCreateInput>,
     res: Response,
-) {
+): Promise<void> {
     try {
-        const blogId = req.params.blogId;
+        const blogId = req.params.id;
+        const blog = await blogService.findByIdOrFail(blogId);
+        if (!blog) {
+            res.status(404).send({ message: "Blog not found" });
+            return;
+        }
         const dataToCreate = {
             ...req.body,
             blogId, // добавляем blogId из URL в данные поста
