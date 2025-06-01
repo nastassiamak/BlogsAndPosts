@@ -168,7 +168,7 @@ describe("Blog API", () => {
       ...response.body,
       id: response.body.id ?? response.body._id,
     };
-   // delete responseBody._id;
+   delete responseBody._id;
 
     expect(responseBody).toMatchObject({
       id: expect.any(String),
