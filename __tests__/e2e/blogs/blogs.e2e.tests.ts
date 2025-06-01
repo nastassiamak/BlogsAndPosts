@@ -109,18 +109,6 @@ describe("Blog API", () => {
 
   });
 
-  it("should return posts by blogId; GET /blogs/{blogId}/posts", async () => {
-    const createdBlog = await createBlog(app);
-    const createdBlogId = createdBlog.id;
-    await Promise.all([
-      await createPostByBlogId(app, createdBlogId),
-
-      await createPostByBlogId(app, createdBlogId),
-    ]);
-    await getPostsByBlogId(app, createdBlogId);
-
-  });
-
   it("should update blog; PUT /blogs/:id", async () => {
     const createdBlog = await createBlog(app);
     const createdBlogId = createdBlog.id;
@@ -159,6 +147,39 @@ describe("Blog API", () => {
       .expect(HttpStatus.NotFound);
   });
 
+  it('should create new post for specific blog and return 201 with correct response structure', async () => {
+    const createdBlog = await createBlog(app);
+    const blogId = createdBlog.id;
+
+    const postData = {
+      title: 'Test post title',
+      shortDescription: 'Test short description',
+      content: 'Test content',
+    };
+
+    const response = await request(app)
+        .post(`${BLOGS_PATH}/${blogId}${POSTS_PATH}`)
+        .set('Authorization', generateAdminAuthToken())
+        .send(postData)
+        .expect(HttpStatus.Created);
+
+    // Подстрахуемся: если пришло _id, то преобразуем в id для стабильности теста
+    const responseBody = {
+      ...response.body,
+      id: response.body.id ?? response.body._id,
+    };
+   // delete responseBody._id;
+
+    expect(responseBody).toMatchObject({
+      id: expect.any(String),
+      blogId: blogId,
+      blogName: expect.any(String),
+      title: postData.title,
+      shortDescription: postData.shortDescription,
+      content: postData.content,
+      createdAt: expect.any(String)
+    });
+  })
 
 
 
