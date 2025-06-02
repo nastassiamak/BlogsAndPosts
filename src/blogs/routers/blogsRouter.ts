@@ -17,6 +17,7 @@ import { PostSortField } from "../../posts/routers/input/postSortField";
 import { getBlogPostListHandler } from "./handlers/getBlogPostListHandler";
 //import { createBlogPostHandler } from "./handlers/createBlogPostHandler";
 import {blogIdValidator, postCreateInputValidation} from "../../posts/routers/postInputDtoValidationMiddleware";
+import {createBlogPostHandler} from "./handlers/createBlogPostHandler";
 
 export const blogsRouter = Router({});
 
@@ -66,11 +67,10 @@ blogsRouter
     getBlogPostListHandler,
   )
   .post(
-    "/:id/posts",
+    "/{:blogId}",
     superAdminGuardMiddleware,
     idValidation,
     postCreateInputValidation,
     inputValidationResultMiddleware,
-    createBlogHandler,
-    //createBlogPostHandler,
+    createBlogPostHandler,
   );

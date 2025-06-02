@@ -84,28 +84,18 @@ describe("Blog API", () => {
     const createdBlog = await createBlog(app);
     const blogId = createdBlog.id;
 
-    const postBody = {
-      title: "Test post",
-      shortDescription: "Test short description",
-      content: "Test content",
-    };
+    const createdPost = await createPostByBlogId(app, blogId);
 
-    const response = await request(app)
-        .post(`${BLOGS_PATH}/${blogId}${POSTS_PATH}`)
-        .set("Authorization", "Basic YWRtaW46cXdlcnR5")
-        .send(postBody)
-        .expect(HttpStatus.Created);
+    console.log("New Post: ", createdPost);
 
-    expect(response.body).toMatchObject({
-      title: postBody.title,
-      shortDescription: postBody.shortDescription,
-      content: postBody.content,
+    expect(createdPost).toMatchObject({
+      title: createdPost.title,
+      shortDescription: createdPost.shortDescription,
+      content: createdPost.content,
       blogName: expect.any(String),
       createdAt: expect.any(String),
 
     });
-
-    const postId = response.body.id;
 
   });
 

@@ -17,7 +17,7 @@ export async function createPost(
 ): Promise<PostDataOutput> {
   const blog = await createBlog(app);
 
-  const defaultPostData = getPostDto(blog.id);
+  const defaultPostData = getPostDto();
   const testPostData = {
     ...defaultPostData, ...postDto
   };

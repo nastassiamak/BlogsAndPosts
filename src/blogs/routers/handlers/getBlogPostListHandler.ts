@@ -10,11 +10,11 @@ import {SortDirection} from "../../../core/types/sortDirection";
 import {PostSortField} from "../../../posts/routers/input/postSortField";
 import {HttpStatus} from "../../../core/types/httpStatus";
 import {RepositoryNotFoundError} from "../../../core/errors/repositoryNotFoundError";
-
+import {mapToPostOutput} from "../../../posts/routers/mappers/mapToPostOutput";
 
 export async function getBlogPostListHandler(
-  req: Request<{ id: string }, {}, {}, ParsedQs>,
-  res: Response,
+    req: Request<{ id: string }, {}, {}, ParsedQs>,
+    res: Response,
 ) {
   function parseBlogPostQuery(query: ParsedQs): PostQueryInput {
     return {
@@ -26,37 +26,45 @@ export async function getBlogPostListHandler(
       searchPostShortDescriptionTerm: (query.searchPostShortDescriptionTerm as string) || undefined,
     };
   }
+
   try {
-
     const id = req.params.id;
-    console.log("Получен запрос на blogId:", id); // вывод параметра пути
+    console.log("Получен запрос на blogId:", id);
 
-    const blogId = await blogService.findByIdOrFail(id);
+    const blog = await blogService.findByIdOrFail(id);
     const queryInput = parseBlogPostQuery(req.query);
     const queryWithDefaults = setDefaultSortAndPaginationIfNotExist(queryInput);
-    console.log("Параметры запроса:", queryWithDefaults); // вывод параметров пагинации и сортировки
+    console.log("Параметры запроса:", queryWithDefaults);
 
+    // Получаем данные с пагинацией
     const paginatedPosts = await postService.findPostsByBlog(
         queryWithDefaults,
-        blogId._id.toString(),
+        blog._id.toString(),
     );
 
-    console.log(`Найдено постов: ${paginatedPosts.items.length}, 
-   из них всего: ${paginatedPosts.totalCount}`); // вывод результата из БД
+    console.log(`Найдено постов: ${paginatedPosts.items.length}, всего: ${paginatedPosts.totalCount}`);
 
-    // const postListOutput = mapToPostListPaginatedOutput(items,
-    //   queryWithDefaults.pageNumber,
-    //   queryWithDefaults.pageSize,
-    //   totalCount,
-    // );
+    // Маппим каждый пост из БД в нужный формат output
+    const mappedItems = paginatedPosts.items.map(post => mapToPostOutput(post));
 
-    console.log("Формируем ответ:", paginatedPosts);
+    // Формируем итоговый ответ с пагинацией и преобразованными постами
+    const responsePayload = {
+      pagesCount: Math.ceil(paginatedPosts.totalCount / queryWithDefaults.pageSize),
+      page: queryWithDefaults.pageNumber,
+      pageSize: queryWithDefaults.pageSize,
+      totalCount: paginatedPosts.totalCount,
+      items: mappedItems,
+    };
 
-    res.send(paginatedPosts);
+    console.log("Формируем ответ:", responsePayload);
+
+    res.status(HttpStatus.Ok).json(responsePayload);
   } catch (error) {
     if (error instanceof RepositoryNotFoundError) {
       res.status(HttpStatus.NotFound).send({ message: 'Blog not found' });
+      return;
     }
+    console.error(error);
     res.status(HttpStatus.InternalServerError).send("Internal Server Error");
   }
 }

@@ -9,26 +9,27 @@ import { generateAdminAuthToken } from "../generateAdminAuthToken";
 import { HttpStatus } from "../../../src/core/types/httpStatus";
 import {PostDataOutput} from "../../../src/posts/routers/output/postDataOutput";
 
-export async function createPostByBlogId(
-  app: Express,
-  blogId: string,
-  postDto?: PostAttributes,
-): Promise<PostDataOutput> {
-  const defaultPostData = getPostDto(blogId);
 
-  const { ...postDataWithoutBlog} = {
+export async function createPostByBlogId(
+    app: Express,
+    blogId: string,
+    postDto?: Partial<Omit<PostAttributes, "blogId">>
+): Promise<PostDataOutput> {
+    const defaultPostData = getPostDto();
+
+    const postDataToSend = {
         ...defaultPostData,
         ...postDto,
-  };
+    };
 
-  console.log("Sending POST with body:", JSON.stringify(postDataWithoutBlog, null, 2));
+    console.log("Sending POST with body:", JSON.stringify(postDataToSend, null, 2));
 
-  const createdPostResponse = await request(app)
-    .post(`${BLOGS_PATH}/${blogId}${POSTS_PATH}`)
-    .set("Authorization", generateAdminAuthToken())
-    .send(postDataWithoutBlog)
-    .expect(HttpStatus.Created);
+    const response = await request(app)
+        .post(`${BLOGS_PATH}/${blogId}${POSTS_PATH}`)
+        .set("Authorization", generateAdminAuthToken())
+        .send(postDataToSend)
+        .expect(HttpStatus.Created);
 
-  console.log("Response body:", createdPostResponse.body);
-  return createdPostResponse.body;
+    console.log("Response body:", response.body);
+    return response.body;
 }
