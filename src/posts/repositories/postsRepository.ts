@@ -10,12 +10,16 @@ import { blogsRepository } from "../../blogs/repositories/blogsRepository";
 export const postsRepository = {
   async findMany(
     queryDto: PostQueryInput,
-  ): Promise<{ items: WithId<Post>[]; totalCount: number }> {
+  ): Promise<{ pagesCount: number;
+    page: number;
+    pageSize: number;
+    totalCount: number;
+    items: WithId<Post>[] }> {
     const {
-      pageNumber,
-      pageSize,
-      sortBy,
-      sortDirection,
+      pageNumber = 1,
+      pageSize = 10,
+      sortBy = "createdAt",
+      sortDirection = "desc",
       searchPostTitleTerm,
       searchPostShortDescriptionTerm,
       searchPostContentTerm,
@@ -41,18 +45,18 @@ export const postsRepository = {
 
     const direction = sortDirection === "asc" ? 1 : -1;
 
-    const [items, totalCount] = await Promise.all([
-      postCollection
+    const totalCount = await postCollection
+        .countDocuments(filter);
+    const pagesCount = Math.ceil(totalCount / pageSize);
+
+    const items = await postCollection
         .find(filter)
         .sort({ [sortBy]: direction })
         .skip(skip)
         .limit(pageSize)
-        .toArray(),
+        .toArray();
 
-      postCollection.countDocuments(filter),
-    ]);
-
-    return { items, totalCount };
+    return {pagesCount, page: pageNumber, pageSize, totalCount, items };
   },
 
   async findPostsByBlog(
