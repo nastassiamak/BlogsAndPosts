@@ -39,17 +39,40 @@ describe("Posts API", () => {
     expect(post).toHaveProperty("blogId");
   });
 
-  it("should return posts list; GET /posts", async () => {
-    await Promise.all([createPost(app), createPost(app)]);
+  it("should return posts list; GET /posts with pagination, sorting and default params", async () => {
+    // Создадим несколько постов для теста пагинации
+    await Promise.all(
+        Array(15)
+            .fill(null)
+            .map(() => createPost(app))
+    );
 
-    const postListResponse = await request(app)
-      .get(POSTS_PATH)
-      //.set("Authorization", adminToken)
-      .expect(HttpStatus.Ok);
+    const pageNumber = 1;
+    const pageSize = 10;
+    const sortBy = "createdAt";
+    const sortDirection = "desc";
 
-    console.log(postListResponse.body);
-    expect(Array.isArray(postListResponse.body.items)).toBe(true);
-    expect(postListResponse.body.items.length).toBeGreaterThanOrEqual(2);
+    const res = await request(app)
+        .get(POSTS_PATH)
+        .query({ pageNumber, pageSize, sortBy, sortDirection })
+        .expect(HttpStatus.Ok);
+
+    // Проверяем структуру ответа
+    expect(res.body).toHaveProperty("pagesCount");
+    expect(res.body).toHaveProperty("page", pageNumber);
+    expect(res.body).toHaveProperty("pageSize", pageSize);
+    expect(res.body).toHaveProperty("totalCount");
+    expect(Array.isArray(res.body.items)).toBe(true);
+
+    // Количество элементов страницы не больше pageSize
+    expect(res.body.items.length).toBeLessThanOrEqual(pageSize);
+
+    // Проверяем сортировку по createdAt от большего к меньшему
+    for (let i = 1; i < res.body.items.length; i++) {
+      const prevDate = new Date(res.body.items[i - 1].createdAt);
+      const curDate = new Date(res.body.items[i].createdAt);
+      expect(prevDate.getTime()).toBeGreaterThanOrEqual(curDate.getTime());
+    }
   });
 
   it("should return posts by id; GET /posts/:id", async () => {
