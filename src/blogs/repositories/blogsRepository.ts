@@ -21,21 +21,21 @@ export const blogsRepository = {
       pageSize = 10,
       sortBy = "createdAt",
       sortDirection = "desc",
-      // searchBlogNameTerm,
-      // searchBlogDescriptionTerm,
+      searchBlogNameTerm,
+      searchBlogDescriptionTerm,
     } = queryDto;
 
     const skip = (pageNumber - 1) * pageSize;
     const filter: any = {};
 
 
-    // if (searchBlogNameTerm) {
-    //   filter.name = { $regex: searchBlogNameTerm, $options: "i" };
-    // }
-    //
-    // if (searchBlogDescriptionTerm) {
-    //   filter.description = { $regex: searchBlogDescriptionTerm, $options: "i" };
-    // }
+    if (searchBlogNameTerm) {
+      filter.name = { $regex: searchBlogNameTerm, $options: "i" };
+    }
+
+    if (searchBlogDescriptionTerm) {
+      filter.description = { $regex: searchBlogDescriptionTerm, $options: "i" };
+    }
 
     const direction = sortDirection === "asc" ? 1 : -1;
 
