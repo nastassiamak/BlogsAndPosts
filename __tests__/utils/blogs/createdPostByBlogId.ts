@@ -15,7 +15,7 @@ export async function createPostByBlogId(
     blogId: string,
     postDto?: Partial<Omit<PostAttributes, "blogId">>
 ): Promise<PostDataOutput> {
-    const defaultPostData = getPostDto();
+    const defaultPostData = getPostDto(blogId);
 
     const postDataToSend = {
         ...defaultPostData,

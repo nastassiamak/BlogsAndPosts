@@ -14,7 +14,7 @@ export async function updatePost(
   postId: string,
   postDto?: PostAttributes,
 ): Promise<void> {
-  const testPostData: PostUpdateInput = {
+  const testPostData = {
 
       id: postId,
 

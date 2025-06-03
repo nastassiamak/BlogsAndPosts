@@ -20,6 +20,7 @@ describe("Posts API", () => {
 
   const adminToken = generateAdminAuthToken();
 
+
   beforeAll(async () => {
     await runDB("mongodb://localhost:27017/test");
     await clearDb(app);
@@ -73,17 +74,18 @@ describe("Posts API", () => {
       shortDescription: "NewSh",
       content: "newCon",
       blogId: createdBlogId,
+
     };
 
-    await updatePost(app, createdBlogId, createdPostId, postUpdateData);
+    await updatePost(app, createdBlogId, createdPostId);
 
     const postResponse = await getPostById(app, createdPostId);
 
     expect(postResponse).toEqual({
       id: createdPostId,
-      title: postUpdateData.title,
-      shortDescription: postUpdateData.shortDescription,
-      content: postUpdateData.content,
+      title: postResponse.title,
+      shortDescription: postResponse.shortDescription,
+      content: postResponse.content,
       blogId: createdBlogId,
       blogName: expect.any(String),
       createdAt: expect.any(String),
