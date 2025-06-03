@@ -1,4 +1,4 @@
-import express from "express";
+import express, {response} from "express";
 import { setupApp } from "../../../src/setupApp";
 import { generateAdminAuthToken } from "../../utils/generateAdminAuthToken";
 import { before } from "node:test";
@@ -39,39 +39,40 @@ describe("Posts API", () => {
     expect(post).toHaveProperty("blogId");
   });
 
-  it("should return posts list; GET /posts with pagination, sorting and default params", async () => {
-    // Создадим несколько постов для теста пагинации
-    await Promise.all(
-        Array(15)
-            .fill(null)
-            .map(() => createPost(app))
-    );
+  it("should return posts list; GET /posts with pagination and sorting", async () => {
+    // Создаём 15 тестовых постов
+    await Promise.all(Array.from({ length: 15 }).map(() => createPost(app)));
 
     const pageNumber = 1;
     const pageSize = 10;
     const sortBy = "createdAt";
     const sortDirection = "desc";
 
-    const res = await request(app)
+    const response = await request(app)
         .get(POSTS_PATH)
         .query({ pageNumber, pageSize, sortBy, sortDirection })
         .expect(HttpStatus.Ok);
 
-    // Проверяем структуру ответа
-    expect(res.body).toHaveProperty("pagesCount");
-    expect(res.body).toHaveProperty("page", pageNumber);
-    expect(res.body).toHaveProperty("pageSize", pageSize);
-    expect(res.body).toHaveProperty("totalCount");
-    expect(Array.isArray(res.body.items)).toBe(true);
+    const body = response.body;
 
-    // Количество элементов страницы не больше pageSize
-    expect(res.body.items.length).toBeLessThanOrEqual(pageSize);
+    // Проверяем обязательные поля пагинации
+    expect(body).toHaveProperty("pagesCount");
+    expect(body).toHaveProperty("page");
+    expect(body).toHaveProperty("pageSize");
+    expect(body).toHaveProperty("totalCount");
+    expect(Array.isArray(body.items)).toBe(true);
 
-    // Проверяем сортировку по createdAt от большего к меньшему
-    for (let i = 1; i < res.body.items.length; i++) {
-      const prevDate = new Date(res.body.items[i - 1].createdAt);
-      const curDate = new Date(res.body.items[i].createdAt);
-      expect(prevDate.getTime()).toBeGreaterThanOrEqual(curDate.getTime());
+    expect(body.page).toBe(pageNumber);
+    expect(body.pageSize).toBe(pageSize);
+    expect(body.items.length).toBeLessThanOrEqual(pageSize);
+    expect(body.totalCount).toBeGreaterThanOrEqual(body.items.length);
+    expect(body.pagesCount).toBe(Math.ceil(body.totalCount / pageSize));
+
+    // Проверяем сортировку по createdAt (desc)
+    for (let i = 1; i < body.items.length; i++) {
+      const prevDate = new Date(body.items[i - 1].createdAt).getTime();
+      const curDate = new Date(body.items[i].createdAt).getTime();
+      expect(prevDate).toBeGreaterThanOrEqual(curDate);
     }
   });
 

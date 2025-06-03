@@ -8,6 +8,7 @@ import {BlogSortField} from "../input/blogSortField";
 import {SortDirection} from "../../../core/types/sortDirection";
 import {RepositoryNotFoundError} from "../../../core/errors/repositoryNotFoundError";
 import {HttpStatus} from "../../../core/types/httpStatus";
+import {mapToBlogOutput} from "../mappers/mapToBlogOutput";
 
 //import { errorsHandler } from "../../../core/errors/errorsHandler";
 
@@ -30,15 +31,22 @@ export async function getBlogListHandler(
         const queryInput = parseBlogQuery(req.query);
         const queryWithDefaults = setDefaultSortAndPaginationIfNotExist(queryInput);
 
-        const { items, totalCount } = await blogService.findMany(queryWithDefaults);
+        const paginatedBlogs = await blogService.findMany(queryWithDefaults);
+        console.log(`Найдено постов: ${paginatedBlogs.items.length}, всего: ${paginatedBlogs.totalCount}`);
 
-        const blogsListOutput = mapToBlogListPaginatedOutput(items,
-            queryWithDefaults.pageNumber,
-            queryWithDefaults.pageSize,
-            totalCount,
-        );
+        // Маппим каждый пост из БД в нужный формат output
+        const mappedItems = paginatedBlogs.items.map(blog => mapToBlogOutput(blog));
 
-        res.send(blogsListOutput);
+
+        // Формируем итоговый ответ с пагинацией и преобразованными постами
+        const responsePayload = {
+            pagesCount: Math.ceil(paginatedBlogs.totalCount / queryWithDefaults.pageSize),
+            page: queryWithDefaults.pageNumber,
+            pageSize: queryWithDefaults.pageSize,
+            totalCount: paginatedBlogs.totalCount,
+            items: mappedItems,
+        };
+        res.send(responsePayload);
     } catch (error) {
         if (error instanceof RepositoryNotFoundError) {
             res.status(HttpStatus.NotFound).send({ message: 'Blog not found' });
