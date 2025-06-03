@@ -11,6 +11,7 @@ import {getPostHandler} from "./getPostHandler";
 import {HttpStatus} from "../../../core/types/httpStatus";
 import {BlogSortField} from "../../../blogs/routers/input/blogSortField";
 import {RepositoryNotFoundError} from "../../../core/errors/repositoryNotFoundError";
+import {mapToPostOutput} from "../mappers/mapToPostOutput";
 
 export async function getPostListHandler(
   req: Request<{}, {}, {}, ParsedQs>,
@@ -22,7 +23,7 @@ export async function getPostListHandler(
       pageSize: Number(query.pageSize) || 10,
       sortBy: (query.sortBy as PostSortField) || PostSortField.CreatedAt,
       sortDirection: (query.sortDirection === "asc" ? SortDirection.Asc : SortDirection.Desc),
-      searchPostTitleTerm: (query.searchPostTitleTerm as string) || undefined,
+      searchPostTitleTerm: (query.searchTitleTerm as string) || undefined,
       searchPostShortDescriptionTerm: (query.searchPostShortDescriptionTerm as string) || undefined,
     };
   }
@@ -32,14 +33,22 @@ export async function getPostListHandler(
     const queryInput = parsePostQuery(req.query);
     const queryWithDefaults = setDefaultSortAndPaginationIfNotExist(queryInput);
 
-    const {items, totalCount} = await postService.findMany(queryWithDefaults);
+    const paginatedPosts = await postService.findMany(queryWithDefaults);
 
-    const postsListOutput = mapToPostListPaginatedOutput(items,
-        queryWithDefaults.pageNumber,
-        queryWithDefaults.pageSize,
-        totalCount,
-    );
-    res.send(postsListOutput);
+    console.log(`Найдено постов: ${paginatedPosts.items.length}, всего: ${paginatedPosts.totalCount}`);
+    // Маппим каждый пост из БД в нужный формат output
+    const mappedItems = paginatedPosts.items.map(blog => mapToPostOutput(blog));
+
+
+    // Формируем итоговый ответ с пагинацией и преобразованными постами
+    const responsePayload = {
+      pagesCount: Math.ceil(paginatedPosts.totalCount / queryWithDefaults.pageSize),
+      page: queryWithDefaults.pageNumber,
+      pageSize: queryWithDefaults.pageSize,
+      totalCount: paginatedPosts.totalCount,
+      items: mappedItems,
+    };
+    res.send(responsePayload);
   } catch (error) {
     if (error instanceof RepositoryNotFoundError) {
       res.status(HttpStatus.NotFound).send({ message: 'Post not found' });

@@ -32,7 +32,7 @@ export async function getBlogListHandler(
         const queryWithDefaults = setDefaultSortAndPaginationIfNotExist(queryInput);
 
         const paginatedBlogs = await blogService.findMany(queryWithDefaults);
-        console.log(`Найдено постов: ${paginatedBlogs.items.length}, всего: ${paginatedBlogs.totalCount}`);
+        console.log(`Найдено блогов: ${paginatedBlogs.items.length}, всего: ${paginatedBlogs.totalCount}`);
 
         // Маппим каждый пост из БД в нужный формат output
         const mappedItems = paginatedBlogs.items.map(blog => mapToBlogOutput(blog));
