@@ -39,10 +39,12 @@ export const postsRepository = {
       filter.content = { $regex: searchPostContentTerm, $options: "i" };
     }
 
+    const direction = sortDirection === "asc" ? 1 : -1;
+
     const [items, totalCount] = await Promise.all([
       postCollection
         .find(filter)
-        .sort({ [sortBy]: sortDirection })
+        .sort({ [sortBy]: direction })
         .skip(skip)
         .limit(pageSize)
         .toArray(),
