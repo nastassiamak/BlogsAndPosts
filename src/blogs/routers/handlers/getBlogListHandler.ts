@@ -22,7 +22,7 @@ export async function getBlogListHandler(
             pageSize: Number(query.pageSize) || 10,
             sortBy: (query.sortBy as BlogSortField) || BlogSortField.CreatedAt,
             sortDirection: (query.sortDirection === "asc" ? SortDirection.Asc : SortDirection.Desc),
-            searchBlogNameTerm: (query.searchBlogNameTerm as string) || undefined,
+            searchBlogNameTerm: (query.searchNameTerm as string) || undefined,
             searchBlogDescriptionTerm: (query.searchBlogDescriptionTerm as string) || undefined,
         };
     }
