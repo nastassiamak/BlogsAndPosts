@@ -16,28 +16,28 @@ export const postsRepository = {
       pageSize,
       sortBy,
       sortDirection,
-      // searchPostTitleTerm,
-      // searchPostShortDescriptionTerm,
-      // searchPostContentTerm,
+      searchPostTitleTerm,
+      searchPostShortDescriptionTerm,
+      searchPostContentTerm,
     } = queryDto;
 
     const skip = (pageNumber - 1) * pageSize;
     const filter: any = {};
 
-    // if (searchPostTitleTerm) {
-    //   filter.title = { $regex: searchPostTitleTerm, $options: "i" };
-    // }
-    //
-    // if (searchPostShortDescriptionTerm) {
-    //   filter.description = {
-    //     $regex: searchPostShortDescriptionTerm,
-    //     $options: "i",
-    //   };
-    // }
-    //
-    // if (searchPostContentTerm) {
-    //   filter.content = { $regex: searchPostContentTerm, $options: "i" };
-    // }
+    if (searchPostTitleTerm) {
+      filter.title = { $regex: searchPostTitleTerm, $options: "i" };
+    }
+
+    if (searchPostShortDescriptionTerm) {
+      filter.description = {
+        $regex: searchPostShortDescriptionTerm,
+        $options: "i",
+      };
+    }
+
+    if (searchPostContentTerm) {
+      filter.content = { $regex: searchPostContentTerm, $options: "i" };
+    }
 
     const [items, totalCount] = await Promise.all([
       postCollection
