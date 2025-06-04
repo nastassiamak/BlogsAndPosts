@@ -14,7 +14,7 @@ import {RepositoryNotFoundError} from "../../../core/errors/repositoryNotFoundEr
 import {mapToPostOutput} from "../mappers/mapToPostOutput";
 
 export async function getPostListHandler(
-  req: Request<{id: string}, {}, {}, ParsedQs>,
+  req: Request<{}, {}, {}, ParsedQs>,
   res: Response,
 ) {
   console.log("Запрос GET /posts:", req.query);
