@@ -17,6 +17,7 @@ export async function getPostListHandler(
   req: Request<{}, {}, {}, ParsedQs>,
   res: Response,
 ) {
+  console.log("Запрос GET /posts:", req.query);
   function parsePostQuery(query: ParsedQs): PostQueryInput {
     return {
       pageNumber: Number(query.pageNumber) || 1,
