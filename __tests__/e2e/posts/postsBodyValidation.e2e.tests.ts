@@ -48,6 +48,7 @@ describe("Posts API body validation check", () => {
             title: 21,
             shortDescription: "   ",
             content: "2vgg",
+            blogId: 1,
 
 
       })
