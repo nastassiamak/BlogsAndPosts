@@ -6,7 +6,7 @@ import express from "express";
 import { setupApp } from "../../../src/setupApp";
 import { BlogAttributes } from "../../../src/blogs/application/dtos/blogAttributes";
 import { HttpStatus } from "../../../src/core/types/httpStatus";
-import {BLOGS_PATH, POSTS_PATH} from "../../../src/core/paths/paths";
+import { BLOGS_PATH, POSTS_PATH } from "../../../src/core/paths/paths";
 import { generateAdminAuthToken } from "../../utils/generateAdminAuthToken";
 import { runDB, stopDb } from "../../../src/db/mongoDb";
 import { clearDb } from "../../utils/clearDb";
@@ -17,8 +17,8 @@ import { updateBlog } from "../../utils/blogs/updateBlog";
 
 import { getPostsByBlogId } from "../../utils/blogs/getPostsByBlogId";
 import { blogsRepository } from "../../../src/blogs/repositories/blogsRepository";
-import {createPost} from "../../utils/posts/createPost";
-import {createPostByBlogId} from "../../utils/blogs/createdPostByBlogId";
+import { createPost } from "../../utils/posts/createPost";
+import { createPostByBlogId } from "../../utils/blogs/createdPostByBlogId";
 
 describe("Blog API", () => {
   const app = express();
@@ -60,7 +60,7 @@ describe("Blog API", () => {
 
     const response = await request(app)
       .get(BLOGS_PATH)
-     // .set("Authorization", adminToken)
+      // .set("Authorization", adminToken)
       .expect(HttpStatus.Ok);
 
     console.log(response.body);
@@ -94,9 +94,7 @@ describe("Blog API", () => {
       content: createdPost.content,
       blogName: expect.any(String),
       createdAt: expect.any(String),
-
     });
-
   });
 
   it("should update blog; PUT /blogs/:id", async () => {
@@ -137,29 +135,28 @@ describe("Blog API", () => {
       .expect(HttpStatus.NotFound);
   });
 
-  it('should create new post for specific blog and return 201 with correct response structure', async () => {
+  it("should create new post for specific blog and return 201 with correct response structure", async () => {
     const createdBlog = await createBlog(app);
     const blogId = createdBlog.id;
 
-
     const postData = {
-      title: 'Test post title',
-      shortDescription: 'Test short description',
-      content: 'Test content',
+      title: "Test post title",
+      shortDescription: "Test short description",
+      content: "Test content",
     };
 
     const response = await request(app)
-        .post(`${BLOGS_PATH}/${blogId}${POSTS_PATH}`)
-        .set('Authorization', generateAdminAuthToken())
-        .send(postData)
-        .expect(HttpStatus.Created);
+      .post(`${BLOGS_PATH}/${blogId}${POSTS_PATH}`)
+      .set("Authorization", generateAdminAuthToken())
+      .send(postData)
+      .expect(HttpStatus.Created);
 
     // Подстрахуемся: если пришло _id, то преобразуем в id для стабильности теста
     const responseBody = {
       ...response.body,
       id: response.body.id ?? response.body._id,
     };
-   delete responseBody._id;
+    delete responseBody._id;
 
     expect(responseBody).toMatchObject({
       id: expect.any(String),
@@ -168,10 +165,7 @@ describe("Blog API", () => {
       title: postData.title,
       shortDescription: postData.shortDescription,
       content: postData.content,
-      createdAt: expect.any(String)
+      createdAt: expect.any(String),
     });
-  })
-
-
-
+  });
 });

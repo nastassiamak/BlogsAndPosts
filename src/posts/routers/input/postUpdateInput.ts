@@ -4,8 +4,8 @@ import { PostAttributes } from "../../application/dtos/postAttributes";
 export type PostUpdateInput = {
   // data: {
   //   type: ResourceType.Posts;
-    id?: string;
-   // attributes: PostAttributes;
+  id?: string;
+  // attributes: PostAttributes;
   //};
   title: string;
   shortDescription: string;

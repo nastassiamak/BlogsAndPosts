@@ -9,7 +9,7 @@ import { POSTS_PATH } from "../../../src/core/paths/paths";
 import { generateAdminAuthToken } from "../generateAdminAuthToken";
 import { HttpStatus } from "../../../src/core/types/httpStatus";
 import { createBlog } from "../blogs/createBlog";
-import {PostDataOutput} from "../../../src/posts/routers/output/postDataOutput";
+import { PostDataOutput } from "../../../src/posts/routers/output/postDataOutput";
 
 export async function createPost(
   app: Express,
@@ -19,7 +19,8 @@ export async function createPost(
 
   const defaultPostData = getPostDto(blog.id);
   const testPostData = {
-    ...defaultPostData, ...postDto
+    ...defaultPostData,
+    ...postDto,
   };
 
   const createdPostResponse = await request(app)

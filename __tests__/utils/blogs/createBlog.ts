@@ -9,14 +9,15 @@ import { HttpStatus } from "../../../src/core/types/httpStatus";
 import { BlogCreateInput } from "../../../src/blogs/routers/input/blogCreateInput";
 import { ResourceType } from "../../../src/core/types/resourceType";
 import { getBlogDto } from "./getBlogDto";
-import {BlogDataOutput} from "../../../src/blogs/routers/output/blogDataOutput";
+import { BlogDataOutput } from "../../../src/blogs/routers/output/blogDataOutput";
 
 export async function createBlog(
   app: Express,
   blogDto?: BlogAttributes,
 ): Promise<BlogDataOutput> {
   const testBlogData: BlogCreateInput = {
-     ...getBlogDto(), ...blogDto
+    ...getBlogDto(),
+    ...blogDto,
   };
   console.log("Request body:", JSON.stringify(testBlogData, null, 2)); // Здесь
 

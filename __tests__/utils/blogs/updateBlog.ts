@@ -16,12 +16,12 @@ export async function updateBlog(
 ): Promise<void> {
   const testBlogData: BlogUpdateInput = {
     //data: {
-     // type: ResourceType.Blogs,
-      id: blogId,
-      //attributes: {
-        ...getBlogDto(),
-        ...blogDto,
-     // },
+    // type: ResourceType.Blogs,
+    id: blogId,
+    //attributes: {
+    ...getBlogDto(),
+    ...blogDto,
+    // },
     //},
   };
   console.log(

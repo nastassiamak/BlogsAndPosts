@@ -48,25 +48,28 @@
 //   next();
 // };
 
+import { validationResult } from "express-validator";
+import { Response, Request, NextFunction } from "express";
+import { HttpStatus } from "../../types/httpStatus";
+import { FieldNamesType, OutputErrorsType } from "../../utils/errorUtils";
 
-import {validationResult} from "express-validator";
-import {Response, Request, NextFunction} from "express";
-import {HttpStatus} from "../../types/httpStatus";
-import {FieldNamesType, OutputErrorsType} from "../../utils/errorUtils";
+export const inputValidationResultMiddleware = async (
+  req: Request,
+  res: Response<OutputErrorsType>,
+  next: NextFunction,
+) => {
+  const e = validationResult(req);
+  if (!e.isEmpty()) {
+    const eArray = e.array({ onlyFirstError: true }) as {
+      path: FieldNamesType;
+      msg: string;
+    }[];
 
-export const inputValidationResultMiddleware = async (req: Request,
-                                                      res: Response<OutputErrorsType>, next: NextFunction) => {
-    const e = validationResult(req)
-    if (!e.isEmpty()) {
-        const eArray = e.array({onlyFirstError: true}) as { path: FieldNamesType, msg: string }[]
+    res.status(HttpStatus.BadRequest).json({
+      errorsMessages: eArray.map((x) => ({ field: x.path, message: x.msg })),
+    });
+    return;
+  }
 
-        res
-            .status(HttpStatus.BadRequest)
-            .json({
-                errorsMessages: eArray.map(x => ({field: x.path, message: x.msg}))
-            })
-        return
-    }
-
-    next()
-}
+  next();
+};

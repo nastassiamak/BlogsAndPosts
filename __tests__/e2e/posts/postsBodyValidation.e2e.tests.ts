@@ -28,15 +28,11 @@ describe("Posts API body validation check", () => {
       .send({})
       .expect(HttpStatus.Unauthorized);
 
-    const invalidDataSet1 =
-        await request(app)
-            .post(POSTS_PATH)
-            .set("Authorization", adminToken)
-            .send({    title: "   ",
-                       shortDescription: "",
-                       content: 1,
-           })
-           .expect(HttpStatus.BadRequest);
+    const invalidDataSet1 = await request(app)
+      .post(POSTS_PATH)
+      .set("Authorization", adminToken)
+      .send({ title: "   ", shortDescription: "", content: 1 })
+      .expect(HttpStatus.BadRequest);
 
     expect(invalidDataSet1.body.errorsMessages).toHaveLength(3);
 
@@ -44,20 +40,16 @@ describe("Posts API body validation check", () => {
       .post(POSTS_PATH)
       .set("Authorization", adminToken)
       .send({
-
-            title: 21,
-            shortDescription: "   ",
-            content: "2vgg",
-            blogId: 1,
-
-
+        title: 21,
+        shortDescription: "   ",
+        content: "2vgg",
+        blogId: 1,
       })
       .expect(HttpStatus.BadRequest);
     console.log(invalidDataSet2.body.errorsMessages);
     expect(invalidDataSet2.body.errorsMessages).toHaveLength(2);
 
-    const postListResponse = await request(app)
-        .get(POSTS_PATH);
+    const postListResponse = await request(app).get(POSTS_PATH);
     //.set("Authorization", adminToken);
 
     expect(postListResponse.body.items).toHaveLength(0);

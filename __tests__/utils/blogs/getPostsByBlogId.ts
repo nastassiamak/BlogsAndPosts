@@ -1,10 +1,9 @@
-
 import { Express } from "express";
 import { getPostDto } from "../posts/getPostDto";
 import request from "supertest";
 import { BLOGS_PATH, POSTS_PATH } from "../../../src/core/paths/paths";
 import { HttpStatus } from "../../../src/core/types/httpStatus";
-import {PostDataOutput} from "../../../src/posts/routers/output/postDataOutput";
+import { PostDataOutput } from "../../../src/posts/routers/output/postDataOutput";
 
 export async function getPostsByBlogId(
   app: Express,

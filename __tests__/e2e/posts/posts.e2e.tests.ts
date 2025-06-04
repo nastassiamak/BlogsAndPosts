@@ -1,4 +1,4 @@
-import express, {response} from "express";
+import express, { response } from "express";
 import { setupApp } from "../../../src/setupApp";
 import { generateAdminAuthToken } from "../../utils/generateAdminAuthToken";
 import { before } from "node:test";
@@ -19,7 +19,6 @@ describe("Posts API", () => {
   setupApp(app);
 
   const adminToken = generateAdminAuthToken();
-
 
   beforeAll(async () => {
     await runDB("mongodb://localhost:27017/test");
@@ -49,9 +48,9 @@ describe("Posts API", () => {
     const sortDirection = "desc";
 
     const response = await request(app)
-        .get(POSTS_PATH)
-        .query({ pageNumber, pageSize, sortBy, sortDirection })
-        .expect(HttpStatus.Ok);
+      .get(POSTS_PATH)
+      .query({ pageNumber, pageSize, sortBy, sortDirection })
+      .expect(HttpStatus.Ok);
 
     const body = response.body;
 
@@ -98,7 +97,6 @@ describe("Posts API", () => {
       shortDescription: "NewSh",
       content: "newCon",
       blogId: createdBlogId,
-
     };
 
     await updatePost(app, createdBlogId, createdPostId);

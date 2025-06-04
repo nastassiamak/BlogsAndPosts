@@ -1,4 +1,4 @@
-import {body, param} from "express-validator";
+import { body, param } from "express-validator";
 import { blogsRepository } from "../../blogs/repositories/blogsRepository";
 import { resourceTypeValidation } from "../../core/middlewares/validation/resourceTypeValidationMiddleware";
 import { ResourceType } from "../../core/types/resourceType";
@@ -11,9 +11,7 @@ export const titleValidator = body("title")
   .isLength({ min: 1, max: 30 })
   .withMessage("more then 30 or 0");
 
-export const shortDescriptionValidator = body(
-  "shortDescription",
-)
+export const shortDescriptionValidator = body("shortDescription")
   .isString()
   .withMessage("not string")
   .trim()
@@ -73,7 +71,7 @@ export const postCreateInputValidation = [
 ];
 
 export const postUpdateInputValidation = [
- // resourceTypeValidation(ResourceType.Posts),
+  // resourceTypeValidation(ResourceType.Posts),
   //dataIdMatchValidator,
   titleValidator,
   shortDescriptionValidator,

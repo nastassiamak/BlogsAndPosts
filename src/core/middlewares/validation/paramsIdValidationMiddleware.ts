@@ -3,13 +3,11 @@ import { body, param } from "express-validator";
 export const idValidation = param("id")
   .exists()
   .withMessage("ID is required")
-    .bail()
+  .bail()
   .isString()
   .withMessage("ID must be a string")
   .isMongoId()
   .withMessage("Incorrect format of ObjectId");
-
-
 
 // export const dataIdMatchValidator = body("id")
 //   .exists()

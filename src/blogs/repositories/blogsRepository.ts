@@ -7,9 +7,7 @@ import { BlogQueryInput } from "../routers/input/blogQueryInput";
 import { RepositoryNotFoundError } from "../../core/errors/repositoryNotFoundError";
 
 export const blogsRepository = {
-  async findMany(
-      queryDto: BlogQueryInput,
-  ): Promise<{
+  async findMany(queryDto: BlogQueryInput): Promise<{
     pagesCount: number;
     page: number;
     pageSize: number;
@@ -28,7 +26,6 @@ export const blogsRepository = {
     const skip = (pageNumber - 1) * pageSize;
     const filter: any = {};
 
-
     if (searchBlogNameTerm) {
       filter.name = { $regex: searchBlogNameTerm, $options: "i" };
     }
@@ -39,16 +36,15 @@ export const blogsRepository = {
 
     const direction = sortDirection === "asc" ? 1 : -1;
 
-    const totalCount = await blogCollection
-        .countDocuments(filter);
+    const totalCount = await blogCollection.countDocuments(filter);
     const pagesCount = Math.ceil(totalCount / pageSize);
 
     const items = await blogCollection
-        .find(filter)
-        .sort({ [sortBy]: direction })
-        .skip(skip)
-        .limit(pageSize)
-        .toArray();
+      .find(filter)
+      .sort({ [sortBy]: direction })
+      .skip(skip)
+      .limit(pageSize)
+      .toArray();
 
     return { pagesCount, page: pageNumber, pageSize, totalCount, items };
   },

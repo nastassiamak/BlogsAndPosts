@@ -15,12 +15,10 @@ export async function updatePost(
   postDto?: PostAttributes,
 ): Promise<void> {
   const testPostData = {
+    id: postId,
 
-      id: postId,
-
-        ...getPostDto(blogId),
-        ...postDto,
-
+    ...getPostDto(blogId),
+    ...postDto,
   };
   console.log(
     "Sending update request with data:",
