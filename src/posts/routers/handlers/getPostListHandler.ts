@@ -14,7 +14,7 @@ import {RepositoryNotFoundError} from "../../../core/errors/repositoryNotFoundEr
 import {mapToPostOutput} from "../mappers/mapToPostOutput";
 
 export async function getPostListHandler(
-  req: Request<{}, {}, {}, ParsedQs>,
+  req: Request<{id: string}, {}, {}, ParsedQs>,
   res: Response,
 ) {
   console.log("Запрос GET /posts:", req.query);
@@ -24,9 +24,9 @@ export async function getPostListHandler(
       pageSize: Number(query.pageSize) || 10,
       sortBy: (query.sortBy as PostSortField) || PostSortField.CreatedAt,
       sortDirection: (query.sortDirection === "asc" ? SortDirection.Asc : SortDirection.Desc),
-      searchPostTitleTerm: (query.searchPostTitleTerm as string) || undefined,
-      searchPostShortDescriptionTerm: (query.searchPostShortDescriptionTerm as string) || undefined,
-      searchPostContentTerm: (query.searchPostContentTerm as string) || undefined,
+      // searchPostTitleTerm: (query.searchPostTitleTerm as string) || undefined,
+      // searchPostShortDescriptionTerm: (query.searchPostShortDescriptionTerm as string) || undefined,
+      // searchPostContentTerm: (query.searchPostContentTerm as string) || undefined,
     };
   }
 
@@ -40,7 +40,7 @@ export async function getPostListHandler(
 
     console.log(`Найдено постов: ${paginatedPosts.items.length}, всего: ${paginatedPosts.totalCount}`);
     // Маппим каждый пост из БД в нужный формат output
-    const mappedItems = paginatedPosts.items.map(blog => mapToPostOutput(blog));
+    const mappedItems = paginatedPosts.items.map(post => mapToPostOutput(post));
 
 
     // Формируем итоговый ответ с пагинацией и преобразованными постами

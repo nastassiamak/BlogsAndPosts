@@ -67,7 +67,7 @@ describe("Posts API", () => {
     expect(body.items.length).toBeLessThanOrEqual(pageSize);
     expect(body.totalCount).toBeGreaterThanOrEqual(body.items.length);
     expect(body.pagesCount).toBe(Math.ceil(body.totalCount / pageSize));
-
+    console.log("Test ------", response.body);
     // Проверяем сортировку по createdAt (desc)
     for (let i = 1; i < body.items.length; i++) {
       const prevDate = new Date(body.items[i - 1].createdAt).getTime();
