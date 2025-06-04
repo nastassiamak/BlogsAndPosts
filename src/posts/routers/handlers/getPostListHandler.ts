@@ -51,7 +51,9 @@ export async function getPostListHandler(
       totalCount: paginatedPosts.totalCount,
       items: mappedItems,
     };
-    res.send(responsePayload);
+    res
+        .status(HttpStatus.Ok)
+        .send(responsePayload);
   } catch (error) {
     if (error instanceof RepositoryNotFoundError) {
       res.status(HttpStatus.NotFound).send({ message: 'Post not found' });

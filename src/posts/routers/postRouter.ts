@@ -18,7 +18,7 @@ export const postsRouter = Router({});
 
 postsRouter
   .get(
-    "",
+    "/",
     paginationAndSortingValidation(PostSortField),
     inputValidationResultMiddleware,
     getPostListHandler,
