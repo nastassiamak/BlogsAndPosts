@@ -33,29 +33,22 @@ export async function getPostListHandler(
 
   try {
     const queryInput = parsePostQuery(req.query);
-    const queryWithDefaults = setDefaultSortAndPaginationIfNotExist(queryInput);
 
-    const paginatedPosts = await postService.findMany(queryWithDefaults);
+    // Запрос данных с пагинацией и сортировкой
+    const { items, totalCount } = await postService.findMany(queryInput);
 
-    console.log(
-      `Найдено ПОСТОВ: ${paginatedPosts.items.length}, всего: ${paginatedPosts.totalCount}`,
-    );
-    // Маппим каждый пост из БД в нужный формат output
-    const mappedItems = paginatedPosts.items.map((post) =>
-      mapToPostOutput(post),
-    );
+    const pagesCount = Math.ceil(totalCount / queryInput.pageSize);
 
-    // Формируем итоговый ответ с пагинацией и преобразованными постами
-    const responsePayload = {
-      pagesCount: Math.ceil(
-        paginatedPosts.totalCount / queryWithDefaults.pageSize,
-      ),
-      page: queryWithDefaults.pageNumber,
-      pageSize: queryWithDefaults.pageSize,
-      totalCount: paginatedPosts.totalCount,
+    // Маппим каждый пост под нужный формат вывода
+    const mappedItems = items.map(mapToPostOutput);
+
+    res.status(HttpStatus.Ok).json({
+      pagesCount,
+      page: queryInput.pageNumber,
+      pageSize: queryInput.pageSize,
+      totalCount,
       items: mappedItems,
-    };
-    res.status(HttpStatus.Ok).send(responsePayload);
+    });
   } catch (error) {
     if (error instanceof RepositoryNotFoundError) {
       res.status(HttpStatus.NotFound).send({ message: "Post not found" });
