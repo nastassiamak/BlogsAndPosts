@@ -28,8 +28,6 @@ export async function getPostListHandler(
       searchPostTitleTerm: (query.searchPostTitleTerm as string) || undefined,
       searchPostShortDescriptionTerm:
         (query.searchPostShortDescriptionTerm as string) || undefined,
-      searchPostContentTerm:
-        (query.searchPostContentTerm as string) || undefined,
     };
   }
 

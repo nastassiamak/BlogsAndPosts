@@ -16,6 +16,7 @@ export async function getBlogListHandler(
   req: Request<{}, {}, {}, ParsedQs>,
   res: Response,
 ) {
+  console.log("Запрос GET /blogs:", req.query)
   function parseBlogQuery(query: ParsedQs): BlogQueryInput {
     return {
       pageNumber: Number(query.pageNumber) || 1,
@@ -53,6 +54,7 @@ export async function getBlogListHandler(
       totalCount: paginatedBlogs.totalCount,
       items: mappedItems,
     };
+    console.log(responsePayload, "<--- bloglist");
     res.send(responsePayload);
   } catch (error) {
     if (error instanceof RepositoryNotFoundError) {

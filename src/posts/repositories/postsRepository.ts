@@ -8,9 +8,7 @@ import { blogService } from "../../blogs/application/blogService";
 import { blogsRepository } from "../../blogs/repositories/blogsRepository";
 
 export const postsRepository = {
-  async findMany(
-    queryDto: PostQueryInput,
-  ): Promise<{
+  async findMany(queryDto: PostQueryInput): Promise<{
     pagesCount: number;
     page: number;
     pageSize: number;

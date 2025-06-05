@@ -5,9 +5,7 @@ import { blogsRepository } from "../repositories/blogsRepository";
 import { BlogAttributes } from "./dtos/blogAttributes";
 
 export const blogService = {
-  async findMany(
-    queryDto: BlogQueryInput,
-  ): Promise<{
+  async findMany(queryDto: BlogQueryInput): Promise<{
     pagesCount: number;
     page: number;
     pageSize: number;
