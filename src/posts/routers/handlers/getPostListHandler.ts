@@ -44,7 +44,7 @@ export async function getPostListHandler(
     );
 
     // Маппим каждый пост из БД в нужный формат output
-    const mappedItems =paginatedPosts.items.map((post) =>
+    const mappedItems = paginatedPosts.items.map((post) =>
         mapToPostOutput(post),
     );
 
@@ -58,7 +58,7 @@ export async function getPostListHandler(
       items: mappedItems,
     };
     console.log(responsePayload, "<--- postlist");
-    res.send(responsePayload);
+    res.status(HttpStatus.Ok).json(responsePayload);
 
   } catch (error) {
     if (error instanceof RepositoryNotFoundError) {
