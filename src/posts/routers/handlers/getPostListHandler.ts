@@ -12,6 +12,7 @@ import { HttpStatus } from "../../../core/types/httpStatus";
 import { BlogSortField } from "../../../blogs/routers/input/blogSortField";
 import { RepositoryNotFoundError } from "../../../core/errors/repositoryNotFoundError";
 import { mapToPostOutput } from "../mappers/mapToPostOutput";
+import {mapToBlogOutput} from "../../../blogs/routers/mappers/mapToBlogOutput";
 
 export async function getPostListHandler(
   req: Request<{}, {}, {}, ParsedQs>,
@@ -34,21 +35,31 @@ export async function getPostListHandler(
   try {
     const queryInput = parsePostQuery(req.query);
 
+    const queryWithDefaults = setDefaultSortAndPaginationIfNotExist(queryInput);
     // Запрос данных с пагинацией и сортировкой
-    const { items, totalCount } = await postService.findMany(queryInput);
+    const paginatedPosts = await postService.findMany(queryWithDefaults);
 
-    const pagesCount = Math.ceil(totalCount / queryInput.pageSize);
+    console.log(
+        `Найдено блогов: ${paginatedPosts.items.length}, всего: ${paginatedPosts.totalCount}`,
+    );
 
-    // Маппим каждый пост под нужный формат вывода
-    const mappedItems = items.map(mapToPostOutput);
+    // Маппим каждый пост из БД в нужный формат output
+    const mappedItems =paginatedPosts.items.map((post) =>
+        mapToPostOutput(post),
+    );
 
-    res.status(HttpStatus.Ok).json({
-      pagesCount,
-      page: queryInput.pageNumber,
-      pageSize: queryInput.pageSize,
-      totalCount,
+    const responsePayload = {
+      pagesCount: Math.ceil(
+          paginatedPosts.totalCount / queryWithDefaults.pageSize,
+      ),
+      page: queryWithDefaults.pageNumber,
+      pageSize: queryWithDefaults.pageSize,
+      totalCount: paginatedPosts.totalCount,
       items: mappedItems,
-    });
+    };
+    console.log(responsePayload, "<--- postlist");
+    res.send(responsePayload);
+
   } catch (error) {
     if (error instanceof RepositoryNotFoundError) {
       res.status(HttpStatus.NotFound).send({ message: "Post not found" });

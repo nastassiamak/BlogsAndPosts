@@ -44,7 +44,6 @@ export async function getBlogListHandler(
       mapToBlogOutput(blog),
     );
 
-    // Формируем итоговый ответ с пагинацией и преобразованными постами
     const responsePayload = {
       pagesCount: Math.ceil(
         paginatedBlogs.totalCount / queryWithDefaults.pageSize,
