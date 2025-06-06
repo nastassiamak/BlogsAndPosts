@@ -6,6 +6,7 @@ import { RepositoryNotFoundError } from "../../core/errors/repositoryNotFoundErr
 import { PostAttributes } from "../application/dtos/postAttributes";
 import { blogService } from "../../blogs/application/blogService";
 import { blogsRepository } from "../../blogs/repositories/blogsRepository";
+import {query} from "express-validator";
 
 export const postsRepository = {
   async findMany(queryDto: PostQueryInput): Promise<{
@@ -15,6 +16,7 @@ export const postsRepository = {
     totalCount: number;
     items: WithId<Post>[];
   }> {
+    console.log("findMany query params:", query);
     const {
       pageNumber = 1,
       pageSize = 10,
