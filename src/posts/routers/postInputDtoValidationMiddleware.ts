@@ -79,7 +79,7 @@ export const postUpdateInputValidation = [
   titleValidator,
   shortDescriptionValidator,
   contentValidator,
-   findPostValidator,
+   //findPostValidator,
   //blogIdValidator,
   createdAtValidator,
 ];
