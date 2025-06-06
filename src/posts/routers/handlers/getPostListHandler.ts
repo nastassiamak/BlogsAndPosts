@@ -39,7 +39,7 @@ export async function getPostListHandler(
 
     const queryWithDefaults = setDefaultSortAndPaginationIfNotExist(queryInput);
     // Запрос данных с пагинацией и сортировкой
-    const paginatedPosts = await postService.findMany(parsePostQuery(req.query));
+    const paginatedPosts = await postService.findMany(queryInput);
 
     console.log(
         `Найдено блогов: ${paginatedPosts.items.length}, всего: ${paginatedPosts.totalCount}`,
