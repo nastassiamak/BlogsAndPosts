@@ -15,7 +15,6 @@ export const postsRepository = {
     totalCount: number;
     items: WithId<Post>[];
   }> {
-    console.log("findMany query params:", queryDto);
     const {
       pageNumber = 1,
       pageSize = 10,
@@ -26,8 +25,6 @@ export const postsRepository = {
       // searchPostContentTerm,
     } = queryDto;
 
-    const page = Math.max(1, pageNumber);
-    const size = Math.max(1, pageSize);
     const skip = (pageNumber - 1) * pageSize;
     const filter: any = {};
 
@@ -48,19 +45,17 @@ export const postsRepository = {
 
     const direction = sortDirection === "asc" ? 1 : -1;
 
-    const totalCount =
-        await postCollection.countDocuments(filter);
-    const pagesCount =
-        Math.ceil(totalCount / size);
+    const totalCount = await postCollection.countDocuments(filter);
+    const pagesCount = Math.ceil(totalCount / pageSize);
 
     const items = await postCollection
       .find(filter)
       .sort({ [sortBy]: direction })
       .skip(skip)
-      .limit(size)
+      .limit(pageSize)
       .toArray();
 
-    return { pagesCount, page, pageSize: size, totalCount, items };
+    return { pagesCount, page: pageNumber, pageSize, totalCount, items };
   },
 
 

@@ -37,7 +37,7 @@ export async function getPostListHandler(
   try {
     const queryInput = parsePostQuery(req.query);
 
-    const queryWithDefaults = setDefaultSortAndPaginationIfNotExist(queryInput);
+   // const queryWithDefaults = setDefaultSortAndPaginationIfNotExist(queryInput);
     // Запрос данных с пагинацией и сортировкой
     const paginatedPosts = await postService.findMany(queryInput);
 
@@ -52,10 +52,10 @@ export async function getPostListHandler(
 
     const responsePayload = {
       pagesCount: Math.ceil(
-          paginatedPosts.totalCount / queryWithDefaults.pageSize,
+          paginatedPosts.totalCount / queryInput.pageSize,
       ),
-      page: queryWithDefaults.pageNumber,
-      pageSize: queryWithDefaults.pageSize,
+      page: queryInput.pageNumber,
+      pageSize: queryInput.pageSize,
       totalCount: paginatedPosts.totalCount,
       items: mappedItems,
     };
