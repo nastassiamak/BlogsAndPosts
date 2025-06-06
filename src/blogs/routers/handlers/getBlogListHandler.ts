@@ -34,7 +34,8 @@ export async function getBlogListHandler(
     const queryInput = parseBlogQuery(req.query);
     const queryWithDefaults = setDefaultSortAndPaginationIfNotExist(queryInput);
 
-    const paginatedBlogs = await blogService.findMany(queryWithDefaults);
+    const paginatedBlogs = await blogService
+        .findMany(queryWithDefaults);
     console.log(
       `Найдено блогов: ${paginatedBlogs.items.length}, всего: ${paginatedBlogs.totalCount}`,
     );
