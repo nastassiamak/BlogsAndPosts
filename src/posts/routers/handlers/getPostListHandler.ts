@@ -17,12 +17,17 @@ import {mapToBlogOutput} from "../../../blogs/routers/mappers/mapToBlogOutput";
 export async function getPostListHandler(
   req: Request<{}, {}, {}, ParsedQs>,
   res: Response,
-) {
+)
+{
+  function safeParsePositiveInt(value: any, defaultValue: number) {
+    const num = Number(value);
+    return Number.isInteger(num) && num > 0 ? num : defaultValue;
+  }
   console.log("Запрос GET /posts:", req.query);
   function parsePostQuery(query: ParsedQs): PostQueryInput {
     return {
-      pageNumber: Number(query.pageNumber) || 1,
-      pageSize: Number(query.pageSize) || 10,
+      pageNumber: safeParsePositiveInt(query.pageNumber, 1),
+      pageSize: safeParsePositiveInt(query.pageSize, 10),
       sortBy: (query.sortBy as PostSortField) || PostSortField.CreatedAt,
       sortDirection:
         query.sortDirection === "asc" ? SortDirection.Asc : SortDirection.Desc,
