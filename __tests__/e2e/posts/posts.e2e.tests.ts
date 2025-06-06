@@ -6,7 +6,7 @@ import { runDB, stopDb } from "../../../src/db/mongoDb";
 import { clearDb } from "../../utils/clearDb";
 import { createPost } from "../../utils/posts/createPost";
 import request from "supertest";
-import { POSTS_PATH } from "../../../src/core/paths/paths";
+import {BLOGS_PATH, POSTS_PATH} from "../../../src/core/paths/paths";
 import { HttpStatus } from "../../../src/core/types/httpStatus";
 import { getPostById } from "../../utils/posts/getPostById";
 import { ResourceType } from "../../../src/core/types/resourceType";
@@ -37,10 +37,36 @@ describe("Posts API", () => {
     expect(post).toHaveProperty("content");
     expect(post).toHaveProperty("blogId");
   });
+  it("should return paginated and sorted posts list", async () => {
+    // Создаем блог, чтобы у постов был валидный blogId
+    const blogResponse = await request(app)
+        .post(BLOGS_PATH)
+        .set("Authorization", adminToken)
+        .send({
+          name: "Test Blog",
+          description: "Description",
+          websiteUrl: "https://example.com",
+        })
+        .expect(HttpStatus.Created);
 
-  it("should return posts list; GET /posts with pagination and sorting", async () => {
-    // Создаём 15 тестовых постов
-    await Promise.all(Array.from({ length: 15 }).map(() => createPost(app)));
+    const blogId = blogResponse.body.id;
+
+    // Создаем 15 постов с разными датами создания и заголовками
+    const postsData = Array.from({ length: 15 }, (_, i) => ({
+      title: `Post Title ${i + 1}`,
+      shortDescription: `Short Desc ${i + 1}`,
+      content: `Content ${i + 1}`,
+      blogId,
+    }));
+
+    for (const postData of postsData) {
+      await request(app)
+          .post(POSTS_PATH)
+          .set("Authorization", adminToken)
+          .send(postData)
+          .expect(HttpStatus.Created);
+      // Если в вашем API нельзя задать createdAt вручную, то сортировка по createdAt будет по времени вставки
+    }
 
     const pageNumber = 1;
     const pageSize = 10;
@@ -48,32 +74,30 @@ describe("Posts API", () => {
     const sortDirection = "desc";
 
     const response = await request(app)
-      .get(POSTS_PATH)
-      .query({ pageNumber, pageSize, sortBy, sortDirection })
-      .expect(HttpStatus.Ok);
+        .get(POSTS_PATH)
+        .query({ pageNumber, pageSize, sortBy, sortDirection })
+        .expect(HttpStatus.Ok);
 
     const body = response.body;
 
-    // Проверяем обязательные поля пагинации
-    expect(body).toHaveProperty("pagesCount");
-    expect(body).toHaveProperty("page");
-    expect(body).toHaveProperty("pageSize");
-    expect(body).toHaveProperty("totalCount");
+    expect(body).toHaveProperty("items");
     expect(Array.isArray(body.items)).toBe(true);
+    expect(body.items.length).toBeLessThanOrEqual(pageSize);
 
     expect(body.page).toBe(pageNumber);
     expect(body.pageSize).toBe(pageSize);
-    expect(body.items.length).toBeLessThanOrEqual(pageSize);
-    expect(body.totalCount).toBeGreaterThanOrEqual(body.items.length);
+    expect(body.totalCount).toBeGreaterThanOrEqual(postsData.length);
     expect(body.pagesCount).toBe(Math.ceil(body.totalCount / pageSize));
-    console.log("Test ------", response.body);
-    // Проверяем сортировку по createdAt (desc)
+
+    // Проверяем сортировку: каждый следующий post.createdAt меньше или равен предыдущему
     for (let i = 1; i < body.items.length; i++) {
       const prevDate = new Date(body.items[i - 1].createdAt).getTime();
       const curDate = new Date(body.items[i].createdAt).getTime();
       expect(prevDate).toBeGreaterThanOrEqual(curDate);
     }
   });
+
+
 
   it("should return posts by id; GET /posts/:id", async () => {
     const createdPost = await createPost(app);

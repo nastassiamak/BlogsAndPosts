@@ -23,9 +23,9 @@ export async function getBlogPostListHandler(
       sortBy: (query.sortBy as PostSortField) || PostSortField.CreatedAt,
       sortDirection:
         query.sortDirection === "asc" ? SortDirection.Asc : SortDirection.Desc,
-      searchPostTitleTerm: (query.searchPostTitleTerm as string) || undefined,
-      searchPostShortDescriptionTerm:
-        (query.searchPostShortDescriptionTerm as string) || undefined,
+      // searchPostTitleTerm: (query.searchPostTitleTerm as string) || undefined,
+      // searchPostShortDescriptionTerm:
+      //   (query.searchPostShortDescriptionTerm as string) || undefined,
     };
   }
 
