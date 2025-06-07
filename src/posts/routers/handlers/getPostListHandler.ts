@@ -20,17 +20,13 @@ export async function getPostListHandler(
 )
 {
   console.log("Запрос GET /posts:", req.query);
-  function parsePostQuery(query: ParsedQs): PostQueryInput {
+  function parsePostQuery(query: ParsedQs) {
     return {
       pageNumber: Number(query.pageNumber) || 1,
       pageSize: Number(query.pageSize) || 10,
       sortBy: (query.sortBy as PostSortField) || PostSortField.CreatedAt,
       sortDirection:
         query.sortDirection === "asc" ? SortDirection.Asc : SortDirection.Desc,
-
-      // searchPostTitleTerm: (query.searchPostTitleTerm as string) || undefined,
-      // searchPostShortDescriptionTerm:
-      //   (query.searchPostShortDescriptionTerm as string) || undefined,
     };
   }
 

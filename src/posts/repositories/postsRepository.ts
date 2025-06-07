@@ -20,9 +20,6 @@ export const postsRepository = {
       pageSize = 10,
       sortBy = "createdAt",
       sortDirection = "desc",
-      // searchPostTitleTerm,
-      // searchPostShortDescriptionTerm,
-      // searchPostContentTerm,
     } = queryDto;
 
     const skip = (pageNumber - 1) * pageSize;
