@@ -7,6 +7,7 @@ import { SortDirection } from "../../../core/types/sortDirection";
 import { HttpStatus } from "../../../core/types/httpStatus";
 import { RepositoryNotFoundError } from "../../../core/errors/repositoryNotFoundError";
 import { mapToPostOutput } from "../mappers/mapToPostOutput";
+import {PostQueryInput} from "../input/postQueryInput";
 
 export async function getPostListHandler(
   req: Request<{}, {}, {}, ParsedQs>,
@@ -14,7 +15,7 @@ export async function getPostListHandler(
 )
 {
   console.log("Запрос GET /posts:", req.query);
-  function parsePostQuery(query: ParsedQs) {
+  function parsePostQuery(query: ParsedQs): PostQueryInput {
     return {
       pageNumber: Number(query.pageNumber) || 1,
       pageSize: Number(query.pageSize) || 10,
