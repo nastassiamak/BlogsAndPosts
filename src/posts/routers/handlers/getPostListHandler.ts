@@ -51,9 +51,10 @@ export async function getPostListHandler(
       items: mappedItems,
     };
     console.log(responsePayload, "<--- postlist");
-    res.status(HttpStatus.Ok).json(responsePayload);
+    res.status(HttpStatus.Ok).send(responsePayload);
 
   } catch (error) {
+    console.error("Ошибка в getPostListHandler:", error);
     if (error instanceof RepositoryNotFoundError) {
       res.status(HttpStatus.NotFound).send({ message: "Post not found" });
     }

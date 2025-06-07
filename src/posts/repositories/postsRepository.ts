@@ -97,15 +97,6 @@ export const postsRepository = {
     return insertResult.insertedId.toString();
   },
 
-  async createPostByBlogId(newPost: Post, blogId: string): Promise<string> {
-    const blog = await blogService.findByIdOrFail(blogId);
-    if (!blog) {
-      throw new RepositoryNotFoundError("Blog not found");
-    }
-    const insertResult = await postCollection.insertOne(newPost);
-    return insertResult.insertedId.toString();
-  },
-
   async updatePost(id: string, dto: PostAttributes): Promise<void> {
     const updateResult = await postCollection.updateOne(
       {

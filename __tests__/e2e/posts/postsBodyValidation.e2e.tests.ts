@@ -65,7 +65,7 @@ describe("Posts API body validation check", () => {
         })
         .expect(HttpStatus.BadRequest);
 
-    console.log(invalidDataSet2.body.errorsMessages);
+    //console.log(invalidDataSet2.body.errorsMessages);
     expect(invalidDataSet2.body.errorsMessages).toHaveLength(2);
   });
 
@@ -82,7 +82,7 @@ describe("Posts API body validation check", () => {
         .expect(HttpStatus.Ok);
     expect(res.body).toHaveProperty("items");
     // Для отладки можно залогировать весь ответ (по необходимости)
-    console.log(res.body);
+   // console.log(res.body);
   });
 
   it("should return 200 with only pageNumber param", async () => {
@@ -119,7 +119,7 @@ describe("Posts API body validation check", () => {
           sortDirection: "desc",
         })
         .expect(HttpStatus.Ok);
-    console.log(res.body);
+    //console.log(res.body);
     expect(res.body).toHaveProperty("items");
 
   });
@@ -131,7 +131,7 @@ describe("Posts API body validation check", () => {
         .get(POSTS_PATH)
         .query({ pageNumber: "abc" })
         .expect(HttpStatus.BadRequest);
-    console.log(res.body);
+    //console.log(res.body);
   });
 
   it("should return 400 when passing invalid pageSize", async () => {
