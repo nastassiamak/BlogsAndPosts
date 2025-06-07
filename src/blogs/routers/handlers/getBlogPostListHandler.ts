@@ -66,7 +66,7 @@ export async function getBlogPostListHandler(
 
     console.log("Формируем ответ:", responsePayload);
 
-    res.status(HttpStatus.Ok).json(responsePayload);
+    res.status(HttpStatus.Ok).send(responsePayload);
   } catch (error) {
     if (error instanceof RepositoryNotFoundError) {
       res.status(HttpStatus.NotFound).send({ message: "Blog not found" });

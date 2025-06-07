@@ -58,9 +58,8 @@ export async function getPostListHandler(
     if (error instanceof RepositoryNotFoundError) {
       res.status(HttpStatus.NotFound).send({ message: "Post not found" });
     }
-    console.error("Error in getPostListHandler:", error);
     res
-      .status(HttpStatus.InternalServerError)
-      .send({ message: "Internal Server Error" });
+        .status(400)
+        .send({ message: (error as Error).message || "Invalid query" });
   }
 }
