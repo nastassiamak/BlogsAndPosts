@@ -43,10 +43,10 @@ export async function getPostListHandler(
 
     const responsePayload = {
       pagesCount: Math.ceil(
-          paginatedPosts.totalCount / queryInput.pageSize,
+          paginatedPosts.totalCount / queryWithDefaults.pageSize,
       ),
-      page: queryInput.pageNumber,
-      pageSize: queryInput.pageSize,
+      page: queryWithDefaults.pageNumber,
+      pageSize: queryWithDefaults.pageSize,
       totalCount: paginatedPosts.totalCount,
       items: mappedItems,
     };
