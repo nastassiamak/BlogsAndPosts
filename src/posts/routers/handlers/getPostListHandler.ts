@@ -1,18 +1,12 @@
 import { Request, Response } from "express";
-import { PostQueryInput } from "../input/postQueryInput";
-import { mapToPostListPaginatedOutput } from "../mappers/mapToPostListPaginatedOutputUtil";
-//import { errorsHandler } from "../../../core/errors/errorsHandler";
 import { postService } from "../../application/postService";
 import { setDefaultSortAndPaginationIfNotExist } from "../../../core/helpers/setDefaultSortAndPagination";
 import { ParsedQs } from "qs";
 import { PostSortField } from "../input/postSortField";
 import { SortDirection } from "../../../core/types/sortDirection";
-import { getPostHandler } from "./getPostHandler";
 import { HttpStatus } from "../../../core/types/httpStatus";
-import { BlogSortField } from "../../../blogs/routers/input/blogSortField";
 import { RepositoryNotFoundError } from "../../../core/errors/repositoryNotFoundError";
 import { mapToPostOutput } from "../mappers/mapToPostOutput";
-import {mapToBlogOutput} from "../../../blogs/routers/mappers/mapToBlogOutput";
 
 export async function getPostListHandler(
   req: Request<{}, {}, {}, ParsedQs>,
@@ -33,9 +27,9 @@ export async function getPostListHandler(
   try {
     const queryInput = parsePostQuery(req.query);
 
-   // const queryWithDefaults = setDefaultSortAndPaginationIfNotExist(queryInput);
+    const queryWithDefaults = setDefaultSortAndPaginationIfNotExist(queryInput);
     // Запрос данных с пагинацией и сортировкой
-    const paginatedPosts = await postService.findMany(queryInput);
+    const paginatedPosts = await postService.findMany(queryWithDefaults);
 
     console.log(
         `Найдено блогов: ${paginatedPosts.items.length}, всего: ${paginatedPosts.totalCount}`,
