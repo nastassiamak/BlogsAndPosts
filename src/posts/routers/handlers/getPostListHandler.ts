@@ -20,7 +20,7 @@ export async function getPostListHandler(
       pageSize: Number(query.pageSize) || 10,
       sortBy: (query.sortBy as PostSortField) || PostSortField.CreatedAt,
       sortDirection:
-      query.shortDescription === "asc" ? SortDirection.Asc : SortDirection.Desc,
+      query.sortDescription === "asc" ? SortDirection.Asc : SortDirection.Desc,
     }
   }
   try {
