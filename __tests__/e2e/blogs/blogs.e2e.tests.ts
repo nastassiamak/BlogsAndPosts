@@ -146,7 +146,7 @@ describe("Blog API", () => {
     };
 
     const response = await request(app)
-      .post(`${BLOGS_PATH}/${blogId}${POSTS_PATH}`)
+      .post(`${BLOGS_PATH}/${blogId}/posts`)
       .set("Authorization", generateAdminAuthToken())
       .send(postData)
       .expect(HttpStatus.Created);

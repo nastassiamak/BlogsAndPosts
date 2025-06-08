@@ -27,7 +27,7 @@ export async function createPostByBlogId(
   );
 
   const response = await request(app)
-    .post(`${BLOGS_PATH}/${blogId}${POSTS_PATH}`)
+    .post(`${BLOGS_PATH}/${blogId}/posts`)
     .set("Authorization", generateAdminAuthToken())
     .send(postDataToSend)
     .expect(HttpStatus.Created);
