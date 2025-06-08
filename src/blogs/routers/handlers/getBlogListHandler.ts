@@ -53,7 +53,7 @@ export async function getBlogListHandler(
       totalCount: paginatedBlogs.totalCount,
       items: mappedItems,
     };
-    console.log(responsePayload, "<--- bloglist");
+    console.log(responsePayload, "<--- blogList");
     res.send(responsePayload);
   } catch (error) {
     if (error instanceof RepositoryNotFoundError) {

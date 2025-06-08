@@ -9,7 +9,12 @@ import { blogsRepository } from "../../blogs/repositories/blogsRepository";
 export const postService = {
   async findMany(
     queryDto: PostQueryInput,
-  ): Promise<{ items: WithId<Post>[]; totalCount: number }> {
+  ): Promise<{ pagesCount: number;
+    page: number;
+    pageSize: number;
+    totalCount: number;
+    items: WithId<Post>[];
+  }> {
     return postsRepository.findMany(queryDto);
   },
 
