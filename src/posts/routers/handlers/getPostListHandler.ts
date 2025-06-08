@@ -15,13 +15,32 @@ export async function getPostListHandler(
 ) {
   console.log("Запрос GET /posts:", req.query);
   function parsePostQuery(query: ParsedQs): PostQueryInput {
-    return {
-      pageNumber: Number(query.pageNumber) || 1,
-      pageSize: Number(query.pageSize) || 10,
-      sortBy: (query.sortBy as PostSortField) || PostSortField.CreatedAt,
-      sortDirection:
-      query.sortDirection === "asc" ? SortDirection.Asc : SortDirection.Desc,
+    const pageNumber = query.pageNumber ? Number(query.pageNumber) : 1;
+
+    if (isNaN(pageNumber) || pageNumber < 1) {
+      throw new Error("Page number must be a positive integer");
     }
+
+    const pageSize = query.pageSize ? Number(query.pageSize) : 10;
+    if (isNaN(pageSize) || pageSize < 1 || pageSize > 20) {
+      throw new Error("Page size must be an integer between 1 and 100");
+    }
+
+    const sortBy = (query.sortBy as PostSortField) || PostSortField.CreatedAt;
+    // можно добавить проверку на валидные значения sortBy
+
+    const sortDirection =
+        query.sortDirection === "asc" ? SortDirection.Asc : SortDirection.Desc;
+
+    // если есть дополнительные поля для поиска, добавьте их здесь
+
+    return {
+      pageNumber,
+      pageSize,
+      sortBy,
+      sortDirection,
+    };
+
   }
   try {
     const queryInput =  parsePostQuery(req.query);
