@@ -24,7 +24,7 @@ export function paginationAndSortingValidation<T extends string>(
     query("pageNumber")
       .optional()
       .default(DEFAULT_PAGE_NUMBER)
-      .isInt({ min: 1 })
+      .isInt({ })
       .withMessage("Page number must be a positive integer")
       .toInt(),
 
