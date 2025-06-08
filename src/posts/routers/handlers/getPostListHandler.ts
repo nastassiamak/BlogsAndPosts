@@ -20,11 +20,11 @@ export async function getPostListHandler(
       pageSize: Number(query.pageSize) || 10,
       sortBy: (query.sortBy as PostSortField) || PostSortField.CreatedAt,
       sortDirection:
-      query.sortDescription === "asc" ? SortDirection.Asc : SortDirection.Desc,
+      query.sortDirection === "asc" ? SortDirection.Asc : SortDirection.Desc,
     }
   }
   try {
-    const queryInput = await parsePostQuery(req.query);
+    const queryInput =  parsePostQuery(req.query);
     const queryWithDefaults = setDefaultSortAndPaginationIfNotExist(queryInput);
     // Вызываем сервис для получения постов с пагинацией, сортировкой и опциональным поиском
     const paginatedPosts = await postService.findMany(queryWithDefaults);
