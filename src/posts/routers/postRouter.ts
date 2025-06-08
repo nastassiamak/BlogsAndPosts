@@ -13,7 +13,7 @@ import {
 import { createPostHandler } from "./handlers/createPostHandler";
 import { updatePostHandler } from "./handlers/updatePostHandler";
 import { deletePostHandler } from "./handlers/deletePostHandler";
-import {Request, Response, NextFunction} from "express";
+import { Request, Response, NextFunction } from "express";
 import { getBlogPostListHandler } from "../../blogs/routers/handlers/getBlogPostListHandler";
 
 export const postsRouter = Router({});
@@ -21,15 +21,11 @@ export const postsRouter = Router({});
 postsRouter
   .get(
     "/",
-   paginationAndSortingValidation(PostSortField),
-   inputValidationResultMiddleware,
-      getPostListHandler,
+    paginationAndSortingValidation(PostSortField),
+    inputValidationResultMiddleware,
+    getPostListHandler,
   )
-  .get(
-      "/:id",
-      idValidation,
-      inputValidationResultMiddleware,
-      getPostHandler)
+  .get("/:id", idValidation, inputValidationResultMiddleware, getPostHandler)
   .post(
     "/",
     superAdminGuardMiddleware,

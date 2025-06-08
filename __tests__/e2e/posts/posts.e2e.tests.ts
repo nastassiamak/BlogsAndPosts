@@ -6,7 +6,7 @@ import { runDB, stopDb } from "../../../src/db/mongoDb";
 import { clearDb } from "../../utils/clearDb";
 import { createPost } from "../../utils/posts/createPost";
 import request from "supertest";
-import {BLOGS_PATH, POSTS_PATH} from "../../../src/core/paths/paths";
+import { BLOGS_PATH, POSTS_PATH } from "../../../src/core/paths/paths";
 import { HttpStatus } from "../../../src/core/types/httpStatus";
 import { getPostById } from "../../utils/posts/getPostById";
 import { ResourceType } from "../../../src/core/types/resourceType";
@@ -40,14 +40,14 @@ describe("Posts API", () => {
   it("should return paginated and sorted posts list", async () => {
     // Создаем блог, чтобы у постов был валидный blogId
     const blogResponse = await request(app)
-        .post(BLOGS_PATH)
-        .set("Authorization", adminToken)
-        .send({
-          name: "Test Blog",
-          description: "Description",
-          websiteUrl: "https://example.com",
-        })
-        .expect(HttpStatus.Created);
+      .post(BLOGS_PATH)
+      .set("Authorization", adminToken)
+      .send({
+        name: "Test Blog",
+        description: "Description",
+        websiteUrl: "https://example.com",
+      })
+      .expect(HttpStatus.Created);
 
     const blogId = blogResponse.body.id;
 
@@ -61,10 +61,10 @@ describe("Posts API", () => {
 
     for (const postData of postsData) {
       await request(app)
-          .post(POSTS_PATH)
-          .set("Authorization", adminToken)
-          .send(postData)
-          .expect(HttpStatus.Created);
+        .post(POSTS_PATH)
+        .set("Authorization", adminToken)
+        .send(postData)
+        .expect(HttpStatus.Created);
       // Если в вашем API нельзя задать createdAt вручную, то сортировка по createdAt будет по времени вставки
     }
 
@@ -74,9 +74,9 @@ describe("Posts API", () => {
     const sortDirection = "desc";
 
     const response = await request(app)
-        .get(POSTS_PATH)
-        .query({ pageNumber, pageSize, sortBy, sortDirection })
-        .expect(HttpStatus.Ok);
+      .get(POSTS_PATH)
+      .query({ pageNumber, pageSize, sortBy, sortDirection })
+      .expect(HttpStatus.Ok);
 
     const body = response.body;
 
@@ -96,8 +96,6 @@ describe("Posts API", () => {
       expect(prevDate).toBeGreaterThanOrEqual(curDate);
     }
   });
-
-
 
   it("should return posts by id; GET /posts/:id", async () => {
     const createdPost = await createPost(app);

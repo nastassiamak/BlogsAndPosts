@@ -2,9 +2,9 @@ import { body, param } from "express-validator";
 import { blogsRepository } from "../../blogs/repositories/blogsRepository";
 import { resourceTypeValidation } from "../../core/middlewares/validation/resourceTypeValidationMiddleware";
 import { ResourceType } from "../../core/types/resourceType";
-import {Request, Response, NextFunction} from "express";
-import {postsRepository} from "../repositories/postsRepository";
-import {HttpStatus} from "../../core/types/httpStatus";
+import { Request, Response, NextFunction } from "express";
+import { postsRepository } from "../repositories/postsRepository";
+import { HttpStatus } from "../../core/types/httpStatus";
 //import { dataIdMatchValidator } from "../../core/middlewares/validation/paramsIdValidationMiddleware";
 
 export const titleValidator = body("title")
@@ -50,19 +50,20 @@ export const blogIdValidator = param("blogId")
     return true; // Если блог найден
   });
 
-export const findPostValidator = async (req: Request<{id: string}>,
-                                        res: Response, next: NextFunction) => {
-    const postId = req.params.id;
-    const post = await postsRepository.findById(postId);
-    if (!post) {
-        res
-            .status(HttpStatus.BadRequest)
-            .json({});
-        return
-    }
+export const findPostValidator = async (
+  req: Request<{ id: string }>,
+  res: Response,
+  next: NextFunction,
+) => {
+  const postId = req.params.id;
+  const post = await postsRepository.findById(postId);
+  if (!post) {
+    res.status(HttpStatus.BadRequest).json({});
+    return;
+  }
 
-    next()
-}
+  next();
+};
 
 export const postCreateInputValidation = [
   //resourceTypeValidation(ResourceType.Posts),
@@ -79,7 +80,7 @@ export const postUpdateInputValidation = [
   titleValidator,
   shortDescriptionValidator,
   contentValidator,
-   //findPostValidator,
+  //findPostValidator,
   //blogIdValidator,
   createdAtValidator,
 ];

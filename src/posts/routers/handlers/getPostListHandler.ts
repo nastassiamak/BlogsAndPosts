@@ -3,31 +3,34 @@ import { PostQueryInput } from "../input/postQueryInput";
 import { postService } from "../../application/postService";
 import { mapToPostOutput } from "../mappers/mapToPostOutput";
 import { HttpStatus } from "../../../core/types/httpStatus";
-import {PostSortField} from "../input/postSortField";
-import {SortDirection} from "../../../core/types/sortDirection";
-import {validationResult} from "express-validator";
+import { PostSortField } from "../input/postSortField";
+import { SortDirection } from "../../../core/types/sortDirection";
+import { validationResult } from "express-validator";
 export async function getPostListHandler(req: Request, res: Response) {
- try {
+  try {
+    // Берём и явно приводим поля из req.query,
+    // их уже гарантированно провалидировали middleware express-validator
+    const pageNumber = +(req.query.pageNumber ?? 1);
+    const pageSize = +(req.query.pageSize ?? 10);
+    const sortBy = (req.query.sortBy ??
+      PostSortField.CreatedAt) as PostSortField;
+    const sortDirection =
+      req.query.sortDirection === "asc"
+        ? SortDirection.Asc
+        : SortDirection.Desc;
 
-  // Берём и явно приводим поля из req.query,
-  // их уже гарантированно провалидировали middleware express-validator
-  const pageNumber = +(req.query.pageNumber ?? 1);
-  const pageSize = +(req.query.pageSize ?? 10);
-  const sortBy = (req.query.sortBy ?? PostSortField.CreatedAt) as PostSortField;
-  const sortDirection =
-      (req.query.sortDirection === "asc" ? SortDirection.Asc : SortDirection.Desc);
+    // Остальные поля (поиск и т.п.) можно получить и привести аналогично
+    const searchCreatedAtTerm = req.query.searchCreatedAtTerm as
+      | string
+      | undefined;
 
-  // Остальные поля (поиск и т.п.) можно получить и привести аналогично
-  const searchCreatedAtTerm = req.query.searchCreatedAtTerm as string | undefined;
-
-  const queryInput: PostQueryInput = {
-    pageNumber,
-    pageSize,
-    sortBy,
-    sortDirection,
-    ...(searchCreatedAtTerm ? { searchCreatedAtTerm } : {}),
-  };
-
+    const queryInput: PostQueryInput = {
+      pageNumber,
+      pageSize,
+      sortBy,
+      sortDirection,
+      ...(searchCreatedAtTerm ? { searchCreatedAtTerm } : {}),
+    };
 
     // Вызываем сервис для получения постов с пагинацией, сортировкой и опциональным поиском
     const paginatedPosts = await postService.findMany(queryInput);

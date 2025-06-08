@@ -16,7 +16,7 @@ export async function getBlogListHandler(
   req: Request<{}, {}, {}, ParsedQs>,
   res: Response,
 ) {
-  console.log("Запрос GET /blogs:", req.query)
+  console.log("Запрос GET /blogs:", req.query);
   function parseBlogQuery(query: ParsedQs): BlogQueryInput {
     return {
       pageNumber: Number(query.pageNumber) || 1,
@@ -34,8 +34,7 @@ export async function getBlogListHandler(
     const queryInput = parseBlogQuery(req.query);
     const queryWithDefaults = setDefaultSortAndPaginationIfNotExist(queryInput);
 
-    const paginatedBlogs = await blogService
-        .findMany(queryWithDefaults);
+    const paginatedBlogs = await blogService.findMany(queryWithDefaults);
     console.log(
       `Найдено блогов: ${paginatedBlogs.items.length}, всего: ${paginatedBlogs.totalCount}`,
     );

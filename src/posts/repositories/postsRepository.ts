@@ -55,7 +55,6 @@ export const postsRepository = {
     return { pagesCount, page: pageNumber, pageSize, totalCount, items };
   },
 
-
   async findPostsByBlog(
     queryDto: PostQueryInput,
     blogId: string,
