@@ -38,7 +38,7 @@ export async function getPostListHandler(
     return {
       pageNumber,
       pageSize,
-      sortBy: PostSortField.CreatedAt,
+      sortBy,
       sortDirection,
     };
 

@@ -21,7 +21,7 @@ export async function getBlogPostListHandler(
     return {
       pageNumber: Number(query.pageNumber) || 1,
       pageSize: Number(query.pageSize) || 10,
-      sortBy: PostSortField.CreatedAt,
+      sortBy: (query.sortBy as PostSortField) || PostSortField.CreatedAt,
       sortDirection:
         query.sortDirection === "asc" ? SortDirection.Asc : SortDirection.Desc,
       // searchPostTitleTerm: (query.searchPostTitleTerm as string) || undefined,
