@@ -15,10 +15,13 @@ export const paginationAndSortingDefault: PaginationAndSorting<string> = {
   sortDirection: DEFAULT_SORT_DIRECTION,
 };
 
+
 export function paginationAndSortingValidation<T extends string>(
   sortFieldsEnum: Record<string, T>,
 ) {
   const allowedSortFields = Object.values(sortFieldsEnum);
+// Лог для диагностики
+  console.log("Allowed sort fields received for validation:", allowedSortFields);
 
   return [
     query("pageNumber")
