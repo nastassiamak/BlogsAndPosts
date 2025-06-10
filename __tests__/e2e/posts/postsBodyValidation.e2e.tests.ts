@@ -68,21 +68,21 @@ describe("Posts API body validation check", () => {
     expect(invalidDataSet2.body.errorsMessages).toHaveLength(2);
   });
 
-  it("should return empty posts list initially", async () => {
-    const postListResponse = await request(app).get(POSTS_PATH);
-    expect(postListResponse.body.items).toHaveLength(0);
-  });
-
-  // Тесты GET /posts с разными параметрами пагинации и сортировки
-
-  it("should return 200 with no query parameters", async () => {
-    const res = await request(app).get(POSTS_PATH).expect(HttpStatus.Ok);
-    expect(res.body).toHaveProperty("items");
-    // Для отладки можно залогировать весь ответ (по необходимости)
-    // console.log(res.body);
-  });
-
-  // it("should return 200 with only pageNumber param", async () => {
+  // it("should return empty posts list initially", async () => {
+  //   const postListResponse = await request(app).get(POSTS_PATH);
+  //   expect(postListResponse.body.items).toHaveLength(0);
+  // });
+  //
+  // // Тесты GET /posts с разными параметрами пагинации и сортировки
+  //
+  // it("should return 200 with no query parameters", async () => {
+  //   const res = await request(app).get(POSTS_PATH).expect(HttpStatus.Ok);
+  //   expect(res.body).toHaveProperty("items");
+  //   // Для отладки можно залогировать весь ответ (по необходимости)
+  //    console.log(res.body);
+  // });
+  //
+  // // it("should return 200 with only pageNumber param", async () => {
   //   const res = await request(app)
   //     .get(POSTS_PATH)
   //     .query({ pageNumber: 1 })

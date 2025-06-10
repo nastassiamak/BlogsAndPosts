@@ -35,7 +35,7 @@ export async function getPostListHandler(req: Request, res: Response): Promise<v
       page: queryWithDefaults.pageNumber,
       pageSize: queryWithDefaults.pageSize,
       totalCount: paginatedPosts.totalCount,
-      items: mappedItems,
+      items: mappedItems || [],
     };
 
     res.status(HttpStatus.Ok).json(responsePayload);
