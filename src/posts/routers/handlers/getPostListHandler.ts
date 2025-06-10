@@ -10,7 +10,7 @@ import {setDefaultSortAndPaginationIfNotExist} from "../../../core/helpers/setDe
 import {RepositoryNotFoundError} from "../../../core/errors/repositoryNotFoundError";
 
 export async function getPostListHandler(
-    req: Request<{},{},{},ParsedQs>,
+    req: Request,
     res: Response,
 ) {
   console.log("Хендлер: getPostListHandler, query:", req.query);
@@ -45,9 +45,9 @@ export async function getPostListHandler(
   }
   try {
     const queryInput =  parsePostQuery(req.query);
-    const queryWithDefaults = setDefaultSortAndPaginationIfNotExist(queryInput);
+   // const queryWithDefaults = setDefaultSortAndPaginationIfNotExist(queryInput);
     // Вызываем сервис для получения постов с пагинацией, сортировкой и опциональным поиском
-    const paginatedPosts = await postService.findMany(queryWithDefaults);
+    const paginatedPosts = await postService.findMany(queryInput);
 
     console.log(
         `Найдено постов: ${paginatedPosts.items.length}, всего: ${paginatedPosts.totalCount}`,
@@ -60,9 +60,9 @@ export async function getPostListHandler(
 
     // Формируем ответ с пагинацией
     const responsePayload = {
-      pagesCount: Math.ceil(paginatedPosts.totalCount /queryWithDefaults.pageSize),
-      page: queryWithDefaults.pageNumber,
-      pageSize: queryWithDefaults.pageSize,
+      pagesCount: Math.ceil(paginatedPosts.totalCount /queryInput.pageSize),
+      page: queryInput.pageNumber,
+      pageSize: queryInput.pageSize,
       totalCount: paginatedPosts.totalCount,
       items: mappedItems,
     };
