@@ -15,39 +15,12 @@ export async function getPostListHandler(
 ) {
   console.log("Хендлер: getPostListHandler, query:", req.query);
 
-  function parsePostQuery(query: ParsedQs): PostQueryInput {
-    const pageNumber = query.pageNumber ? Number(query.pageNumber) : 1;
-
-    if (isNaN(pageNumber) || pageNumber < 1) {
-      throw new Error("Page number must be a positive integer");
-    }
-
-    const pageSize = query.pageSize ? Number(query.pageSize) : 10;
-    if (isNaN(pageSize) || pageSize < 1 || pageSize > 20) {
-      throw new Error("Page size must be an integer between 1 and 100");
-    }
-
-    const sortBy = (query.sortBy as PostSortField) || PostSortField.CreatedAt;
-    // можно добавить проверку на валидные значения sortBy
-
-    const sortDirection =
-        query.sortDirection === "asc" ? SortDirection.Asc : SortDirection.Desc;
-
-    // если есть дополнительные поля для поиска, добавьте их здесь
-
-    return {
-      pageNumber,
-      pageSize,
-      sortBy,
-      sortDirection,
-    };
-
-  }
   try {
-    const queryInput =  parsePostQuery(req.query);
-   // const queryWithDefaults = setDefaultSortAndPaginationIfNotExist(queryInput);
+    const queryInput = req.query as unknown as PostQueryInput;
+   // const queryInput: PostQueryInput =  req.query;
+    const queryWithDefaults = setDefaultSortAndPaginationIfNotExist(queryInput);
     // Вызываем сервис для получения постов с пагинацией, сортировкой и опциональным поиском
-    const paginatedPosts = await postService.findMany(queryInput);
+    const paginatedPosts = await postService.findMany(queryWithDefaults);
 
     console.log(
         `Найдено постов: ${paginatedPosts.items.length}, всего: ${paginatedPosts.totalCount}`,
