@@ -25,36 +25,21 @@ export const postsRepository = {
     const skip = (pageNumber - 1) * pageSize;
     const filter: any = {};
 
-    // if (searchPostTitleTerm) {
-    //   filter.title = { $regex: searchPostTitleTerm, $options: "i" };
-    // }
-    //
-    // if (searchPostShortDescriptionTerm) {
-    //   filter.shortDescription = {
-    //     $regex: searchPostShortDescriptionTerm,
-    //     $options: "i",
-    //   };
-    // }
-    //
-    // if (searchPostContentTerm) {
-    //   filter.content = { $regex: searchPostContentTerm, $options: "i" };
-    // }
-
     const direction = sortDirection === "asc" ? 1 : -1;
 
     const totalCount = await postCollection.countDocuments(filter);
-    const pagesCount = Math.ceil(totalCount / pageSize);
+    const safePageSize = pageSize > 0 ? pageSize : 10;
+    const pagesCount = Math.ceil(totalCount / safePageSize);
 
     const items = await postCollection
-      .find(filter)
-      .sort({ [sortBy]: direction, _id: 1 })
-      .skip(skip)
-      .limit(pageSize)
-      .toArray();
+        .find(filter)
+        .sort({ [sortBy]: direction, _id: 1 })
+        .skip(skip)
+        .limit(safePageSize)
+        .toArray();
 
-    return { pagesCount, page: pageNumber, pageSize, totalCount, items };
+    return { pagesCount, page: pageNumber, pageSize: safePageSize, totalCount, items };
   },
-
   async findPostsByBlog(
     queryDto: PostQueryInput,
     blogId: string,

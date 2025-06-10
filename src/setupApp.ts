@@ -13,12 +13,12 @@ import { postsRouter } from "./posts/routers/postRouter";
 export const setupApp = (app: Express) => {
   app.use(express.json()); // middleware для парсинга JSON в теле запроса
 
-  /*app.use((req, res, next) => {
+  app.use((req, res, next) => {
     console.log(`[Incoming] ${req.method} ${req.originalUrl} - body:`, req.body, "query:", req.query);
     next();
   });
 
-   */
+
 
   app.get("/", (req, res) => {
     res.send("Hello from API");
@@ -26,6 +26,8 @@ export const setupApp = (app: Express) => {
   app.use(BLOGS_PATH, blogsRouter);
   app.use(POSTS_PATH, postsRouter);
   app.use(TESTING_PATH, testingRouter);
+
+
 
   setupSwagger(app);
 
