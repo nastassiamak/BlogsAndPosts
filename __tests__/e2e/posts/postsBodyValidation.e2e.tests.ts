@@ -67,7 +67,7 @@ describe("Posts API body validation check", () => {
     //console.log(invalidDataSet2.body.errorsMessages);
     expect(invalidDataSet2.body.errorsMessages).toHaveLength(2);
   });
-
+  //
   // it("should return empty posts list initially", async () => {
   //   const postListResponse = await request(app).get(POSTS_PATH);
   //   expect(postListResponse.body.items).toHaveLength(0);
@@ -81,8 +81,8 @@ describe("Posts API body validation check", () => {
   //   // Для отладки можно залогировать весь ответ (по необходимости)
   //    console.log(res.body);
   // });
-  //
-  // // it("should return 200 with only pageNumber param", async () => {
+
+  // it("should return 200 with only pageNumber param", async () => {
   //   const res = await request(app)
   //     .get(POSTS_PATH)
   //     .query({ pageNumber: 1 })

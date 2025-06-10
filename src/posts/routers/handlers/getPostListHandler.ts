@@ -8,6 +8,7 @@ import {ParsedQs} from "qs";
 import {SortDirection} from "../../../core/types/sortDirection";
 import {setDefaultSortAndPaginationIfNotExist} from "../../../core/helpers/setDefaultSortAndPagination";
 import {RepositoryNotFoundError} from "../../../core/errors/repositoryNotFoundError";
+import {mapToBlogOutput} from "../../../blogs/routers/mappers/mapToBlogOutput";
 
 function parseQuery(query: any): PostQueryInput {
   return {
@@ -25,7 +26,8 @@ export async function getPostListHandler(req: Request, res: Response): Promise<v
 
     const paginatedPosts = await postService.findMany(queryWithDefaults);
 
-    const mappedItems = paginatedPosts.items.map(mapToPostOutput);
+    const mappedItems = paginatedPosts.items.map((post) =>
+        mapToPostOutput(post),);
 
     // Корректный расчёт pagesCount по числовому queryWithDefaults.pageSize
     const pagesCount = Math.ceil(paginatedPosts.totalCount / queryWithDefaults.pageSize);
