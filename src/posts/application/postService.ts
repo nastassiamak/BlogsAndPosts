@@ -18,14 +18,14 @@ export const postService = {
     return postsRepository.findMany(queryDto);
   },
 
-  async findPostsByBlog(
-    queryDto: PostQueryInput,
-    blogId: string,
-  ): Promise<{ items: WithId<Post>[]; totalCount: number }> {
-    await blogsRepository.findByIdOrFail(blogId);
-
-    return postsRepository.findPostsByBlog(queryDto, blogId);
-  },
+  // async findPostsByBlog(
+  //   queryDto: PostQueryInput,
+  //   blogId: string,
+  // ): Promise<{ items: WithId<Post>[]; totalCount: number }> {
+  //   await blogsRepository.findByIdOrFail(blogId);
+  //
+  //   return postsRepository.findPostsByBlog(queryDto, blogId);
+  // },
 
   async findByIdOrFail(id: string): Promise<WithId<Post>> {
     return postsRepository.findByIdOrFail(id);
