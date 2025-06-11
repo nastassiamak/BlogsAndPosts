@@ -8,6 +8,7 @@ import { PostSortField } from "../input/postSortField";
 import { ParsedQs } from "qs";
 import { SortDirection } from "../../../core/types/sortDirection";
 import { RepositoryNotFoundError } from "../../../core/errors/repositoryNotFoundError";
+import {setDefaultSortAndPaginationIfNotExist} from "../../../core/helpers/setDefaultSortAndPagination";
 
 export async function getPostListHandler(req: Request<{}, {}, {}, ParsedQs>, res: Response) {
   console.log("Запрос GET /posts: ", req.query);
@@ -25,35 +26,35 @@ export async function getPostListHandler(req: Request<{}, {}, {}, ParsedQs>, res
     const queryInput = parsePostQuery(req.query);
 
     // Если у вас setDefaultSortAndPaginationIfNotExist добавляет дефолты — можно вызвать, либо убрать, если parsePostQuery справляется
-    // const queryWithDefaults = setDefaultSortAndPaginationIfNotExist(queryInput);
-    const queryWithDefaults = queryInput;
+    const queryWithDefaults = setDefaultSortAndPaginationIfNotExist(queryInput);
+    //const queryWithDefaults = queryInput;
 
-    const paginatedPosts = await postService.findMany(queryWithDefaults);
+    const paginatedPosts =
+        await postService.findMany(queryWithDefaults);
 
     console.log(`Найдено постов: ${paginatedPosts.items.length}, всего: ${paginatedPosts.totalCount}`);
 
     const mappedItems =
-        paginatedPosts.items.map(post => mapToPostOutput(post));
+        paginatedPosts.items.map((post) => mapToPostOutput(post));
 
 
     // Формируем ответ с нужной структурой — даже если постов нет, items должен быть массивом
     const responsePayload = {
-      pagesCount: paginatedPosts.pagesCount ?? Math.ceil(paginatedPosts.totalCount / queryInput.pageSize),
-      page: paginatedPosts.page ?? queryInput.pageNumber,
-      pageSize: paginatedPosts.pageSize ?? queryInput.pageSize,
+      pagesCount: Math.ceil(
+          paginatedPosts.totalCount / queryWithDefaults.pageSize
+      ),
+      page: queryWithDefaults.pageNumber,
+      pageSize: queryWithDefaults.pageSize,
+      totalCount: paginatedPosts.totalCount,
       items: mappedItems,
-      totalCount: paginatedPosts.totalCount ?? 0,
-      // totalCount: paginatedPosts.totalCount ?? 0,
-      // items: paginatedPosts.items ? paginatedPosts.items.map(post => mapToPostOutput(post)) : [],
     };
 
-    console.log("Ответ POST list:", responsePayload);
+    console.log(responsePayload, "<--- postList");
 
-    res.status(HttpStatus.Ok).send(responsePayload);
+    res.send(responsePayload);
   } catch (error) {
     if (error instanceof RepositoryNotFoundError) {
      res.status(HttpStatus.NotFound).json({ message: "Post not found" });
-     return;
     }
     res.status(HttpStatus.BadRequest).json({ message: (error as Error).message || "Invalid query" });
   }

@@ -10,7 +10,11 @@ import {postService} from "../application/postService";
 
 export const postsRepository = {
   async findMany(queryDto: PostQueryInput): Promise<{
-    items: WithId<Post>[]; totalCount: number;
+    pagesCount: number;
+    page: number;
+    pageSize: number;
+    totalCount: number;
+    items: WithId<Post>[];
   }> {
     console.log("postsRepository.findMany started with queryDto:", queryDto);
     const {
@@ -22,22 +26,22 @@ export const postsRepository = {
 
 
     const skip = (pageNumber - 1) * pageSize;
-    //const filter: any = {};
+    const filter: any = { };
 
     const direction = sortDirection === "asc" ? 1 : -1;
 
     const totalCount =
-        await postCollection.countDocuments();
+        await postCollection.countDocuments(filter);
     const pagesCount = Math.ceil(totalCount / pageSize);
 
     const items = await
       postCollection
-          .find()
+          .find(filter)
           .sort({ [sortBy]: direction })
           .skip(skip)
           .limit(pageSize)
           .toArray();
-    return { items, totalCount };
+    return { pagesCount, page: pageNumber, pageSize, totalCount, items };
 
   },
   async findPostsByBlog(
