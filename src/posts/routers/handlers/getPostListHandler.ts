@@ -32,7 +32,8 @@ export async function getPostListHandler(req: Request<{}, {}, {}, ParsedQs>, res
 
     console.log(`Найдено постов: ${paginatedPosts.items.length}, всего: ${paginatedPosts.totalCount}`);
 
-    const mappedItems = paginatedPosts.items.map(post => mapToPostOutput(post));
+    const mappedItems =
+        paginatedPosts.items.map(post => mapToPostOutput(post));
 
 
     // Формируем ответ с нужной структурой — даже если постов нет, items должен быть массивом
@@ -40,7 +41,7 @@ export async function getPostListHandler(req: Request<{}, {}, {}, ParsedQs>, res
       pagesCount: paginatedPosts.pagesCount ?? Math.ceil(paginatedPosts.totalCount / queryInput.pageSize),
       page: paginatedPosts.page ?? queryInput.pageNumber,
       pageSize: paginatedPosts.pageSize ?? queryInput.pageSize,
-      items: paginatedPosts.items ?? [],
+      items: mappedItems,
       totalCount: paginatedPosts.totalCount ?? 0,
       // totalCount: paginatedPosts.totalCount ?? 0,
       // items: paginatedPosts.items ? paginatedPosts.items.map(post => mapToPostOutput(post)) : [],
