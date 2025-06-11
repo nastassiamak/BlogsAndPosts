@@ -12,11 +12,11 @@ import { postsRouter } from "./posts/routers/postRouter";
 
 export const setupApp = (app: Express) => {
   app.use(express.json()); // middleware для парсинга JSON в теле запроса
-
-  app.use((req, res, next) => {
-    console.log(`[Incoming] ${req.method} ${req.originalUrl} - body:`, req.body, "query:", req.query);
-    next();
-  });
+  //
+  // app.use((req, res, next) => {
+  //   console.log(`[Incoming] ${req.method} ${req.originalUrl} - body:`, req.body, "query:", req.query);
+  //   next();
+  // });
 
 
 
@@ -27,7 +27,10 @@ export const setupApp = (app: Express) => {
   app.use(POSTS_PATH, postsRouter);
   app.use(TESTING_PATH, testingRouter);
 
-
+  app.use((req, res, next) => {
+    console.log(`[Request] ${req.method} ${req.url}`);
+    next();
+  });
 
   setupSwagger(app);
 

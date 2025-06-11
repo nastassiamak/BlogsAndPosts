@@ -4,7 +4,7 @@ import request from "supertest";
 import express from "express";
 import { setupApp } from "../../../src/setupApp";
 import { BlogAttributes } from "../../../src/blogs/application/dtos/blogAttributes";
-import { BLOGS_PATH, POSTS_PATH } from "../../../src/core/paths/paths";
+import { BLOGS_PATH} from "../../../src/core/paths/paths";
 import { HttpStatus } from "../../../src/core/types/httpStatus";
 import { getBlogDto } from "../../utils/blogs/getBlogDto";
 import { generateAdminAuthToken } from "../../utils/generateAdminAuthToken";
@@ -12,9 +12,7 @@ import { runDB, stopDb } from "../../../src/db/mongoDb";
 import { clearDb } from "../../utils/clearDb";
 import { createBlog } from "../../utils/blogs/createBlog";
 import { getBlogById } from "../../utils/blogs/getBlogById";
-import { ResourceType } from "../../../src/core/types/resourceType";
-import { BlogCreateInput } from "../../../src/blogs/routers/input/blogCreateInput";
-import { BlogUpdateInput } from "../../../src/blogs/routers/input/blogUpdateInput";
+
 
 describe("Blog API body validation check", () => {
   const app = express();
@@ -106,4 +104,82 @@ describe("Blog API body validation check", () => {
       ...createdBlog,
     });
   });
+
+    // Добавляем блок для пагинации и сортировки
+    describe("GET /blogs - pagination and sorting", () => {
+
+        it("should return 200 and paginated blogs list with default params", async () => {
+            const res = await request(app)
+                .get(BLOGS_PATH)
+                .expect(HttpStatus.Ok);
+
+            expect(res.body).toHaveProperty("items");
+            expect(Array.isArray(res.body.items)).toBe(true);
+
+            expect(res.body).toHaveProperty("page", 1);
+            expect(res.body).toHaveProperty("pageSize");
+            expect(res.body).toHaveProperty("totalCount");
+            expect(res.body).toHaveProperty("pagesCount");
+        });
+
+        it("should paginate blogs correctly - GET /blogs?pageNumber=2&pageSize=2", async () => {
+            const res = await request(app)
+                .get(BLOGS_PATH)
+                .query({ pageNumber: 2, pageSize: 2 })
+                .expect(HttpStatus.Ok);
+
+            expect(res.body).toHaveProperty("page", 2);
+            expect(res.body).toHaveProperty("pageSize", 2);
+            expect(Array.isArray(res.body.items)).toBe(true);
+            expect(res.body.items.length).toBeLessThanOrEqual(2);
+        });
+
+        it("should sort blogs ascending by name", async () => {
+            const res = await request(app)
+                .get(BLOGS_PATH)
+                .query({ sortBy: "name", sortDirection: "asc" })
+                .expect(HttpStatus.Ok);
+
+            expect(res.body).toHaveProperty("items");
+            const names = res.body.items.map((item: any) => item.name);
+            const sorted = [...names].sort((a, b) => a.localeCompare(b));
+            expect(names).toEqual(sorted);
+        });
+
+        it("should sort blogs descending by name", async () => {
+            const res = await request(app)
+                .get(BLOGS_PATH)
+                .query({ sortBy: "name", sortDirection: "desc" })
+                .expect(HttpStatus.Ok);
+
+            expect(res.body).toHaveProperty("items");
+            const names = res.body.items.map((item: any) => item.name);
+            const sorted = [...names].sort((a, b) => b.localeCompare(a));
+            expect(names).toEqual(sorted);
+        });
+
+        it("should return 400 for invalid pagination params", async () => {
+            await request(app)
+                .get(BLOGS_PATH)
+                .query({ pageNumber: "abc" })
+                .expect(HttpStatus.BadRequest);
+
+            await request(app)
+                .get(BLOGS_PATH)
+                .query({ pageSize: -1 })
+                .expect(HttpStatus.BadRequest);
+        });
+
+        it("should return 400 for invalid sorting params", async () => {
+            await request(app)
+                .get(BLOGS_PATH)
+                .query({ sortBy: "invalidField" })
+                .expect(HttpStatus.BadRequest);
+
+            await request(app)
+                .get(BLOGS_PATH)
+                .query({ sortDirection: "upwards" })
+                .expect(HttpStatus.BadRequest);
+        });
+    });
 });

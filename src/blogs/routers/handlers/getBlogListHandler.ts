@@ -34,15 +34,19 @@ export async function getBlogListHandler(
     const queryInput = parseBlogQuery(req.query);
     const queryWithDefaults = setDefaultSortAndPaginationIfNotExist(queryInput);
 
-    const paginatedBlogs = await blogService.findMany(queryWithDefaults);
+    const paginatedBlogs =
+        await blogService.findMany(queryWithDefaults);
     console.log(
       `Найдено блогов: ${paginatedBlogs.items.length}, всего: ${paginatedBlogs.totalCount}`,
     );
 
+
     // Маппим каждый пост из БД в нужный формат output
-    const mappedItems = paginatedBlogs.items.map((blog) =>
+    const mappedItems =
+        paginatedBlogs.items.map((blog) =>
       mapToBlogOutput(blog),
     );
+
 
     const responsePayload = {
       pagesCount: Math.ceil(

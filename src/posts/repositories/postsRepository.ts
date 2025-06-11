@@ -6,15 +6,13 @@ import { RepositoryNotFoundError } from "../../core/errors/repositoryNotFoundErr
 import { PostAttributes } from "../application/dtos/postAttributes";
 import { blogService } from "../../blogs/application/blogService";
 import { blogsRepository } from "../../blogs/repositories/blogsRepository";
+import {postService} from "../application/postService";
 
 export const postsRepository = {
   async findMany(queryDto: PostQueryInput): Promise<{
-    pagesCount: number;
-    page: number;
-    pageSize: number;
-    totalCount: number;
-    items: WithId<Post>[];
+    items: WithId<Post>[]; totalCount: number;
   }> {
+    console.log("postsRepository.findMany started with queryDto:", queryDto);
     const {
       pageNumber = 1,
       pageSize = 10,
@@ -22,23 +20,25 @@ export const postsRepository = {
       sortDirection = "desc",
     } = queryDto;
 
+
     const skip = (pageNumber - 1) * pageSize;
-    const filter: any = {};
+    //const filter: any = {};
 
     const direction = sortDirection === "asc" ? 1 : -1;
 
-    const totalCount = await postCollection.countDocuments(filter);
-    const safePageSize = pageSize > 0 ? pageSize : 10;
-    const pagesCount = Math.ceil(totalCount / safePageSize);
+    const totalCount =
+        await postCollection.countDocuments();
+    const pagesCount = Math.ceil(totalCount / pageSize);
 
-    const items = await postCollection
-        .find(filter)
-        .sort({ [sortBy]: direction, _id: 1 })
-        .skip(skip)
-        .limit(safePageSize)
-        .toArray();
+    const items = await
+      postCollection
+          .find()
+          .sort({ [sortBy]: direction })
+          .skip(skip)
+          .limit(pageSize)
+          .toArray();
+    return { items, totalCount };
 
-    return { pagesCount, page: pageNumber, pageSize: safePageSize, totalCount, items };
   },
   async findPostsByBlog(
     queryDto: PostQueryInput,

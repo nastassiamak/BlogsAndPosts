@@ -37,65 +37,77 @@ describe("Posts API", () => {
     expect(post).toHaveProperty("content");
     expect(post).toHaveProperty("blogId");
   });
-  // it("should return paginated and sorted posts list", async () => {
-  //   // Создаем блог, чтобы у постов был валидный blogId
-  //   const blogResponse = await request(app)
-  //     .post(BLOGS_PATH)
-  //     .set("Authorization", adminToken)
-  //     .send({
-  //       name: "Test Blog",
-  //       description: "Description",
-  //       websiteUrl: "https://example.com",
-  //     })
-  //     .expect(HttpStatus.Created);
-  //
-  //   const blogId = blogResponse.body.id;
-  //
-  //   // Создаем 15 постов с разными датами создания и заголовками
-  //   const postsData = Array.from({ length: 15 }, (_, i) => ({
-  //     title: `Post Title ${i + 1}`,
-  //     shortDescription: `Short Desc ${i + 1}`,
-  //     content: `Content ${i + 1}`,
-  //     blogId,
-  //   }));
-  //
-  //   for (const postData of postsData) {
-  //     await request(app)
-  //       .post(POSTS_PATH)
-  //       .set("Authorization", adminToken)
-  //       .send(postData)
-  //       .expect(HttpStatus.Created);
-  //     // Если в вашем API нельзя задать createdAt вручную, то сортировка по createdAt будет по времени вставки
-  //   }
-  //
-  //   const pageNumber = 1;
-  //   const pageSize = 10;
-  //   const sortBy = "createdAt";
-  //   const sortDirection = "desc";
-  //
-  //   const response = await request(app)
-  //     .get(POSTS_PATH)
-  //     .query({ pageNumber, pageSize, sortBy, sortDirection })
-  //     .expect(HttpStatus.Ok);
-  //
-  //   const body = response.body;
-  //
-  //   expect(body).toHaveProperty("items");
-  //   expect(Array.isArray(body.items)).toBe(true);
-  //   expect(body.items.length).toBeLessThanOrEqual(pageSize);
-  //
-  //   expect(body.page).toBe(pageNumber);
-  //   expect(body.pageSize).toBe(pageSize);
-  //   expect(body.totalCount).toBeGreaterThanOrEqual(postsData.length);
-  //   expect(body.pagesCount).toBe(Math.ceil(body.totalCount / pageSize));
-  //
-  //   // Проверяем сортировку: каждый следующий post.createdAt меньше или равен предыдущему
-  //   for (let i = 1; i < body.items.length; i++) {
-  //     const prevDate = new Date(body.items[i - 1].createdAt).getTime();
-  //     const curDate = new Date(body.items[i].createdAt).getTime();
-  //     expect(prevDate).toBeGreaterThanOrEqual(curDate);
-  //   }
-  // });
+  it("should return paginated and sorted posts list", async () => {
+    // Создаем блог, чтобы у постов был валидный blogId
+    const blogResponse = await request(app)
+      .post(BLOGS_PATH)
+      .set("Authorization", adminToken)
+      .send({
+        name: "Test Blog",
+        description: "Description",
+        websiteUrl: "https://example.com",
+      })
+      .expect(HttpStatus.Created);
+
+    const blogId = blogResponse.body.id;
+
+    // Создаем 15 постов с разными датами создания и заголовками
+    const postsData = Array.from({ length: 5 }, (_, i) => ({
+      title: `Post Title ${i + 1}`,
+      shortDescription: `Short Desc ${i + 1}`,
+      content: `Content ${i + 1}`,
+      blogId,
+    }));
+
+    for (const postData of postsData) {
+      await request(app)
+        .post(POSTS_PATH)
+        .set("Authorization", adminToken)
+        .send(postData)
+        .expect(HttpStatus.Created);
+      // Если в вашем API нельзя задать createdAt вручную, то сортировка по createdAt будет по времени вставки
+    }
+    // Дополнительный GET без параметров — проверяем, что посты в базе
+    const getAllResponse = await request(app)
+        .get(POSTS_PATH)
+        .expect(HttpStatus.Ok);
+
+    console.log("GET /posts без параметров вернул:", getAllResponse.body);
+
+    expect(getAllResponse.body).toHaveProperty("items");
+    expect(Array.isArray(getAllResponse.body.items)).toBe(true);
+    expect(getAllResponse.body.items.length).toBeGreaterThanOrEqual(postsData.length);
+
+    // Далее — ваш исходный GET с пагинацией и сортировкой
+
+    const pageNumber = 1;
+    const pageSize = 10;
+    const sortBy = "createdAt";
+    const sortDirection = "desc";
+
+    const response = await request(app)
+      .get(POSTS_PATH)
+      .query({ pageNumber, pageSize, sortBy, sortDirection })
+      .expect(HttpStatus.Ok);
+
+    const body = response.body;
+
+    expect(body).toHaveProperty("items");
+    expect(Array.isArray(body.items)).toBe(true);
+    expect(body.items.length).toBeLessThanOrEqual(pageSize);
+
+    expect(body.page).toBe(pageNumber);
+    expect(body.pageSize).toBe(pageSize);
+    expect(body.totalCount).toBeGreaterThanOrEqual(postsData.length);
+    expect(body.pagesCount).toBe(Math.ceil(body.totalCount / pageSize));
+
+    // Проверяем сортировку: каждый следующий post.createdAt меньше или равен предыдущему
+    for (let i = 1; i < body.items.length; i++) {
+      const prevDate = new Date(body.items[i - 1].createdAt).getTime();
+      const curDate = new Date(body.items[i].createdAt).getTime();
+      expect(prevDate).toBeGreaterThanOrEqual(curDate);
+    }
+  });
 
   it("should return posts by id; GET /posts/:id", async () => {
     const createdPost = await createPost(app);

@@ -19,12 +19,7 @@ import { getBlogPostListHandler } from "../../blogs/routers/handlers/getBlogPost
 export const postsRouter = Router({});
 
 postsRouter
-  .get(
-    "/debug/query",
-    paginationAndSortingValidation(PostSortField),
-    inputValidationResultMiddleware,
-    getPostListHandler,
-  )
+
   .get("/:id", idValidation, inputValidationResultMiddleware, getPostHandler)
   .post(
     "/",
@@ -41,6 +36,12 @@ postsRouter
     inputValidationResultMiddleware,
     updatePostHandler,
   )
+    .get(
+        "/",
+        paginationAndSortingValidation(PostSortField),
+        inputValidationResultMiddleware,
+        getPostListHandler,
+    )
   .delete(
     "/:id",
     superAdminGuardMiddleware,

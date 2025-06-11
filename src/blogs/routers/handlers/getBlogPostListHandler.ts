@@ -40,9 +40,8 @@ export async function getBlogPostListHandler(
     console.log("Параметры запроса:", queryWithDefaults);
 
     // Получаем данные с пагинацией
-    const paginatedPosts = await postService.findPostsByBlog(
+    const paginatedPosts = await postService.findMany(
       queryWithDefaults,
-      blog._id.toString(),
     );
 
     console.log(

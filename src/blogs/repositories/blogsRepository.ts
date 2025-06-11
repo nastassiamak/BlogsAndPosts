@@ -36,7 +36,8 @@ export const blogsRepository = {
 
     const direction = sortDirection === "asc" ? 1 : -1;
 
-    const totalCount = await blogCollection.countDocuments(filter);
+    const totalCount =
+        await blogCollection.countDocuments(filter);
     const pagesCount = Math.ceil(totalCount / pageSize);
 
     const items = await blogCollection

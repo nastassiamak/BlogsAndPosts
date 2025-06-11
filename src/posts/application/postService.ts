@@ -4,27 +4,28 @@ import { Post } from "../domain/post";
 import { postsRepository } from "../repositories/postsRepository";
 import { PostAttributes } from "./dtos/postAttributes";
 import { blogService } from "../../blogs/application/blogService";
-import { blogsRepository } from "../../blogs/repositories/blogsRepository";
 
 export const postService = {
-  async findMany(
-    queryDto: PostQueryInput,
-  ): Promise<{ pagesCount: number;
+  async findMany(queryDto: PostQueryInput): Promise<{
+    items: WithId<Post>[];
+    totalCount: number;
+    pagesCount: number;
     page: number;
     pageSize: number;
-    totalCount: number;
-    items: WithId<Post>[];
   }> {
-    return postsRepository.findMany(queryDto);
-  },
+    const { pageNumber = 1, pageSize = 10 } = queryDto;
 
-  async findPostsByBlog(
-    queryDto: PostQueryInput,
-    blogId: string,
-  ): Promise<{ items: WithId<Post>[]; totalCount: number }> {
-    await blogsRepository.findByIdOrFail(blogId);
+    const { items, totalCount } = await postsRepository.findMany(queryDto);
 
-    return postsRepository.findPostsByBlog(queryDto, blogId);
+    const pagesCount = Math.ceil(totalCount / pageSize);
+
+    return {
+      items,
+      totalCount,
+      pagesCount,
+      page: pageNumber,
+      pageSize,
+    };
   },
 
   async findByIdOrFail(id: string): Promise<WithId<Post>> {
