@@ -13,8 +13,6 @@ import {mapToBlogListPaginatedOutput} from "../../../blogs/routers/mappers/mapTo
 import {mapToPostListPaginatedOutput} from "../mappers/mapToPostListPaginatedOutputUtil";
 
 export async function getPostListHandler(req: Request, res: Response) {
-
-
   try {
 
     const queryInput = {
@@ -46,9 +44,8 @@ export async function getPostListHandler(req: Request, res: Response) {
             paginatedPosts.items,
         )
 
-    console.log(responsePayload, "<--- postList");
-
-    res.send(responsePayload);
+      console.log("Ответ API:", responsePayload);
+      res.status(HttpStatus.Ok).json(responsePayload);
   } catch (error) {
     if (error instanceof RepositoryNotFoundError) {
      res.status(HttpStatus.NotFound).json({ message: "Post not found" });

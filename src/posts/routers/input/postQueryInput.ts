@@ -6,5 +6,5 @@ export type PostQueryInput = PaginationAndSorting<PostSortField> &
     // searchPostTitleTerm: string;
     // searchPostShortDescriptionTerm: string;
     // searchPostContentTerm: string;
-    searchCreatedAtTerm: string;
+   // searchCreatedAtTerm: string;
   }>;

@@ -110,6 +110,7 @@ describe("Posts API body validation check", () => {
           .get(POSTS_PATH)
           .query({ pageNumber: 1 })
           .expect(HttpStatus.Ok);
+      console.log(res.body);
       expect(res.body).toHaveProperty("page", 1);
     });
 
