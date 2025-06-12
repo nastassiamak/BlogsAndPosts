@@ -2,7 +2,7 @@ import express, { Express } from "express";
 import { BLOGS_PATH, POSTS_PATH, TESTING_PATH } from "./core/paths/paths";
 import { blogsRouter } from "./blogs/routers/blogsRouter";
 import { testingRouter } from "./testing/routers/testingRouter";
-import { setupSwagger } from "./core/swagger/setupSwagger";
+
 import { postsRouter } from "./posts/routers/postRouter";
 
 /**
@@ -32,7 +32,7 @@ export const setupApp = (app: Express) => {
     next();
   });
 
-  setupSwagger(app);
+
 
   return app;
 };
