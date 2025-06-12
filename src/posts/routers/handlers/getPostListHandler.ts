@@ -1,55 +1,63 @@
-
+import {PostSortField} from "../input/postSortField";
+import {SortDirection} from "../../../core/types/sortDirection";
 import { Request, Response } from "express";
-import { PostQueryInput } from "../input/postQueryInput";
-import { postService } from "../../application/postService";
-import { mapToPostOutput } from "../mappers/mapToPostOutput";
-import { HttpStatus } from "../../../core/types/httpStatus";
-import { PostSortField } from "../input/postSortField";
-import { ParsedQs } from "qs";
-import { SortDirection } from "../../../core/types/sortDirection";
-import { RepositoryNotFoundError } from "../../../core/errors/repositoryNotFoundError";
-import {setDefaultSortAndPaginationIfNotExist} from "../../../core/helpers/setDefaultSortAndPagination";
-import {mapToBlogListPaginatedOutput} from "../../../blogs/routers/mappers/mapToBlogListPaginatedOutputUtil";
-import {mapToPostListPaginatedOutput} from "../mappers/mapToPostListPaginatedOutputUtil";
+import {postService} from "../../application/postService";
+import {HttpStatus} from "../../../core/types/httpStatus";
+
+const DEFAULT_PAGE_NUMBER = 1;
+const DEFAULT_PAGE_SIZE = 10;
+const DEFAULT_SORT_BY = PostSortField.CreatedAt;
+const DEFAULT_SORT_DIRECTION = SortDirection.Desc;
 
 export async function getPostListHandler(req: Request, res: Response) {
-  try {
+    try {
+        // Используем значения из query, или дефолты, если параметры отсутствуют
+        const pageNumber =
+            req.query.pageNumber !== undefined
+                ? Number(req.query.pageNumber)
+                : DEFAULT_PAGE_NUMBER;
 
-    const queryInput = {
-      pageNumber: Number(req.query.pageNumber) || 1,
-      pageSize: Number(req.query.pageSize) || 10,
-      sortBy: (req.query.sortBy as PostSortField) || PostSortField.CreatedAt,
-      sortDirection: req.query.sortDirection === "asc" ? SortDirection.Asc : SortDirection.Desc,
-    };
+        const pageSize =
+            req.query.pageSize !== undefined
+                ? Number(req.query.pageSize)
+                : DEFAULT_PAGE_SIZE;
 
-   const queryWithDefaults =
-       setDefaultSortAndPaginationIfNotExist(queryInput);
+        const sortBy =
+            typeof req.query.sortBy === "string" &&
+            Object.values(PostSortField).includes(req.query.sortBy as PostSortField)
+                ? (req.query.sortBy as PostSortField)
+                : DEFAULT_SORT_BY;
 
-    const paginatedPosts =
-        await postService.findMany(queryInput);
+        const sortDirection =
+            typeof req.query.sortDirection === "string" &&
+            Object.values(SortDirection).includes(req.query.sortDirection as SortDirection)
+                ? (req.query.sortDirection as SortDirection)
+                : DEFAULT_SORT_DIRECTION;
 
-    // Считаем pagesCount, если в сервисе не отдаётся
-    const pagesCount =
-        Math.ceil(paginatedPosts.totalCount / queryWithDefaults.pageSize);
+        const queryInput = {
+            pageNumber,
+            pageSize,
+            sortBy,
+            sortDirection,
+        };
 
-    console.log(`Найдено постов: ${paginatedPosts.items.length}, всего: ${paginatedPosts.totalCount}`);
+        // Далее вызываем сервис с queryInput
+        const paginatedPosts = await postService.findMany(queryInput);
 
-    // Формируем ответ с нужной структурой — даже если постов нет, items должен быть массивом
-    const responsePayload =
-        mapToPostListPaginatedOutput(
-            queryWithDefaults.pageNumber,
-            pagesCount,
-            queryWithDefaults.pageSize,
-            paginatedPosts.totalCount,
-            paginatedPosts.items,
-        )
+        // Считаем pagesCount, если не возвращается сервисом
+        const pagesCount = Math.ceil(paginatedPosts.totalCount / pageSize);
 
-      console.log("Ответ API:", responsePayload);
-      res.status(HttpStatus.Ok).json(responsePayload);
-  } catch (error) {
-    if (error instanceof RepositoryNotFoundError) {
-     res.status(HttpStatus.NotFound).json({ message: "Post not found" });
+        const responsePayload = {
+            items: paginatedPosts.items,
+            page: pageNumber,
+            pageSize: pageSize,
+            totalCount: paginatedPosts.totalCount,
+            pagesCount: pagesCount,
+        };
+
+        res.status(HttpStatus.Ok).json(responsePayload);
+    } catch (error) {
+        // Обработка ошибок
+        res.status(HttpStatus.BadRequest).json({ message: (error as Error).message || "Invalid query" });
     }
-    res.status(HttpStatus.BadRequest).json({ message: (error as Error).message || "Invalid query" });
-  }
 }
