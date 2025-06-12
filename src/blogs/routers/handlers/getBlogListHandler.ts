@@ -39,14 +39,16 @@ export async function getBlogListHandler(req: Request<{}, {}, {}, ParsedQs>, res
     // // Формируем и отправляем ответ через маппер
     const responsePayload =
         mapToBlogListPaginatedOutput(
-          paginatedBlogs.items,
+
           queryWithDefaults.pageNumber,
           pagesCount,
           queryWithDefaults.pageSize,
           paginatedBlogs.totalCount,
+            paginatedBlogs.items,
     );
 
-     res.status(HttpStatus.Ok).send(responsePayload);
+    console.log("Ответ API:", responsePayload);
+    res.status(HttpStatus.Ok).json(responsePayload);
 
   } catch (error) {
     if (error instanceof RepositoryNotFoundError) {

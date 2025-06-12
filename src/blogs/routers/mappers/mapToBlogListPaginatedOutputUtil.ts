@@ -5,11 +5,12 @@ import {BlogDataOutput} from "../output/blogDataOutput";
 
 
 export function mapToBlogListPaginatedOutput(
-    blogs: BlogDataOutput[],
+
     page: number,
     pagesCount: number,
     pageSize: number,
     totalCount: number,
+    blogs: BlogDataOutput[],
 ): BlogListPaginatedOutput {
     return {
         page,

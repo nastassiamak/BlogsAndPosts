@@ -29,8 +29,19 @@ export const blogsRouter = Router({});
 //blogsRouter.use(superAdminGuardMiddleware);
 
 blogsRouter
+// .get("/", (req, res) => {
+//   console.log("GET /blogs запрос обработан");
+//   res.status(200).json({
+//     items: [],
+//     page: 1,
+//     pageSize: 10,
+//     totalCount: 0,
+//     pagesCount: 0
+//   });
+// })
   .get(
-    "/debug/query",
+
+    "/",
     paginationAndSortingValidation(BlogSortField),
     inputValidationResultMiddleware,
     getBlogListHandler,

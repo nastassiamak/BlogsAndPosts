@@ -66,7 +66,8 @@ describe("Blog API body validation check", () => {
     const blogListResponse = await request(app).get(BLOGS_PATH);
     //.set("Authorization", adminToken);
 
-    expect(blogListResponse.body.items).toHaveLength(0);
+
+      expect(blogListResponse.body.items).toHaveLength(0);
   });
 
   it("❌ should not update blog when incorrect data passed; PUT /blogs/:id", async () => {
@@ -113,8 +114,10 @@ describe("Blog API body validation check", () => {
                 .get(BLOGS_PATH)
                 .expect(HttpStatus.Ok);
 
-            expect(res.body).toHaveProperty("items");
-            expect(Array.isArray(res.body.items)).toBe(true);
+            console.log('Response body:', res.body);
+            expect(res.body).toHaveProperty("items");                 // Проверяем, что в объекте есть поле items
+            expect(Array.isArray(res.body.items)).toBe(true);         // Проверяем, что items — массив
+
 
             expect(res.body).toHaveProperty("page", 1);
             expect(res.body).toHaveProperty("pageSize");
