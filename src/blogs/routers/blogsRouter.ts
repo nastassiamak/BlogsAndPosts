@@ -40,7 +40,6 @@ blogsRouter
 //   });
 // })
   .get(
-
     "/",
     paginationAndSortingValidation(BlogSortField),
     inputValidationResultMiddleware,

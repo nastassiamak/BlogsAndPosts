@@ -3,21 +3,23 @@ import { Post } from "../../domain/post";
 import { PostListPaginatedOutput } from "../output/postListPaginatedOutput";
 import { PostDataOutput } from "../output/postDataOutput";
 import { ResourceType } from "../../../core/types/resourceType";
+import {BlogDataOutput} from "../../../blogs/routers/output/blogDataOutput";
 
 export function mapToPostListPaginatedOutput(
-    posts: WithId<Post>[],
     page: number,
+    pagesCount: number,
     pageSize: number,
     totalCount: number,
+    posts: PostDataOutput[],
 ): PostListPaginatedOutput {
-    const pagesCount = Math.ceil(totalCount / pageSize);
+
     return {
         pagesCount,
         page,
         pageSize,
         totalCount,
         items: posts.map(post => ({
-            id: post._id.toString(),
+            id: post.id,
             title: post.title,
             shortDescription: post.shortDescription,
             content: post.content,

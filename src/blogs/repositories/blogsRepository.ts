@@ -33,7 +33,8 @@ export const blogsRepository = {
 
     const direction = sortDirection === "asc" ? 1 : -1;
 
-    const totalCount = await blogCollection.countDocuments(filter);
+    const totalCount =
+        await blogCollection.countDocuments(filter);
     const pagesCount = Math.ceil(totalCount / pageSize);
 
     const rawItems = await blogCollection
@@ -44,8 +45,8 @@ export const blogsRepository = {
         .toArray();
 
     // Преобразуем документы в DTO
-    const items: BlogDataOutput[] = rawItems.map(mapToBlogOutput);
-
+    const items: BlogDataOutput[] =
+        rawItems.map(mapToBlogOutput);
 
     return { pagesCount, page: pageNumber, pageSize, totalCount, items };
   },

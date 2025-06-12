@@ -7,15 +7,12 @@ import { PostAttributes } from "../application/dtos/postAttributes";
 import { blogService } from "../../blogs/application/blogService";
 import { blogsRepository } from "../../blogs/repositories/blogsRepository";
 import {postService} from "../application/postService";
+import {PostListPaginatedOutput} from "../routers/output/postListPaginatedOutput";
+import {PostDataOutput} from "../routers/output/postDataOutput";
+import {mapToPostOutput} from "../routers/mappers/mapToPostOutput";
 
 export const postsRepository = {
-  async findMany(queryDto: PostQueryInput): Promise<{
-    pagesCount: number;
-    page: number;
-    pageSize: number;
-    totalCount: number;
-    items: WithId<Post>[];
-  }> {
+  async findMany(queryDto: PostQueryInput): Promise<PostListPaginatedOutput> {
     console.log("postsRepository.findMany started with queryDto:", queryDto);
     const {
       pageNumber = 1,
@@ -34,13 +31,17 @@ export const postsRepository = {
         await postCollection.countDocuments(filter);
     const pagesCount = Math.ceil(totalCount / pageSize);
 
-    const items = await
+    const rawItems = await
       postCollection
           .find(filter)
           .sort({ [sortBy]: direction })
           .skip(skip)
           .limit(pageSize)
           .toArray();
+
+    const items: PostDataOutput[] =
+        rawItems.map(mapToPostOutput);
+
     return { pagesCount, page: pageNumber, pageSize, totalCount, items };
 
   },

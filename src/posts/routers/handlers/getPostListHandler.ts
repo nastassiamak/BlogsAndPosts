@@ -9,46 +9,42 @@ import { ParsedQs } from "qs";
 import { SortDirection } from "../../../core/types/sortDirection";
 import { RepositoryNotFoundError } from "../../../core/errors/repositoryNotFoundError";
 import {setDefaultSortAndPaginationIfNotExist} from "../../../core/helpers/setDefaultSortAndPagination";
+import {mapToBlogListPaginatedOutput} from "../../../blogs/routers/mappers/mapToBlogListPaginatedOutputUtil";
+import {mapToPostListPaginatedOutput} from "../mappers/mapToPostListPaginatedOutputUtil";
 
 export async function getPostListHandler(req: Request, res: Response) {
-  console.log("Запрос GET /posts: ", req.query);
 
-  function parsePostQuery(query: ParsedQs): PostQueryInput {
-    return {
-      pageNumber: Number(query.pageNumber) || 1,
-      pageSize: Number(query.pageSize) || 10,
-      sortBy: (query.sortBy as PostSortField) || PostSortField.CreatedAt,
-      sortDirection: query.sortDirection === "asc" ? SortDirection.Asc : SortDirection.Desc,
-    };
-  }
 
   try {
-    const queryInput = parsePostQuery(req.query);
 
-    // Если у вас setDefaultSortAndPaginationIfNotExist
-    // добавляет дефолты — можно вызвать, либо убрать, если parsePostQuery справляется
-   // const {pageNumber, pageSize, sortBy, sortDirection} = setDefaultSortAndPaginationIfNotExist(queryInput);
-    //const queryWithDefaults = queryInput;
+    const queryInput = {
+      pageNumber: Number(req.query.pageNumber) || 1,
+      pageSize: Number(req.query.pageSize) || 10,
+      sortBy: (req.query.sortBy as PostSortField) || PostSortField.CreatedAt,
+      sortDirection: req.query.sortDirection === "asc" ? SortDirection.Asc : SortDirection.Desc,
+    };
+
+   const queryWithDefaults =
+       setDefaultSortAndPaginationIfNotExist(queryInput);
 
     const paginatedPosts =
         await postService.findMany(queryInput);
 
+    // Считаем pagesCount, если в сервисе не отдаётся
+    const pagesCount =
+        Math.ceil(paginatedPosts.totalCount / queryWithDefaults.pageSize);
+
     console.log(`Найдено постов: ${paginatedPosts.items.length}, всего: ${paginatedPosts.totalCount}`);
 
-    const mappedItems =
-        paginatedPosts.items.map((post) => mapToPostOutput(post));
-
-
     // Формируем ответ с нужной структурой — даже если постов нет, items должен быть массивом
-    const responsePayload = {
-      pagesCount: Math.ceil(
-          paginatedPosts.totalCount / queryInput.pageSize
-      ),
-      page: queryInput.pageNumber,
-      pageSize: queryInput.pageSize,
-      totalCount: paginatedPosts.totalCount,
-      items: mappedItems,
-    };
+    const responsePayload =
+        mapToPostListPaginatedOutput(
+            queryWithDefaults.pageNumber,
+            pagesCount,
+            queryWithDefaults.pageSize,
+            paginatedPosts.totalCount,
+            paginatedPosts.items,
+        )
 
     console.log(responsePayload, "<--- postList");
 
