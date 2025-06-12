@@ -37,7 +37,7 @@ postsRouter
     updatePostHandler,
   )
     .get(
-        "/",
+        "/debug/query",
         paginationAndSortingValidation(PostSortField),
         inputValidationResultMiddleware,
         getPostListHandler,

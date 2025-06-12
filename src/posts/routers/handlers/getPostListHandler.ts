@@ -10,7 +10,7 @@ import { SortDirection } from "../../../core/types/sortDirection";
 import { RepositoryNotFoundError } from "../../../core/errors/repositoryNotFoundError";
 import {setDefaultSortAndPaginationIfNotExist} from "../../../core/helpers/setDefaultSortAndPagination";
 
-export async function getPostListHandler(req: Request<{}, {}, {}, ParsedQs>, res: Response) {
+export async function getPostListHandler(req: Request, res: Response) {
   console.log("Запрос GET /posts: ", req.query);
 
   function parsePostQuery(query: ParsedQs): PostQueryInput {
@@ -25,12 +25,13 @@ export async function getPostListHandler(req: Request<{}, {}, {}, ParsedQs>, res
   try {
     const queryInput = parsePostQuery(req.query);
 
-    // Если у вас setDefaultSortAndPaginationIfNotExist добавляет дефолты — можно вызвать, либо убрать, если parsePostQuery справляется
-    const queryWithDefaults = setDefaultSortAndPaginationIfNotExist(queryInput);
+    // Если у вас setDefaultSortAndPaginationIfNotExist
+    // добавляет дефолты — можно вызвать, либо убрать, если parsePostQuery справляется
+   // const {pageNumber, pageSize, sortBy, sortDirection} = setDefaultSortAndPaginationIfNotExist(queryInput);
     //const queryWithDefaults = queryInput;
 
     const paginatedPosts =
-        await postService.findMany(queryWithDefaults);
+        await postService.findMany(queryInput);
 
     console.log(`Найдено постов: ${paginatedPosts.items.length}, всего: ${paginatedPosts.totalCount}`);
 
@@ -41,10 +42,10 @@ export async function getPostListHandler(req: Request<{}, {}, {}, ParsedQs>, res
     // Формируем ответ с нужной структурой — даже если постов нет, items должен быть массивом
     const responsePayload = {
       pagesCount: Math.ceil(
-          paginatedPosts.totalCount / queryWithDefaults.pageSize
+          paginatedPosts.totalCount / queryInput.pageSize
       ),
-      page: queryWithDefaults.pageNumber,
-      pageSize: queryWithDefaults.pageSize,
+      page: queryInput.pageNumber,
+      pageSize: queryInput.pageSize,
       totalCount: paginatedPosts.totalCount,
       items: mappedItems,
     };

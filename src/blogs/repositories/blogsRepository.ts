@@ -5,15 +5,12 @@ import { ObjectId, WithId } from "mongodb";
 import { blogCollection } from "../../db/mongoDb";
 import { BlogQueryInput } from "../routers/input/blogQueryInput";
 import { RepositoryNotFoundError } from "../../core/errors/repositoryNotFoundError";
+import {BlogListPaginatedOutput} from "../routers/output/blogListPaginatedOutput";
+import {BlogDataOutput} from "../routers/output/blogDataOutput";
+import {mapToBlogOutput} from "../routers/mappers/mapToBlogOutput";
 
 export const blogsRepository = {
-  async findMany(queryDto: BlogQueryInput): Promise<{
-    pagesCount: number;
-    page: number;
-    pageSize: number;
-    totalCount: number;
-    items: WithId<Blog>[];
-  }> {
+  async findMany(queryDto: BlogQueryInput): Promise<BlogListPaginatedOutput> {
     const {
       pageNumber = 1,
       pageSize = 10,
@@ -36,16 +33,19 @@ export const blogsRepository = {
 
     const direction = sortDirection === "asc" ? 1 : -1;
 
-    const totalCount =
-        await blogCollection.countDocuments(filter);
+    const totalCount = await blogCollection.countDocuments(filter);
     const pagesCount = Math.ceil(totalCount / pageSize);
 
-    const items = await blogCollection
-      .find(filter)
-      .sort({ [sortBy]: direction })
-      .skip(skip)
-      .limit(pageSize)
-      .toArray();
+    const rawItems = await blogCollection
+        .find(filter)
+        .sort({ [sortBy]: direction })
+        .skip(skip)
+        .limit(pageSize)
+        .toArray();
+
+    // Преобразуем документы в DTO
+    const items: BlogDataOutput[] = rawItems.map(mapToBlogOutput);
+
 
     return { pagesCount, page: pageNumber, pageSize, totalCount, items };
   },

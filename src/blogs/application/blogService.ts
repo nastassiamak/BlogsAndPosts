@@ -3,15 +3,10 @@ import { Blog } from "../domain/blog";
 import { BlogQueryInput } from "../routers/input/blogQueryInput";
 import { blogsRepository } from "../repositories/blogsRepository";
 import { BlogAttributes } from "./dtos/blogAttributes";
+import {BlogListPaginatedOutput} from "../routers/output/blogListPaginatedOutput";
 
 export const blogService = {
-  async findMany(queryDto: BlogQueryInput): Promise<{
-    pagesCount: number;
-    page: number;
-    pageSize: number;
-    totalCount: number;
-    items: WithId<Blog>[];
-  }> {
+  async findMany(queryDto: BlogQueryInput): Promise<BlogListPaginatedOutput> {
     return blogsRepository.findMany(queryDto);
   },
 

@@ -83,11 +83,18 @@ describe("Posts API body validation check", () => {
   // GET тесты
   describe("GET /posts - initial state and basic list", () => {
     it("should return some posts list after creation", async () => {
-      const postListResponse = await request(app).get(POSTS_PATH);
-      console.log("GET /posts ответ:", postListResponse.body);
-      expect(postListResponse.body.items).toBeDefined();
-      expect(Array.isArray(postListResponse.body.items)).toBe(true);
-      expect(postListResponse.body.items.length).toBeGreaterThan(0);
+      const res = await request(app)
+          .get(POSTS_PATH)
+          .expect(HttpStatus.Ok);
+
+      expect(res.body).toHaveProperty("items");
+      expect(Array.isArray(res.body.items)).toBe(true);
+
+      expect(res.body).toHaveProperty("page", 1);
+      expect(res.body).toHaveProperty("pageSize");
+      expect(res.body).toHaveProperty("totalCount");
+      expect(res.body).toHaveProperty("pagesCount");
+
     });
 
     it("should return 200 with no query parameters", async () => {

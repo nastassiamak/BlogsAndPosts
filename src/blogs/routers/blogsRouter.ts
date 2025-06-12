@@ -30,7 +30,7 @@ export const blogsRouter = Router({});
 
 blogsRouter
   .get(
-    "/",
+    "/debug/query",
     paginationAndSortingValidation(BlogSortField),
     inputValidationResultMiddleware,
     getBlogListHandler,
@@ -58,13 +58,13 @@ blogsRouter
     inputValidationResultMiddleware,
     deleteBlogHandler,
   )
-  .get(
-    "/:id/posts",
-    idValidation,
-    paginationAndSortingValidation(PostSortField),
-    inputValidationResultMiddleware,
-    getBlogPostListHandler,
-  )
+  // .get(
+  //   "/:id/posts",
+  //   idValidation,
+  //   paginationAndSortingValidation(PostSortField),
+  //   inputValidationResultMiddleware,
+  //   getBlogPostListHandler,
+  // )
   .post(
     "/:id/posts",
     superAdminGuardMiddleware,
