@@ -48,11 +48,11 @@ export async function getPostListHandler(req: Request, res: Response) {
         const pagesCount = Math.ceil(paginatedPosts.totalCount / pageSize);
 
         const responsePayload = {
-            items: paginatedPosts.items,
             page: pageNumber,
             pageSize: pageSize,
             totalCount: paginatedPosts.totalCount,
             pagesCount: pagesCount,
+            items: paginatedPosts.items,
         };
 
         res.status(HttpStatus.Ok).json(responsePayload);
