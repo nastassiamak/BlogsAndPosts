@@ -13,5 +13,6 @@ import {PaginatedOutput} from "../types/paginatedOutput";
 export type FieldNamesType = keyof BlogDataOutput | keyof PostDataOutput | keyof PaginatedOutput;
 
 export type OutputErrorsType = {
+
   errorsMessages: { message: string; field: FieldNamesType }[];
 };
