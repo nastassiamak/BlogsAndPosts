@@ -2,11 +2,9 @@ import { ResourceType } from "../../../core/types/resourceType";
 import { PostAttributes } from "../../application/dtos/postAttributes";
 
 export type PostUpdateInput = {
-  // data: {
-  //   type: ResourceType.Posts;
-  id?: string;
-  // attributes: PostAttributes;
-  //};
+
+  id: string;
+
   title: string;
   shortDescription: string;
   content: string;

@@ -3,58 +3,42 @@ import {SortDirection} from "../../../core/types/sortDirection";
 import { Request, Response } from "express";
 import {postService} from "../../application/postService";
 import {HttpStatus} from "../../../core/types/httpStatus";
+import {setDefaultSortAndPaginationIfNotExist} from "../../../core/helpers/setDefaultSortAndPagination";
+import {ParsedQs} from "qs";
+import {mapToPostListPaginatedOutput} from "../mappers/mapToPostListPaginatedOutputUtil";
 
-const DEFAULT_PAGE_NUMBER = 1;
-const DEFAULT_PAGE_SIZE = 10;
-const DEFAULT_SORT_BY = PostSortField.CreatedAt;
-const DEFAULT_SORT_DIRECTION = SortDirection.Desc;
-
-export async function getPostListHandler(req: Request, res: Response) {
+export async function getPostListHandler(req: Request<{}, {}, {}, ParsedQs>, res: Response) {
+    console.log("Вызван getPostListHandler", req.query)
     try {
-        // Используем значения из query, или дефолты, если параметры отсутствуют
-        const pageNumber =
-            req.query.pageNumber !== undefined
-                ? Number(req.query.pageNumber)
-                : DEFAULT_PAGE_NUMBER;
-
-        const pageSize =
-            req.query.pageSize !== undefined
-                ? Number(req.query.pageSize)
-                : DEFAULT_PAGE_SIZE;
-
-        const sortBy =
-            typeof req.query.sortBy === "string" &&
-            Object.values(PostSortField).includes(req.query.sortBy as PostSortField)
-                ? (req.query.sortBy as PostSortField)
-                : DEFAULT_SORT_BY;
-
-        const sortDirection =
-            typeof req.query.sortDirection === "string" &&
-            Object.values(SortDirection).includes(req.query.sortDirection as SortDirection)
-                ? (req.query.sortDirection as SortDirection)
-                : DEFAULT_SORT_DIRECTION;
 
         const queryInput = {
-            pageNumber,
-            pageSize,
-            sortBy,
-            sortDirection,
+            pageNumber: Number(req.query.pageNumber) || 1,
+            pageSize: Number(req.query.pageSize) || 10,
+            sortBy: (req.query.sortBy as PostSortField) || PostSortField.CreatedAt,
+            sortDirection: req.query.sortDirection === "asc" ? SortDirection.Asc : SortDirection.Desc,
         };
+
+        const queryWithDefaults =
+            setDefaultSortAndPaginationIfNotExist(queryInput);
 
         // Далее вызываем сервис с queryInput
-        const paginatedPosts = await postService.findMany(queryInput);
+        const paginatedPosts =
+            await postService.findMany(queryInput);
 
         // Считаем pagesCount, если не возвращается сервисом
-        const pagesCount = Math.ceil(paginatedPosts.totalCount / pageSize);
+        const pagesCount =
+            Math.ceil(paginatedPosts.totalCount / queryWithDefaults.pageSize);
 
-        const responsePayload = {
-            page: pageNumber,
-            pageSize: pageSize,
-            totalCount: paginatedPosts.totalCount,
-            pagesCount: pagesCount,
-            items: paginatedPosts.items,
-        };
+        const responsePayload =
+            mapToPostListPaginatedOutput(
+            queryWithDefaults.pageNumber,
+            pagesCount,
+            queryWithDefaults.pageSize,
+            paginatedPosts.totalCount,
+            paginatedPosts.items,
+        )
 
+        console.log("Ответ API: ", responsePayload);
         res.status(HttpStatus.Ok).json(responsePayload);
     } catch (error) {
         // Обработка ошибок

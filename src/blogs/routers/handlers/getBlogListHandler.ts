@@ -12,8 +12,8 @@ import { mapToBlogOutput } from "../mappers/mapToBlogOutput";
 import {WithId} from "mongodb";
 import {Blog} from "../../domain/blog";
 
-//import { errorsHandler } from "../../../core/errors/errorsHandler";
 export async function getBlogListHandler(req: Request<{}, {}, {}, ParsedQs>, res: Response){
+  console.log("Вызван getBlogListHandler", req.query)
   try {
     const queryInput = {
       pageNumber: Number(req.query.pageNumber) || 1,

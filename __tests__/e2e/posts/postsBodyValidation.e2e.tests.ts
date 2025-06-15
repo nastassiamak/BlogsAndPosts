@@ -108,10 +108,14 @@ describe("Posts API body validation check", () => {
     it("should return 200 with only pageNumber param", async () => {
       const res = await request(app)
           .get(POSTS_PATH)
-          .query({ pageNumber: 1 })
+          .query({ pageNumber: 2, pageSize: 2 })
           .expect(HttpStatus.Ok);
+
       console.log(res.body);
-      expect(res.body).toHaveProperty("page", 1);
+      expect(res.body).toHaveProperty("page", 2);
+      expect(res.body).toHaveProperty("pageSize", 2);
+      expect(Array.isArray(res.body.items)).toBe(true);
+      expect(res.body.items.length).toBeLessThanOrEqual(2);
     });
 
     it("should return 200 with pageNumber and pageSize", async () => {
