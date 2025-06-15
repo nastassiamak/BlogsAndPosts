@@ -9,6 +9,7 @@ import {mapToPostListPaginatedOutput} from "../mappers/mapToPostListPaginatedOut
 
 export async function getPostListHandler(req: Request<{}, {}, {}, ParsedQs>, res: Response) {
     console.log("Вызван getPostListHandler", req.query)
+    debugger;
     try {
 
         const queryInput = {

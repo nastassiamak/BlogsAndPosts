@@ -156,34 +156,22 @@ describe("Posts API body validation check", () => {
     });
   });
 
-  describe("GET /posts - invalid pagination and sorting params", () => {
-    it("should return 400 when passing invalid pageNumber", async () => {
-      await request(app)
+    it("should return 400 when passing invalid pagination and sorting params GET /posts ", async () => {
+     const res = await request(app)
           .get(POSTS_PATH)
-          .query({ pageNumber: "abc" })
-          .expect(HttpStatus.BadRequest);
-    });
-
-    it("should return 400 when passing invalid pageSize", async () => {
-      await request(app)
-          .get(POSTS_PATH)
-          .query({ pageSize: -1 })
-          .expect(HttpStatus.BadRequest);
-    });
-
-    it("should return 400 when passing invalid sortBy", async () => {
-      const res = await request(app)
-          .get(POSTS_PATH)
-          .query({ sortBy: "invalidField" })
-          .expect(HttpStatus.BadRequest);
+          .query({ pageNumber: "abc" , pageSize: -1 , sortBy: "invalidField", sortDirection: "upwards" })
+          .expect(HttpStatus.BadRequest)
+          .expect((res) => {
+            expect(res.body.errorsMessages).toEqual(
+                expect.arrayContaining([
+                    expect.objectContaining({field: "pageNumber"}),
+                    expect.objectContaining({ field: "pageSize" }),
+                    expect.objectContaining({ field: "sortBy" }),
+                    expect.objectContaining({ field: "sortDirection" }),
+                ])
+            );
+          })
       console.log(res.body);
-    });
 
-    it("should return 400 when passing invalid sortDirection", async () => {
-      await request(app)
-          .get(POSTS_PATH)
-          .query({ sortDirection: "upwards" })
-          .expect(HttpStatus.BadRequest);
     });
   });
-});
