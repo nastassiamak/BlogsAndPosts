@@ -159,7 +159,7 @@ describe("Posts API body validation check", () => {
     it("should return 400 when passing invalid pagination and sorting params GET /posts ", async () => {
      const res = await request(app)
           .get(POSTS_PATH)
-          .query({ pageNumber: "abc" , pageSize: -1 , sortBy: "invalidField", sortDirection: "upwards" })
+          .query({ pageNumber: "abc" , pageSize: 0, sortBy: "invalidField", sortDirection: "upwards" })
           .expect(HttpStatus.BadRequest)
           .expect((res) => {
             expect(res.body.errorsMessages).toEqual(

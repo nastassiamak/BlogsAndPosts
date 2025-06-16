@@ -1,11 +1,9 @@
 import { body, param } from "express-validator";
 import { blogsRepository } from "../../blogs/repositories/blogsRepository";
-import { resourceTypeValidation } from "../../core/middlewares/validation/resourceTypeValidationMiddleware";
-import { ResourceType } from "../../core/types/resourceType";
 import { Request, Response, NextFunction } from "express";
 import { postsRepository } from "../repositories/postsRepository";
 import { HttpStatus } from "../../core/types/httpStatus";
-//import { dataIdMatchValidator } from "../../core/middlewares/validation/paramsIdValidationMiddleware";
+import { dataIdMatchValidator } from "../../core/middlewares/validation/paramsIdValidationMiddleware";
 
 export const titleValidator = body("title")
   .isString()
@@ -38,7 +36,7 @@ export const createdAtValidator = body("createdAt")
   )
   .withMessage("not valid date format");
 
-export const blogIdValidator = param("blogId")
+export const blogIdValidator = body("blogId")
   .isString()
   .withMessage("not string")
   .trim()
@@ -70,17 +68,16 @@ export const postCreateInputValidation = [
   titleValidator,
   shortDescriptionValidator,
   contentValidator,
-  //blogIdValidator,
+  //dataIdMatchValidator,
+  blogIdValidator,
   createdAtValidator,
 ];
 
 export const postUpdateInputValidation = [
-  // resourceTypeValidation(ResourceType.Posts),
-  //dataIdMatchValidator,
   titleValidator,
   shortDescriptionValidator,
   contentValidator,
-  //findPostValidator,
-  //blogIdValidator,
+  //dataIdMatchValidator,
+    blogIdValidator,
   createdAtValidator,
 ];
