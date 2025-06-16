@@ -7,8 +7,12 @@ import { blogService } from "../../blogs/application/blogService";
 import {PostListPaginatedOutput} from "../routers/output/postListPaginatedOutput";
 
 export const postService = {
-  async findMany(queryDto: PostQueryInput, blogId?: string): Promise<PostListPaginatedOutput> {
+  async findMany(queryDto: PostQueryInput): Promise<PostListPaginatedOutput> {
     return postsRepository.findMany(queryDto);
+  },
+
+  async findPostsByBlogId(queryDto: PostQueryInput, blogId: string): Promise<PostListPaginatedOutput> {
+    return postsRepository.findPostsByBlog(queryDto, blogId);
   },
 
   async findByIdOrFail(id: string): Promise<WithId<Post>> {

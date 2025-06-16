@@ -9,7 +9,7 @@ import {PostDataOutput} from "../routers/output/postDataOutput";
 import {mapToPostOutput} from "../routers/mappers/mapToPostOutput";
 
 export const postsRepository = {
-  async findMany(queryDto: PostQueryInput, blogId?: string): Promise<PostListPaginatedOutput> {
+  async findMany(queryDto: PostQueryInput): Promise<PostListPaginatedOutput> {
     console.log("postsRepository.findMany started with queryDto:", queryDto);
     const {
       pageNumber = 1,
@@ -20,7 +20,7 @@ export const postsRepository = {
 
 
     const skip = (pageNumber - 1) * pageSize;
-    const filter: any = { blogId };
+    const filter: any = {};
 
     const direction = sortDirection === "asc" ? 1 : -1;
 
@@ -42,28 +42,40 @@ export const postsRepository = {
     return { pagesCount, page: pageNumber, pageSize, totalCount, items };
 
   },
-  //
-  // async findPostsByBlog(
-  //   queryDto: PostQueryInput,
-  //   blogId: string,
-  // ): Promise<PostListPaginatedOutput> {
-  //   const { pageNumber, pageSize, sortBy, sortDirection } = queryDto;
-  //   const filter: any = { blogId };
-  //   const skip = (pageNumber - 1) * pageSize;
-  //
-  //   const direction = sortDirection === "asc" ? 1 : -1;
-  //   const [items, totalCount] = await Promise.all([
-  //     postCollection
-  //       .find(filter)
-  //       .sort({ [sortBy]: direction })
-  //       .skip(skip)
-  //       .limit(pageSize)
-  //       .toArray(),
-  //     postCollection.countDocuments(filter),
-  //   ]);
-  //
-  //   return { items, totalCount };
-  // },
+
+  async findPostsByBlog(queryDto: PostQueryInput, blogId: string): Promise<PostListPaginatedOutput> {
+    console.log("postsRepository.findMany started with queryDto:", queryDto);
+    const {
+      pageNumber = 1,
+      pageSize = 10,
+      sortBy = "createdAt",
+      sortDirection = "desc",
+    } = queryDto;
+
+
+    const skip = (pageNumber - 1) * pageSize;
+    const filter: any = {blogId};
+
+    const direction = sortDirection === "asc" ? 1 : -1;
+
+    const totalCount =
+        await postCollection.countDocuments(filter);
+    const pagesCount = Math.ceil(totalCount / pageSize);
+
+    const rawItems = await
+        postCollection
+            .find(filter)
+            .sort({ [sortBy]: direction })
+            .skip(skip)
+            .limit(pageSize)
+            .toArray();
+
+    const items: PostDataOutput[] =
+        rawItems.map(mapToPostOutput);
+
+    return { pagesCount, page: pageNumber, pageSize, totalCount, items };
+
+  },
 
   async findById(id: string): Promise<WithId<Post> | null> {
     return postCollection.findOne({ _id: new ObjectId(id) });

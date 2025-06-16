@@ -1,8 +1,6 @@
 import { Request, Response } from "express";
 import { PostQueryInput } from "../../../posts/routers/input/postQueryInput";
 import { postService } from "../../../posts/application/postService";
-import { mapToPostListPaginatedOutput } from "../../../posts/routers/mappers/mapToPostListPaginatedOutputUtil";
-//import { errorsHandler } from "../../../core/errors/errorsHandler";
 import { setDefaultSortAndPaginationIfNotExist } from "../../../core/helpers/setDefaultSortAndPagination";
 import { blogService } from "../../application/blogService";
 import { ParsedQs } from "qs";
@@ -10,8 +8,6 @@ import { SortDirection } from "../../../core/types/sortDirection";
 import { PostSortField } from "../../../posts/routers/input/postSortField";
 import { HttpStatus } from "../../../core/types/httpStatus";
 import { RepositoryNotFoundError } from "../../../core/errors/repositoryNotFoundError";
-import { mapToPostOutput } from "../../../posts/routers/mappers/mapToPostOutput";
-import {mapToBlogListPaginatedOutput} from "../mappers/mapToBlogListPaginatedOutputUtil";
 import {mapToBlogPostListPaginatedOutput} from "../mappers/mapToBlogPostListPaginatedOutputUtil";
 
 export async function getBlogPostListHandler(
@@ -26,9 +22,6 @@ export async function getBlogPostListHandler(
       sortBy: (query.sortBy as PostSortField) || PostSortField.CreatedAt,
       sortDirection:
         query.sortDirection === "asc" ? SortDirection.Asc : SortDirection.Desc,
-      // searchPostTitleTerm: (query.searchPostTitleTerm as string) || undefined,
-      // searchPostShortDescriptionTerm:
-      //   (query.searchPostShortDescriptionTerm as string) || undefined,
     };
   }
 
@@ -42,7 +35,7 @@ export async function getBlogPostListHandler(
     console.log("Параметры запроса:", queryWithDefaults);
 
     // Получаем данные с пагинацией
-    const paginatedPosts = await postService.findMany(
+    const paginatedPosts = await postService.findPostsByBlogId(
       queryWithDefaults,
         blog._id.toString(),
     );

@@ -139,6 +139,7 @@ describe("Blog API", () => {
     const createdBlog = await createBlog(app);
     const blogId = createdBlog.id;
 
+
     const postData = {
       title: "Test post title",
       shortDescription: "Test short description",
