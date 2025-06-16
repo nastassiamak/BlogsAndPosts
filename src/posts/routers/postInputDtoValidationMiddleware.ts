@@ -3,7 +3,6 @@ import { blogsRepository } from "../../blogs/repositories/blogsRepository";
 import { Request, Response, NextFunction } from "express";
 import { postsRepository } from "../repositories/postsRepository";
 import { HttpStatus } from "../../core/types/httpStatus";
-import { dataIdMatchValidator } from "../../core/middlewares/validation/paramsIdValidationMiddleware";
 
 export const titleValidator = body("title")
   .isString()
@@ -36,40 +35,12 @@ export const createdAtValidator = body("createdAt")
   )
   .withMessage("not valid date format");
 
-export const blogIdValidator = body("blogId")
-  .isString()
-  .withMessage("not string")
-  .trim()
-  .custom(async (blogId: string) => {
-    const blog = await blogsRepository.findByIdOrFail(blogId);
-    if (!blog) {
-      throw new Error("no blog"); // Явно сообщите об ошибке, если блог не найден
-    }
-    return true; // Если блог найден
-  });
 
-export const findPostValidator = async (
-  req: Request<{ id: string }>,
-  res: Response,
-  next: NextFunction,
-) => {
-  const postId = req.params.id;
-  const post = await postsRepository.findById(postId);
-  if (!post) {
-    res.status(HttpStatus.BadRequest).json({});
-    return;
-  }
-
-  next();
-};
 
 export const postCreateInputValidation = [
-  //resourceTypeValidation(ResourceType.Posts),
   titleValidator,
   shortDescriptionValidator,
   contentValidator,
-  //dataIdMatchValidator,
-  blogIdValidator,
   createdAtValidator,
 ];
 
@@ -77,7 +48,5 @@ export const postUpdateInputValidation = [
   titleValidator,
   shortDescriptionValidator,
   contentValidator,
-  //dataIdMatchValidator,
-    blogIdValidator,
   createdAtValidator,
 ];

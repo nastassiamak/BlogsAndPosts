@@ -7,7 +7,7 @@ import { blogService } from "../../blogs/application/blogService";
 import {PostListPaginatedOutput} from "../routers/output/postListPaginatedOutput";
 
 export const postService = {
-  async findMany(queryDto: PostQueryInput): Promise<PostListPaginatedOutput> {
+  async findMany(queryDto: PostQueryInput, blogId?: string): Promise<PostListPaginatedOutput> {
     return postsRepository.findMany(queryDto);
   },
 

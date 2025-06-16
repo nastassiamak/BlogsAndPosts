@@ -11,6 +11,8 @@ import { PostSortField } from "../../../posts/routers/input/postSortField";
 import { HttpStatus } from "../../../core/types/httpStatus";
 import { RepositoryNotFoundError } from "../../../core/errors/repositoryNotFoundError";
 import { mapToPostOutput } from "../../../posts/routers/mappers/mapToPostOutput";
+import {mapToBlogListPaginatedOutput} from "../mappers/mapToBlogListPaginatedOutputUtil";
+import {mapToBlogPostListPaginatedOutput} from "../mappers/mapToBlogPostListPaginatedOutputUtil";
 
 export async function getBlogPostListHandler(
   req: Request<{ id: string }, {}, {}, ParsedQs>,
@@ -31,10 +33,10 @@ export async function getBlogPostListHandler(
   }
 
   try {
-    const id = req.params.id;
-    console.log("Получен запрос на blogId:", id);
+    const blogId = req.params.id;
+    console.log("Получен запрос на blogId:", blogId);
 
-    const blog = await blogService.findByIdOrFail(id);
+    const blog = await blogService.findByIdOrFail(blogId);
     const queryInput = parseBlogPostQuery(req.query);
     const queryWithDefaults = setDefaultSortAndPaginationIfNotExist(queryInput);
     console.log("Параметры запроса:", queryWithDefaults);
@@ -42,27 +44,21 @@ export async function getBlogPostListHandler(
     // Получаем данные с пагинацией
     const paginatedPosts = await postService.findMany(
       queryWithDefaults,
+        blog._id.toString(),
     );
 
-    console.log(
-      `Найдено постов: ${paginatedPosts.items.length}, всего: ${paginatedPosts.totalCount}`,
-    );
-
-    // Маппим каждый пост из БД в нужный формат output
-    const mappedItems = paginatedPosts.items.map((post) =>
-      mapToPostOutput(post),
-    );
+    const pagesCount =
+        Math.ceil(paginatedPosts.totalCount / queryWithDefaults.pageSize);
 
     // Формируем итоговый ответ с пагинацией и преобразованными постами
-    const responsePayload = {
-      pagesCount: Math.ceil(
-        paginatedPosts.totalCount / queryWithDefaults.pageSize,
-      ),
-      page: queryWithDefaults.pageNumber,
-      pageSize: queryWithDefaults.pageSize,
-      totalCount: paginatedPosts.totalCount,
-      items: mappedItems,
-    };
+    const responsePayload = mapToBlogPostListPaginatedOutput(
+
+        queryWithDefaults.pageNumber,
+        pagesCount,
+        queryWithDefaults.pageSize,
+        paginatedPosts.totalCount,
+        paginatedPosts.items,
+    );
 
     console.log("Формируем ответ:", responsePayload);
 

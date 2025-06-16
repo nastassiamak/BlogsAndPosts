@@ -1,12 +1,10 @@
-import { PostAttributes } from "../../../src/posts/application/dtos/postAttributes";
+import {PostCreateInput} from "../../../src/posts/routers/input/postCreateInput";
 
-export function getPostDto(blogId: string) {
+export function getPostDto(blogId: string): PostCreateInput {
   return {
     title: "title1",
     shortDescription: "shortDescription1",
     content: "content1",
-    blogId: blogId,
-    // blogName: "blogId",
-    // createdAt: new Date().toISOString(),
+    blogId,
   };
 }

@@ -1,5 +1,5 @@
 import { body } from "express-validator";
-//import { dataIdMatchValidator } from "../../core/middlewares/validation/paramsIdValidationMiddleware";
+
 
 export const nameValidator = body("name")
   .isString()
@@ -41,7 +41,6 @@ export const isMembershipValidator = body("isMembership")
   .toBoolean(); // Опционально, чтобы преобразовать входное значение в булевый тип
 
 export const blogCreateInputValidation = [
-  // resourceTypeValidation(ResourceType.Blogs),
   nameValidator,
   descriptionValidator,
   websiteUrlValidator,
@@ -50,8 +49,6 @@ export const blogCreateInputValidation = [
 ];
 
 export const blogUpdateInputValidation = [
-  //resourceTypeValidation(ResourceType.Blogs),
-  //dataIdMatchValidator,
   nameValidator,
   descriptionValidator,
   websiteUrlValidator,

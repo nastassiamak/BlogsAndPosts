@@ -5,7 +5,5 @@ export function getBlogDto(): BlogAttributes {
     name: "N11",
     description: "D11",
     websiteUrl: "http://example.com/",
-    // createdAt: new Date().toISOString(),
-    // isMembership: false,
   };
 }

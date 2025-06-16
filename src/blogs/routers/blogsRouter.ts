@@ -13,11 +13,7 @@ import {
   blogCreateInputValidation,
   blogUpdateInputValidation,
 } from "./blogInputDtoValidationMiddleware";
-import { PostSortField } from "../../posts/routers/input/postSortField";
-import { getBlogPostListHandler } from "./handlers/getBlogPostListHandler";
-//import { createBlogPostHandler } from "./handlers/createBlogPostHandler";
 import {
-  blogIdValidator,
   postCreateInputValidation,
 } from "../../posts/routers/postInputDtoValidationMiddleware";
 import { createBlogPostHandler } from "./handlers/createBlogPostHandler";
@@ -29,23 +25,16 @@ export const blogsRouter = Router({});
 //blogsRouter.use(superAdminGuardMiddleware);
 
 blogsRouter
-// .get("/", (req, res) => {
-//   console.log("GET /blogs запрос обработан");
-//   res.status(200).json({
-//     items: [],
-//     page: 1,
-//     pageSize: 10,
-//     totalCount: 0,
-//     pagesCount: 0
-//   });
-// })
-  .get(
-    "/",
+  .get("/",
     paginationAndSortingValidation(BlogSortField),
     inputValidationResultMiddleware,
     getBlogListHandler,
   )
-  .get("/:id", idValidation, inputValidationResultMiddleware, getBlogHandler)
+  .get("/:id",
+      idValidation,
+      inputValidationResultMiddleware,
+      getBlogHandler
+  )
   .post(
     "/",
     superAdminGuardMiddleware,
@@ -68,13 +57,6 @@ blogsRouter
     inputValidationResultMiddleware,
     deleteBlogHandler,
   )
-  // .get(
-  //   "/:id/posts",
-  //   idValidation,
-  //   paginationAndSortingValidation(PostSortField),
-  //   inputValidationResultMiddleware,
-  //   getBlogPostListHandler,
-  // )
   .post(
     "/:id/posts",
     superAdminGuardMiddleware,

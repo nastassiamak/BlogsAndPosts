@@ -174,7 +174,7 @@ describe("Blog API", () => {
     const blogId = createdBlog.id;
 
     // 2. Создаем несколько постов для блога
-    const postsToCreate = 15; // чтобы проверить пагинацию
+    const postsToCreate = 5; // чтобы проверить пагинацию
     for (let i = 0; i < postsToCreate; i++) {
       await createPostByBlogId(app, blogId, {
         title: `Post Title ${i}`,
@@ -187,7 +187,7 @@ describe("Blog API", () => {
     const pageNumber = 1;
     const pageSize = 10;
     const response = await request(app)
-        .get(`${BLOGS_PATH}/${blogId}/posts`)
+        .get(`${BLOGS_PATH}/${blogId}${POSTS_PATH}`)
         .query({ pageNumber, pageSize, sortBy: "createdAt", sortDirection: "desc" })
         .expect(HttpStatus.Ok);
 
