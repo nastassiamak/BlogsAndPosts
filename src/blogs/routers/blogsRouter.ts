@@ -19,6 +19,7 @@ import {
 import { createBlogPostHandler } from "./handlers/createBlogPostHandler";
 import { createPostHandler } from "../../posts/routers/handlers/createPostHandler";
 import {getBlogPostListHandler} from "./handlers/getBlogPostListHandler";
+import {PostSortField} from "../../posts/routers/input/postSortField";
 
 export const blogsRouter = Router({});
 
@@ -69,6 +70,7 @@ blogsRouter
     .get(
         "/:id/posts",
         idValidation,
+        paginationAndSortingValidation(PostSortField),
         inputValidationResultMiddleware,
         getBlogPostListHandler,
     );

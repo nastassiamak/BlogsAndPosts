@@ -87,6 +87,7 @@ describe("Posts API body validation check", () => {
           .get(POSTS_PATH)
           .expect(HttpStatus.Ok);
 
+      console.log(res.body)
       expect(res.body).toHaveProperty("items");
       expect(Array.isArray(res.body.items)).toBe(true);
 

@@ -37,6 +37,7 @@ describe("Posts API", () => {
     expect(post).toHaveProperty("content");
     expect(post).toHaveProperty("blogId");
   });
+
   it("should return paginated and sorted posts list", async () => {
     // Создаем блог, чтобы у постов был валидный blogId
     const blogResponse = await request(app)
@@ -51,6 +52,7 @@ describe("Posts API", () => {
 
     const blogId = blogResponse.body.id;
 
+    console.log("blogId", blogId);
     // Создаем 15 постов с разными датами создания и заголовками
     const postsData = Array.from({ length: 5 }, (_, i) => ({
       title: `Post Title ${i + 1}`,
@@ -67,6 +69,8 @@ describe("Posts API", () => {
         .expect(HttpStatus.Created);
       // Если в вашем API нельзя задать createdAt вручную, то сортировка по createdAt будет по времени вставки
     }
+
+    console.log(postsData)
     // Дополнительный GET без параметров — проверяем, что посты в базе
     const getAllResponse = await request(app)
         .get(POSTS_PATH)
