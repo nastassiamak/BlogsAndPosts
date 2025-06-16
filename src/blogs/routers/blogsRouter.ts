@@ -18,6 +18,7 @@ import {
 } from "../../posts/routers/postInputDtoValidationMiddleware";
 import { createBlogPostHandler } from "./handlers/createBlogPostHandler";
 import { createPostHandler } from "../../posts/routers/handlers/createPostHandler";
+import {getBlogPostListHandler} from "./handlers/getBlogPostListHandler";
 
 export const blogsRouter = Router({});
 
@@ -64,4 +65,10 @@ blogsRouter
     postCreateInputValidation,
     inputValidationResultMiddleware,
     createBlogPostHandler,
-  );
+  )
+    .get(
+        "/:id/posts",
+        idValidation,
+        inputValidationResultMiddleware,
+        getBlogPostListHandler,
+    );
