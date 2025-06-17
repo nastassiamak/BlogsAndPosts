@@ -52,6 +52,7 @@ export const postCreateInputValidation = [
   shortDescriptionValidator,
   contentValidator,
   createdAtValidator,
+    blogIdValidator
 
 ];
 

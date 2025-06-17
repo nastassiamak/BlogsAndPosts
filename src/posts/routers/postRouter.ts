@@ -43,7 +43,6 @@ postsRouter
   )
     .get(
         "/",
-
         paginationAndSortingValidation(PostSortField),
         inputValidationResultMiddleware,
         getPostListHandler,
