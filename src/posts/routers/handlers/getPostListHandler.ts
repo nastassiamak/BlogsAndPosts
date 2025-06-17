@@ -7,17 +7,12 @@ import {setDefaultSortAndPaginationIfNotExist} from "../../../core/helpers/setDe
 import {ParsedQs} from "qs";
 import {mapToPostListPaginatedOutput} from "../mappers/mapToPostListPaginatedOutputUtil";
 
-function parsePositiveInt(value: unknown): number | undefined {
-    if (value === undefined) return undefined;
-    const num = Number(value);
-    return Number.isInteger(num) && num > 0 ? num : undefined;
-}
 
 export async function getPostListHandler(req: Request<{}, {}, {}, ParsedQs>, res: Response) {
     console.log("Вызван getPostListHandler", req.query);
     try {
-        const pageNumber = parsePositiveInt(req.query.pageNumber);
-        const pageSize = parsePositiveInt(req.query.pageSize);
+        const pageNumber = Number(req.query.pageNumber) || 1;
+        const pageSize = Number(req.query.pageSize) || 10;
         const sortBy = req.query.sortBy as PostSortField | undefined;
         const sortDirection = req.query.sortDirection as SortDirection | undefined;
 
@@ -28,11 +23,14 @@ export async function getPostListHandler(req: Request<{}, {}, {}, ParsedQs>, res
             sortDirection,
         };
 
-        const queryWithDefaults = setDefaultSortAndPaginationIfNotExist(queryInput);
+        const queryWithDefaults =
+            setDefaultSortAndPaginationIfNotExist(queryInput);
 
-        const paginatedPosts = await postService.findMany(queryWithDefaults);
+        const paginatedPosts =
+            await postService.findMany(queryWithDefaults);
 
-        const pagesCount = Math.ceil(paginatedPosts.totalCount / queryWithDefaults.pageSize);
+        const pagesCount =
+            Math.ceil(paginatedPosts.totalCount / queryWithDefaults.pageSize);
 
         const responsePayload = mapToPostListPaginatedOutput(
             queryWithDefaults.pageNumber,

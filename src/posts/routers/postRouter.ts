@@ -1,6 +1,6 @@
 import { Router } from "express";
 import {
-  paginationAndSortingValidation, setPaginationDefaults,
+  paginationAndSortingValidation,
 } from "../../core/middlewares/validation/queryPaginationSortingValidation";
 import { PostSortField } from "./input/postSortField";
 import { inputValidationResultMiddleware } from "../../core/middlewares/validation/inputValidationResultMiddleware";
@@ -45,7 +45,6 @@ postsRouter
 
         paginationAndSortingValidation(PostSortField),
         inputValidationResultMiddleware,
-        setPaginationDefaults,
         getPostListHandler,
     )
   .delete(
