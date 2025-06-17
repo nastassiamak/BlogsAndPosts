@@ -18,6 +18,22 @@ export const paginationAndSortingDefault: PaginationAndSorting<string> = {
   sortDirection: DEFAULT_SORT_DIRECTION,
 };
 
+export function setPaginationDefaults(req: Request, res: Response, next: NextFunction) {
+  if (req.query.pageNumber === undefined) {
+    req.query.pageNumber = String(paginationAndSortingDefault.pageNumber);
+  }
+  if (req.query.pageSize === undefined) {
+    req.query.pageSize = String(paginationAndSortingDefault.pageSize);
+  }
+  if (req.query.sortBy === undefined) {
+    req.query.sortBy = paginationAndSortingDefault.sortBy;
+  }
+  if (req.query.sortDirection === undefined) {
+    req.query.sortDirection = paginationAndSortingDefault.sortDirection;
+  }
+  next();
+}
+
 
 export function paginationAndSortingValidation<T extends string>(
   sortFieldsEnum: Record<string, T>,
