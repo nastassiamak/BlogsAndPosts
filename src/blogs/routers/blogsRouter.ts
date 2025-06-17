@@ -14,7 +14,7 @@ import {
   blogUpdateInputValidation,
 } from "./blogInputDtoValidationMiddleware";
 import {
-  postCreateInputValidation,
+  postCreateInputValidation, postCreateWithBlogIdInputValidation,
 } from "../../posts/routers/postInputDtoValidationMiddleware";
 import { createBlogPostHandler } from "./handlers/createBlogPostHandler";
 import { createPostHandler } from "../../posts/routers/handlers/createPostHandler";
@@ -63,7 +63,7 @@ blogsRouter
     "/:id/posts",
     superAdminGuardMiddleware,
     idValidation,
-    postCreateInputValidation,
+      postCreateWithBlogIdInputValidation,
     inputValidationResultMiddleware,
     createBlogPostHandler,
   )

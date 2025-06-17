@@ -3,11 +3,7 @@ import {SortDirection} from "../../../core/types/sortDirection";
 import { Request, Response } from "express";
 import {postService} from "../../application/postService";
 import {HttpStatus} from "../../../core/types/httpStatus";
-import {setDefaultSortAndPaginationIfNotExist} from "../../../core/helpers/setDefaultSortAndPagination";
-import {ParsedQs} from "qs";
-import {mapToPostListPaginatedOutput} from "../mappers/mapToPostListPaginatedOutputUtil";
 import {RepositoryNotFoundError} from "../../../core/errors/repositoryNotFoundError";
-import {BlogSortField} from "../../../blogs/routers/input/blogSortField";
 
 
 export async function getPostListHandler(req: Request, res: Response) {
