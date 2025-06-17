@@ -24,7 +24,8 @@ postsRouter
   .get("/:id",
       idValidation,
       inputValidationResultMiddleware,
-      getPostHandler)
+      getPostHandler
+  )
   .post(
     "/",
     superAdminGuardMiddleware,

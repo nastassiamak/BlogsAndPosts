@@ -1,8 +1,6 @@
-import { body, param } from "express-validator";
-import { blogsRepository } from "../../blogs/repositories/blogsRepository";
-import { Request, Response, NextFunction } from "express";
-import { postsRepository } from "../repositories/postsRepository";
-import { HttpStatus } from "../../core/types/httpStatus";
+import {body} from "express-validator";
+import {blogsRepository} from "../../blogs/repositories/blogsRepository";
+
 
 export const titleValidator = body("title")
   .isString()
@@ -25,6 +23,18 @@ export const contentValidator = body("content")
   .isLength({ min: 1, max: 1000 })
   .withMessage("more then 1000 or 0");
 
+export const blogIdValidator = body("blogId")
+    .exists().withMessage("blogId is required")
+    .bail()
+    .isMongoId().withMessage("blogId must be valid ObjectId")
+    .bail()
+    .custom(async (blogId) => {
+      const blogExists = await blogsRepository.findByIdOrFail(blogId)
+      if (!blogExists) {
+        return Promise.reject("Blog with such id does not exist");
+      }
+    })
+
 export const createdAtValidator = body("createdAt")
   .optional() // Делает поле необязательным
   .isString()
@@ -42,6 +52,7 @@ export const postCreateInputValidation = [
   shortDescriptionValidator,
   contentValidator,
   createdAtValidator,
+
 ];
 
 export const postUpdateInputValidation = [
@@ -49,4 +60,5 @@ export const postUpdateInputValidation = [
   shortDescriptionValidator,
   contentValidator,
   createdAtValidator,
+
 ];

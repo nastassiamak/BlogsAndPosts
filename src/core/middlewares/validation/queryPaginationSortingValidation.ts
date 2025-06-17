@@ -2,7 +2,7 @@
 import { SortDirection } from "../../types/sortDirection";
 import { PaginationAndSorting } from "../../types/paginationAndSorting";
 import { query } from "express-validator";
-import {Request, Response, NextFunction} from "express";
+
 
 const DEFAULT_PAGE_NUMBER = 1;
 const DEFAULT_PAGE_SIZE = 10;
@@ -29,21 +29,21 @@ export function paginationAndSortingValidation<T extends string>(
   return [
     query("pageNumber")
       .optional()
-      //.default(DEFAULT_PAGE_NUMBER)
+      .default(DEFAULT_PAGE_NUMBER)
       .isInt({min: 1 })
       .withMessage("Page number must be a positive integer")
       .toInt(),
 
     query("pageSize")
       .optional()
-      //.default(DEFAULT_PAGE_SIZE)
+      .default(DEFAULT_PAGE_SIZE)
       .isInt({ min: 1, max: 20 })
       .withMessage("Page size must be between 1 and 20")
       .toInt(),
 
     query("sortBy")
       .optional()
-      //.default(Object.values(sortFieldsEnum)[0])
+      .default(Object.values(sortFieldsEnum)[0])
       .isIn(allowedSortFields)
       .withMessage(
         `Invalid sort field. Allowed values: ${allowedSortFields.join(", ")}`,
@@ -51,7 +51,7 @@ export function paginationAndSortingValidation<T extends string>(
 
     query("sortDirection")
       .optional()
-     // .default(DEFAULT_SORT_DIRECTION)
+     .default(DEFAULT_SORT_DIRECTION)
       .isIn(Object.values(SortDirection))
       .withMessage(
         `Sort direction must be one of: ${Object.values(SortDirection).join(", ")}`,
