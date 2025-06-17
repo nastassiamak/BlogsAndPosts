@@ -144,6 +144,7 @@ describe("Blog API", () => {
       title: "Test post title",
       shortDescription: "Test short description",
       content: "Test content",
+      blogId: blogId,
     };
 
     const response = await request(app)

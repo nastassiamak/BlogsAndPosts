@@ -7,49 +7,30 @@ import {setDefaultSortAndPaginationIfNotExist} from "../../../core/helpers/setDe
 import {ParsedQs} from "qs";
 import {mapToPostListPaginatedOutput} from "../mappers/mapToPostListPaginatedOutputUtil";
 import {RepositoryNotFoundError} from "../../../core/errors/repositoryNotFoundError";
+import {BlogSortField} from "../../../blogs/routers/input/blogSortField";
 
 
-export async function getPostListHandler(req: Request<{}, {}, {}, ParsedQs>, res: Response) {
+export async function getPostListHandler(req: Request, res: Response) {
     console.log("Вызван getPostListHandler", req.query);
     try {
-        const pageNumber = Number(req.query.pageNumber) || 1;
-        const pageSize = Number(req.query.pageSize) || 10;
-        const sortBy = req.query.sortBy as PostSortField || PostSortField.CreatedAt;
-        const sortDirection = req.query.sortDirection === "asc" ? SortDirection.Asc : SortDirection.Desc;
+        // Парсим параметры из query и задаём дефолты
+        const queryDto = {
+            pageNumber: req.query.pageNumber ? parseInt(req.query.pageNumber as string, 10) : 1,
+            pageSize: req.query.pageSize ? parseInt(req.query.pageSize as string, 10) : 10,
+            sortBy: (req.query.sortBy as PostSortField) || PostSortField.CreatedAt,
+            sortDirection: req.query.sortDirection === "asc" ? SortDirection.Asc : SortDirection.Desc
+        }
 
-        const queryInput = {
-            pageNumber,
-            pageSize,
-            sortBy,
-            sortDirection,
-        };
+        // Вызываем метод репозитория для получения данных с пагинацией
+        const postsPage = await postService.findMany(queryDto);
 
-        const queryWithDefaults =
-            setDefaultSortAndPaginationIfNotExist(queryInput);
-
-        const paginatedPosts =
-            await postService.findMany(queryInput);
-
-        const pagesCount =
-            Math.ceil(paginatedPosts.totalCount / queryWithDefaults.pageSize);
-
-        const responsePayload =
-            mapToPostListPaginatedOutput(
-
-            queryWithDefaults.pageNumber,
-            pagesCount,
-            queryWithDefaults.pageSize,
-            paginatedPosts.totalCount,
-            paginatedPosts.items,
-        );
-
-        console.log("Ответ API: ", responsePayload);
-        res.status(HttpStatus.Ok).json(responsePayload);
+        console.log("Ответ API: ", postsPage);
+        res.status(HttpStatus.Ok).json(postsPage);
 
     } catch (error) {
         if (error instanceof RepositoryNotFoundError) {
-            res.status(HttpStatus.NotFound).json({ message: "Post not found" });
+            res.status(HttpStatus.NotFound).json({message: "Post not found"});
         }
-        res.status(HttpStatus.BadRequest).json({ message: (error as Error).message || "Invalid query" });
+        res.status(HttpStatus.BadRequest).json({message: (error as Error).message || "Invalid query"});
     }
 }
