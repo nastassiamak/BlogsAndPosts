@@ -21,13 +21,12 @@ export const postService = {
 
   async create(dto: PostAttributes): Promise<string> {
     const blog = await blogService.findByIdOrFail(dto.blogId);
-    const blogName = blog ? blog.name : "Неизвестный блог"; // Устанавли
     const newPost: Post = {
       title: dto.title,
       shortDescription: dto.shortDescription,
       content: dto.content,
-      blogId: dto.blogId,
-      blogName: blogName,
+      blogId: blog._id.toString(),
+      blogName: blog.name,
       createdAt: new Date().toISOString(),
     };
     return await postsRepository.createPost(newPost);

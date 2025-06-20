@@ -170,49 +170,49 @@ describe("Blog API", () => {
       createdAt: expect.any(String),
     });
   });
-  // it("should return posts for a specific blog with pagination and status 200", async () => {
-  //   // 1. Создаем блог
-  //   const createdBlog = await createBlog(app);
-  //   const blogId = createdBlog.id;
-  //
-  //   // 2. Создаем несколько постов для блога
-  //   const postsToCreate = 5; // чтобы проверить пагинацию
-  //   for (let i = 0; i < postsToCreate; i++) {
-  //     await createPostByBlogId(app, blogId, {
-  //       title: `Post Title ${i}`,
-  //       shortDescription: `Short Desc ${i}`,
-  //       content: `Content ${i}`,
-  //     });
-  //   }
-  //
-  //   // 3. Выполняем запрос к списку постов блога с параметрами пагинации
-  //   const pageNumber = 1;
-  //   const pageSize = 10;
-  //   const response = await request(app)
-  //       .get(`${BLOGS_PATH}/${blogId}${POSTS_PATH}`)
-  //       .query({ pageNumber, pageSize, sortBy: "createdAt", sortDirection: "desc" })
-  //       .expect(HttpStatus.Ok);
-  //
-  //   // 4. Проверяем структуру и содержимое ответа
-  //   expect(response.body).toHaveProperty("pagesCount");
-  //   expect(response.body).toHaveProperty("page", pageNumber);
-  //   expect(response.body).toHaveProperty("pageSize", pageSize);
-  //   expect(response.body).toHaveProperty("totalCount");
-  //   expect(Array.isArray(response.body.items)).toBe(true);
-  //
-  //   // Длина items не должна превышать pageSize
-  //   expect(response.body.items.length).toBeLessThanOrEqual(pageSize);
-  //
-  //   // Проверим свойства первого поста
-  //   if (response.body.items.length > 0) {
-  //     const post = response.body.items[0];
-  //     expect(post).toHaveProperty("id");
-  //     expect(post).toHaveProperty("title");
-  //     expect(post).toHaveProperty("shortDescription");
-  //     expect(post).toHaveProperty("content");
-  //     expect(post).toHaveProperty("blogId", blogId);
-  //     expect(post).toHaveProperty("blogName");
-  //     expect(post).toHaveProperty("createdAt");
-  //   }
-  // });
+  it("should return posts for a specific blog with pagination and status 200", async () => {
+    // 1. Создаем блог
+    const createdBlog = await createBlog(app);
+    const blogId = createdBlog.id;
+
+    // 2. Создаем несколько постов для блога
+    const postsToCreate = 5; // чтобы проверить пагинацию
+    for (let i = 0; i < postsToCreate; i++) {
+      await createPostByBlogId(app, blogId, {
+        title: `Post Title ${i}`,
+        shortDescription: `Short Desc ${i}`,
+        content: `Content ${i}`,
+      });
+    }
+
+    // 3. Выполняем запрос к списку постов блога с параметрами пагинации
+    const pageNumber = 1;
+    const pageSize = 10;
+    const response = await request(app)
+        .get(`${BLOGS_PATH}/${blogId}${POSTS_PATH}`)
+        .query({ pageNumber, pageSize, sortBy: "createdAt", sortDirection: "desc" })
+        .expect(HttpStatus.Ok);
+
+    // 4. Проверяем структуру и содержимое ответа
+    expect(response.body).toHaveProperty("pagesCount");
+    expect(response.body).toHaveProperty("page", pageNumber);
+    expect(response.body).toHaveProperty("pageSize", pageSize);
+    expect(response.body).toHaveProperty("totalCount");
+    expect(Array.isArray(response.body.items)).toBe(true);
+
+    // Длина items не должна превышать pageSize
+    expect(response.body.items.length).toBeLessThanOrEqual(pageSize);
+
+    // Проверим свойства первого поста
+    if (response.body.items.length > 0) {
+      const post = response.body.items[0];
+      expect(post).toHaveProperty("id");
+      expect(post).toHaveProperty("title");
+      expect(post).toHaveProperty("shortDescription");
+      expect(post).toHaveProperty("content");
+      expect(post).toHaveProperty("blogId", blogId);
+      expect(post).toHaveProperty("blogName");
+      expect(post).toHaveProperty("createdAt");
+    }
+  });
 });

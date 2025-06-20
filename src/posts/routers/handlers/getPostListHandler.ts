@@ -26,7 +26,8 @@ export async function getPostListHandler(req: Request<{}, {}, {}, ParsedQs>, res
 
 
         // Вызываем метод репозитория для получения данных с пагинацией
-        const paginatedPosts = await postService.findMany(queryInput);
+        const paginatedPosts =
+            await postService.findMany(queryWithDefaults);
 
         const pagesCount =
             Math.ceil(paginatedPosts.totalCount / queryWithDefaults.pageSize);
@@ -41,6 +42,7 @@ export async function getPostListHandler(req: Request<{}, {}, {}, ParsedQs>, res
             );
 
         console.log("Ответ API: ", responsePayload);
+
         res.status(HttpStatus.Ok).json(responsePayload);
 
     } catch (error) {
