@@ -16,7 +16,7 @@ export async function getPostListHandler(req: Request<{}, {}, {}, ParsedQs>, res
         const queryInput = {
             pageNumber: Number(req.query.pageNumber) || 1,
             pageSize: Number(req.query.pageSize) || 10,
-            sortBy: (req.query.sortBy as PostSortField) || PostSortField.CreatedAt,
+            sortBy: (req.query.sortBy as PostSortField) || "createdAt",
             sortDirection: req.query.sortDirection === "asc" ? SortDirection.Asc : SortDirection.Desc
         };
 
