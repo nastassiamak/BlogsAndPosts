@@ -1,6 +1,17 @@
 import {body} from "express-validator";
 import {blogsRepository} from "../../blogs/repositories/blogsRepository";
 
+export const blogIdValidator = body('blogId')
+    .exists().withMessage('blogId is required')
+    .bail()
+    .isMongoId().withMessage('blogId must be a valid ObjectId')
+    .bail()
+    .custom(async (blogId) => {
+        const blogExists = await blogsRepository.findById(blogId);
+        if (!blogExists) {
+            return Promise.reject('Blog with the given id does not exist');
+        }
+    })
 
 export const titleValidator = body("title")
   .isString()
@@ -23,17 +34,6 @@ export const contentValidator = body("content")
   .isLength({ min: 1, max: 1000 })
   .withMessage("more then 1000 or 0");
 
-export const blogIdValidator = body("blogId")
-    .exists().withMessage("blogId is required")
-    .bail()
-    .isMongoId().withMessage("blogId must be valid ObjectId")
-    .bail()
-    .custom(async (blogId) => {
-      const blogExists = await blogsRepository.findByIdOrFail(blogId)
-      if (!blogExists) {
-        return Promise.reject("Blog with such id does not exist");
-      }
-    })
 
 export const createdAtValidator = body("createdAt")
   .optional() // Делает поле необязательным
@@ -51,6 +51,7 @@ export const postCreateInputValidation = [
   titleValidator,
   shortDescriptionValidator,
   contentValidator,
+    blogIdValidator,
   createdAtValidator,
 
 ];
