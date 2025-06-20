@@ -26,7 +26,9 @@ export const postsRepository = {
 
     const totalCount =
         await postCollection.countDocuments(filter);
-    const pagesCount = Math.ceil(totalCount / pageSize);
+
+    const pagesCount =
+        Math.ceil(totalCount / pageSize);
 
     const rawItems = await
       postCollection
@@ -54,7 +56,7 @@ export const postsRepository = {
 
 
     const skip = (pageNumber - 1) * pageSize;
-    const filter: any = {blogId};
+    const filter: any = { blogId: new ObjectId(blogId) };
 
     const direction = sortDirection === "asc" ? 1 : -1;
 

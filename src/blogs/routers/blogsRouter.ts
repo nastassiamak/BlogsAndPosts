@@ -14,10 +14,10 @@ import {
   blogUpdateInputValidation,
 } from "./blogInputDtoValidationMiddleware";
 import {
+  blogIdValidator,
   postCreateInputValidation,
 } from "../../posts/routers/postInputDtoValidationMiddleware";
 import { createBlogPostHandler } from "./handlers/createBlogPostHandler";
-import { createPostHandler } from "../../posts/routers/handlers/createPostHandler";
 import {getBlogPostListHandler} from "./handlers/getBlogPostListHandler";
 import {PostSortField} from "../../posts/routers/input/postSortField";
 
@@ -68,8 +68,8 @@ blogsRouter
     createBlogPostHandler,
   )
     .get(
-        "/:id/posts",
-        idValidation,
+        "/:blogId/posts",
+        blogIdValidator,
         paginationAndSortingValidation(PostSortField),
         inputValidationResultMiddleware,
         getBlogPostListHandler,

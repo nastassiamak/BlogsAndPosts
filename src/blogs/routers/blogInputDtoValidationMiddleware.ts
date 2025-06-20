@@ -1,5 +1,8 @@
-import { body } from "express-validator";
+import {body, param} from "express-validator";
 
+const blogIdValidator = param('blogId')
+    .exists().withMessage('blogId param is required')
+    .isMongoId().withMessage('blogId param must be valid ObjectId');
 
 export const nameValidator = body("name")
   .isString()

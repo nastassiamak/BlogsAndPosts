@@ -11,6 +11,7 @@ import {mapToBlogOutput} from "../routers/mappers/mapToBlogOutput";
 
 export const blogsRepository = {
   async findMany(queryDto: BlogQueryInput): Promise<BlogListPaginatedOutput> {
+    console.log("blogsRepository.findMany started with queryDto:", queryDto);
     const {
       pageNumber = 1,
       pageSize = 10,
@@ -35,14 +36,17 @@ export const blogsRepository = {
 
     const totalCount =
         await blogCollection.countDocuments(filter);
-    const pagesCount = Math.ceil(totalCount / pageSize);
 
-    const rawItems = await blogCollection
-        .find(filter)
-        .sort({ [sortBy]: direction })
-        .skip(skip)
-        .limit(pageSize)
-        .toArray();
+    const pagesCount =
+        Math.ceil(totalCount / pageSize);
+
+    const rawItems = await
+        blogCollection
+          .find(filter)
+          .sort({ [sortBy]: direction })
+          .skip(skip)
+          .limit(pageSize)
+          .toArray();
 
     // Преобразуем документы в DTO
     const items: BlogDataOutput[] =
@@ -56,7 +60,8 @@ export const blogsRepository = {
   },
 
   async findByIdOrFail(id: string): Promise<WithId<Blog>> {
-    const res = await blogCollection.findOne({ _id: new ObjectId(id) });
+    const res =
+        await blogCollection.findOne({ _id: new ObjectId(id) });
 
     if (!res) {
       throw new RepositoryNotFoundError("Blog not exists");
@@ -65,7 +70,9 @@ export const blogsRepository = {
   },
 
   async create(newBlog: Blog): Promise<string> {
-    const insertResult = await blogCollection.insertOne(newBlog);
+    const insertResult =
+        await blogCollection.insertOne(newBlog);
+
     return insertResult.insertedId.toString();
   },
 
@@ -92,7 +99,8 @@ export const blogsRepository = {
   },
 
   async delete(id: string): Promise<void> {
-    const deleteResult = await blogCollection.deleteOne({
+    const deleteResult =
+        await blogCollection.deleteOne({
       _id: new ObjectId(id),
     });
 
