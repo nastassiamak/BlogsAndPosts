@@ -1,13 +1,9 @@
 import request from "supertest";
 import { Express } from "express";
-import { PostAttributes } from "../../../src/posts/application/dtos/postAttributes";
-
 import { getPostDto } from "../posts/getPostDto";
-import { ResourceType } from "../../../src/core/types/resourceType";
 import { BLOGS_PATH, POSTS_PATH } from "../../../src/core/paths/paths";
 import { generateAdminAuthToken } from "../generateAdminAuthToken";
 import { HttpStatus } from "../../../src/core/types/httpStatus";
-import { PostDataOutput } from "../../../src/posts/routers/output/postDataOutput";
 import {PostCreateInput} from "../../../src/posts/routers/input/postCreateInput";
 
 export async function createPostByBlogId(

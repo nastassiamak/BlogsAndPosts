@@ -7,11 +7,11 @@ import { RepositoryNotFoundError } from "../../../core/errors/repositoryNotFound
 import {blogsRepository} from "../../repositories/blogsRepository";
 
 export async function createBlogPostHandler(
-  req: Request<{id: string}, {}, PostCreateInput>,
+  req: Request<{blogId: string}, {}, PostCreateInput>,
   res: Response,
 ){
 
-  const blogId = req.params.id;
+  const blogId = req.params.blogId;
   try {
 
     // Проверяем, что блог существует

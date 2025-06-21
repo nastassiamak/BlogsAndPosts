@@ -1,5 +1,10 @@
-import {body} from "express-validator";
+import {body, param} from "express-validator";
 import {blogsRepository} from "../../blogs/repositories/blogsRepository";
+
+export const blogIdParamValidator = param("blogId")
+    .exists().withMessage("blogId is required")
+    .isMongoId().withMessage("blogId must be a valid ObjectId");
+
 
 export const blogIdValidator = body('blogId')
     .exists().withMessage('blogId is required')
@@ -55,6 +60,13 @@ export const postCreateInputValidation = [
   createdAtValidator,
 
 ];
+
+export const postCreateWithOutBlogIdValidation = [
+    titleValidator,
+    shortDescriptionValidator,
+    contentValidator,
+    createdAtValidator,
+]
 
 export const postUpdateInputValidation = [
   titleValidator,

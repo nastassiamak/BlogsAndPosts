@@ -4,5 +4,5 @@ import { PostSortField } from "./postSortField";
 export type PostQueryInput = PaginationAndSorting<PostSortField>
     &
   Partial<{
-    blogId: string;
+
   }>;
