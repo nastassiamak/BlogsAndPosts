@@ -56,7 +56,7 @@ export const postsRepository = {
 
 
     const skip = (pageNumber - 1) * pageSize;
-    const filter: any = { blogId: new ObjectId(blogId)  };
+    const filter: any = { blogId: blogId };
 
     const direction = sortDirection === "asc" ? 1 : -1;
 
