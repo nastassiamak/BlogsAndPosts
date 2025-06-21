@@ -5,6 +5,7 @@ import { SortDirection } from "../../../core/types/sortDirection";
 import { PostSortField } from "../../../posts/routers/input/postSortField";
 import { HttpStatus } from "../../../core/types/httpStatus";
 import { RepositoryNotFoundError } from "../../../core/errors/repositoryNotFoundError";
+import {blogService} from "../../application/blogService";
 
 
 export async function getBlogPostListHandler(
@@ -24,8 +25,9 @@ export async function getBlogPostListHandler(
   // }
 
   try {
-    const blogId = req.params.blogId;
+    const blogId = await blogService.findByIdOrFail(req.params.blogId);
     console.log("Получен запрос на blogId:", blogId);
+
 
     const pageNumber = req.query.pageNumber ? Number(req.query.pageNumber) : 1;
     const pageSizeRaw = req.query.pageSize ? Number(req.query.pageSize) : 10;
@@ -35,7 +37,7 @@ export async function getBlogPostListHandler(
 
     const paginatedPosts = await postService.findPostsByBlogId(
         { pageNumber, pageSize, sortBy, sortDirection },
-        blogId,
+        blogId._id.toString(),
     );
 
     const pagesCount = Math.ceil(paginatedPosts.totalCount / pageSize);

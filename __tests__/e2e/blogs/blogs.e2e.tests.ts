@@ -14,10 +14,6 @@ import { getBlogDto } from "../../utils/blogs/getBlogDto";
 import { createBlog } from "../../utils/blogs/createBlog";
 import { getBlogById } from "../../utils/blogs/getBlogById";
 import { updateBlog } from "../../utils/blogs/updateBlog";
-
-import { getPostsByBlogId } from "../../utils/blogs/getPostsByBlogId";
-import { blogsRepository } from "../../../src/blogs/repositories/blogsRepository";
-import { createPost } from "../../utils/posts/createPost";
 import { createPostByBlogId } from "../../utils/blogs/createdPostByBlogId";
 
 describe("Blog API", () => {
