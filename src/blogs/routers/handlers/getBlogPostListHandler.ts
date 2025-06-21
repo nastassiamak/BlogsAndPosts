@@ -27,13 +27,24 @@ export async function getBlogPostListHandler(
   try {
     const blogId = await blogService.findByIdOrFail(req.params.blogId);
     console.log("Получен запрос на blogId:", blogId);
+    const rawPageNumber = req.query.pageNumber as string | undefined;
+    const rawPageSize = req.query.pageSize as string | undefined;
+    const rawSortBy = req.query.sortBy as string | undefined;
+    const rawSortDir = req.query.sortDirection as string | undefined;
+
+    const pageNumber = rawPageNumber && +rawPageNumber > 0 ? +rawPageNumber : 1;
+    const pageSize = rawPageSize && +rawPageSize > 0 ? +rawPageSize : 10;
+    const sortBy = rawSortBy && Object.values(PostSortField).includes(rawSortBy as PostSortField)
+        ? rawSortBy as PostSortField
+        : PostSortField.CreatedAt;
+    const sortDirection = rawSortDir === 'asc' ? SortDirection.Asc : SortDirection.Desc;
 
 
-    const pageNumber = req.query.pageNumber ? Number(req.query.pageNumber) : 1;
-    const pageSizeRaw = req.query.pageSize ? Number(req.query.pageSize) : 10;
-    const pageSize = pageSizeRaw > 0 ? pageSizeRaw : 10;
-    const sortBy = (req.query.sortBy as PostSortField) || PostSortField.CreatedAt;
-    const sortDirection = (req.query.sortDirection as string) === "asc" ? SortDirection.Asc : SortDirection.Desc
+    // const pageNumber = req.query.pageNumber ? Number(req.query.pageNumber) : 1;
+    // const pageSizeRaw = req.query.pageSize ? Number(req.query.pageSize) : 10;
+    // const pageSize = pageSizeRaw > 0 ? pageSizeRaw : 10;
+    // const sortBy = (req.query.sortBy as PostSortField) || PostSortField.CreatedAt;
+    // const sortDirection = (req.query.sortDirection as string) === "asc" ? SortDirection.Asc : SortDirection.Desc
 
     const paginatedPosts = await postService.findPostsByBlogId(
         { pageNumber, pageSize, sortBy, sortDirection },
