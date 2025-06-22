@@ -13,17 +13,6 @@ export async function getBlogPostListHandler(
   res: Response,
 ) {
   console.log("Хендлер: getBlogPostListHandler, params:", req.params, "query:", req.query);
-  // function parseBlogPostQuery(query: ParsedQs): PostQueryInput {
-  //   return {
-  //     pageNumber: Number(query.pageNumber) || 1,
-  //     pageSize: Number(query.pageSize) || 10,
-  //     sortBy: (query.sortBy as PostSortField) || PostSortField.CreatedAt,
-  //     sortDirection:
-  //       query.sortDirection === "asc" ? SortDirection.Asc : SortDirection.Desc,
-  //
-  //   };
-  // }
-
   try {
     const blogId = await blogService.findByIdOrFail(req.params.blogId);
     console.log("Получен запрос на blogId:", blogId);
