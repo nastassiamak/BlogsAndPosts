@@ -28,7 +28,7 @@ export async function createPostHandler(
     const createdPost =
         await postService.findByIdOrFail(createdPostId);
 
-    const postOutput = createdPost;
+    const postOutput = mapToPostOutput(createdPost);
     res.status(HttpStatus.Created).send(postOutput);
 
   } catch (error) {
