@@ -68,7 +68,7 @@ export const inputValidationResultMiddleware = async (
     res.status(HttpStatus.BadRequest).json({
       errorsMessages: eArray.map((x) => ({ field: x.path, message: x.msg })),
     });
-    //console.log("Validation errors:", validationResult(req).array());
+    console.log("Validation errors:", validationResult(req).array());
     return;
   }
 
