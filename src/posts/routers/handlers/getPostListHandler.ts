@@ -14,10 +14,10 @@ export async function getPostListHandler(req: Request<{}, {}, {}, ParsedQs>, res
     try {
         // Парсим параметры из query и задаём дефолты
         const queryInput = {
-            pageNumber: Number(req.query.pageNumber) || 1,
-            pageSize: Number(req.query.pageSize) || 10,
-            sortBy: (req.query.sortBy as PostSortField) || "createdAt",
-            sortDirection: req.query.sortDirection === "asc" ? SortDirection.Asc : SortDirection.Desc
+            pageNumber: req.query.pageNumber as unknown as number,
+            pageSize: req.query.pageSize as unknown as number,
+            sortBy: req.query.sortBy as PostSortField,
+            sortDirection: (req.query.sortDirection === "asc" ? SortDirection.Asc : SortDirection.Desc),
         };
 
         // При необходимости установите дефолты

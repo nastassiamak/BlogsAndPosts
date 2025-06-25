@@ -9,9 +9,7 @@ import { idValidation } from "../../core/middlewares/validation/paramsIdValidati
 import { getPostHandler } from "./handlers/getPostHandler";
 import { superAdminGuardMiddleware } from "../../auth/middlewares/superAdminGuardMiddleware";
 import {
-  blogIdValidator,
-  checkBlogExistsBody,
-  postCreateInputValidation, postCreateWithOutBlogIdValidation,
+  postCreateWithOutBlogIdValidation,
   postUpdateInputValidation,
 } from "./postInputDtoValidationMiddleware";
 import { createPostHandler } from "./handlers/createPostHandler";
