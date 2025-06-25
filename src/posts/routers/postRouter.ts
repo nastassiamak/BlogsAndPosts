@@ -15,6 +15,7 @@ import {
 import { createPostHandler } from "./handlers/createPostHandler";
 import { updatePostHandler } from "./handlers/updatePostHandler";
 import { deletePostHandler } from "./handlers/deletePostHandler";
+import {postsPaginationValidation} from "./postsPaginationValidation";
 
 
 export const postsRouter = Router({});
@@ -43,7 +44,8 @@ postsRouter
   )
     .get(
         "/",
-        paginationAndSortingValidation(PostSortField),
+        //paginationAndSortingValidation(PostSortField),
+        postsPaginationValidation,
         inputValidationResultMiddleware,
         getPostListHandler,
     )
