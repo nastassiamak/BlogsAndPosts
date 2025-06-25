@@ -3,7 +3,14 @@ import {blogsRepository} from "../../blogs/repositories/blogsRepository";
 
 export const blogIdParamValidator = param("blogId")
     .exists().withMessage("blogId is required")
-    .isMongoId().withMessage("blogId must be a valid ObjectId");
+    .isMongoId().withMessage("blogId must be a valid ObjectId")
+    .bail()
+    .custom(async (blogId) => {
+        const blogExists = await blogsRepository.findById(blogId);
+        if (!blogExists) {
+            return Promise.reject('Blog with the given id does not exist');
+        }
+    })
 
 
 export const blogIdValidator = body('blogId')

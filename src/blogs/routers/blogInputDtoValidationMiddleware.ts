@@ -49,7 +49,6 @@ export const blogCreateInputValidation = [
 ];
 
 export const blogUpdateInputValidation = [
-
   nameValidator,
   descriptionValidator,
   websiteUrlValidator,
