@@ -11,7 +11,7 @@ import { superAdminGuardMiddleware } from "../../auth/middlewares/superAdminGuar
 import {
   blogIdValidator,
   checkBlogExistsBody,
-  postCreateInputValidation,
+  postCreateInputValidation, postCreateWithOutBlogIdValidation,
   postUpdateInputValidation,
 } from "./postInputDtoValidationMiddleware";
 import { createPostHandler } from "./handlers/createPostHandler";
@@ -31,9 +31,8 @@ postsRouter
   .post(
     "/",
     superAdminGuardMiddleware,
-    postCreateInputValidation,
+    postCreateWithOutBlogIdValidation,
     inputValidationResultMiddleware,
-    blogIdValidator,
     createPostHandler,
   )
   .put(
@@ -48,7 +47,6 @@ postsRouter
         "/",
         paginationAndSortingValidation(PostSortField),
         inputValidationResultMiddleware,
-        checkBlogExistsBody,
         getPostListHandler,
     )
   .delete(

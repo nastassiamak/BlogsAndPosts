@@ -26,6 +26,7 @@ import { Request, Response, NextFunction } from "express";
 //         }
 //     })
 
+
 export const blogIdParamValidator = param("blogId")
     .exists().withMessage("blogId is required")
     .isMongoId().withMessage("blogId must be a valid ObjectId");
@@ -95,6 +96,7 @@ export const postCreateInputValidation = [
   shortDescriptionValidator,
   contentValidator,
   createdAtValidator,
+    blogIdParamValidator,
 
 ];
 
