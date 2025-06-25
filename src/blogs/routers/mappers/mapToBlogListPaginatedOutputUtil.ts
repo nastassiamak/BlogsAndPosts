@@ -18,7 +18,7 @@ export function mapToBlogListPaginatedOutput(
         pageSize,
         totalCount,
         items: blogs.map(blog => ({
-            id: blog.id,
+            blogId: blog.blogId,
             name: blog.name,
             description: blog.description,
             websiteUrl: blog.websiteUrl,

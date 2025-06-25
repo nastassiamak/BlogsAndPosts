@@ -6,11 +6,11 @@ import { RepositoryNotFoundError } from "../../../core/errors/repositoryNotFound
 //import { errorsHandler } from "../../../core/errors/errorsHandler";
 
 export async function updateBlogHandler(
-  req: Request<{ id: string }, {}, BlogUpdateInput>,
+  req: Request<{ blogId: string }, {}, BlogUpdateInput>,
   res: Response,
 ) {
   try {
-    const id = req.params.id;
+    const id = req.params.blogId;
 
     await blogService.update(id, req.body);
 

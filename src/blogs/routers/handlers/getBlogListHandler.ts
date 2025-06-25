@@ -12,7 +12,7 @@ import { mapToBlogOutput } from "../mappers/mapToBlogOutput";
 import {WithId} from "mongodb";
 import {Blog} from "../../domain/blog";
 
-export async function getBlogListHandler(req: Request<{ blogId: string}, {}, {}, ParsedQs>, res: Response){
+export async function getBlogListHandler(req: Request<{}, {}, {}, ParsedQs>, res: Response){
   console.log("Вызван getBlogListHandler", req.query)
   try {
     const queryInput = {

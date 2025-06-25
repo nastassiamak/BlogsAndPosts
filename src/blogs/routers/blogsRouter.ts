@@ -15,8 +15,7 @@ import {
 } from "./blogInputDtoValidationMiddleware";
 import {
   blogIdParamValidator,
-  blogIdValidator,
-  postCreateInputValidation, postCreateWithOutBlogIdValidation,
+  postCreateWithOutBlogIdValidation,
 } from "../../posts/routers/postInputDtoValidationMiddleware";
 import { createBlogPostHandler } from "./handlers/createBlogPostHandler";
 import {getBlogPostListHandler} from "./handlers/getBlogPostListHandler";
@@ -33,7 +32,7 @@ blogsRouter
     inputValidationResultMiddleware,
     getBlogListHandler,
   )
-  .get("/:id",
+  .get("/:blogId",
       idValidation,
       inputValidationResultMiddleware,
       getBlogHandler
@@ -46,15 +45,14 @@ blogsRouter
     createBlogHandler,
   )
   .put(
-    "/:id",
+    "/:blogId",
     superAdminGuardMiddleware,
-    idValidation,
     blogUpdateInputValidation,
     inputValidationResultMiddleware,
     updateBlogHandler,
   )
   .delete(
-    "/:id",
+    "/:blogId",
     superAdminGuardMiddleware,
     idValidation,
     inputValidationResultMiddleware,

@@ -2,16 +2,15 @@ import { Request, Response } from "express";
 import { HttpStatus } from "../../../core/types/httpStatus";
 import { blogService } from "../../application/blogService";
 import { RepositoryNotFoundError } from "../../../core/errors/repositoryNotFoundError";
-//import { errorsHandler } from "../../../core/errors/errorsHandler";
 
 export async function deleteBlogHandler(
-  req: Request<{ id: string }>,
+  req: Request<{ blogId: string }>,
   res: Response,
 ): Promise<void> {
   try {
-    const id = req.params.id;
+    const blogId = req.params.blogId;
 
-    await blogService.delete(id);
+    await blogService.delete(blogId);
     res.sendStatus(HttpStatus.NoContent);
   } catch (error) {
     if (error instanceof RepositoryNotFoundError) {

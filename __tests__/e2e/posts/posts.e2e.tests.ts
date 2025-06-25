@@ -50,7 +50,7 @@ describe("Posts API", () => {
       })
       .expect(HttpStatus.Created);
 
-    const blogId = blogResponse.body.id;
+    const blogId = blogResponse.body.blogId;
 
     console.log("blogId", blogId);
     // Создаем 15 постов с разными датами создания и заголовками
@@ -126,7 +126,7 @@ describe("Posts API", () => {
 
   it("should update post; PUT /posts/:id ", async () => {
     const createdBlog = await createBlog(app);
-    const createdBlogId = createdBlog.id;
+    const createdBlogId = createdBlog.blogId;
     const createdPost = await createPost(app);
     const createdPostId = createdPost.id;
 

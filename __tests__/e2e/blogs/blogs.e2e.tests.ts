@@ -65,9 +65,9 @@ describe("Blog API", () => {
     expect(response.body.items.length).toBeGreaterThanOrEqual(2);
   });
 
-  it("should return blog by id; GET /blogs/:id", async () => {
+  it("should return blog by id; GET /blogs/{blogId}", async () => {
     const createdBlog = await createBlog(app);
-    const createdBlogId = createdBlog.id;
+    const createdBlogId = createdBlog.blogId;
 
     const blog = await getBlogById(app, createdBlogId);
 
@@ -78,7 +78,7 @@ describe("Blog API", () => {
 
   it("should create post by blogId; POST /blogs/{blogId}/posts", async () => {
     const createdBlog = await createBlog(app);
-    const blogId = createdBlog.id;
+    const blogId = createdBlog.blogId;
 
     const createdPost = await createPostByBlogId(app, blogId);
 
@@ -95,7 +95,7 @@ describe("Blog API", () => {
 
   it("should update blog; PUT /blogs/:id", async () => {
     const createdBlog = await createBlog(app);
-    const createdBlogId = createdBlog.id;
+    const createdBlogId = createdBlog.blogId;
 
     const blogUpdateData: BlogAttributes = {
       name: "Updated Blog",
@@ -108,7 +108,7 @@ describe("Blog API", () => {
     const blogResponse = await getBlogById(app, createdBlogId);
 
     expect(blogResponse).toEqual({
-      id: createdBlogId,
+      blogId: createdBlogId,
       name: blogUpdateData.name,
       description: blogUpdateData.description,
       websiteUrl: blogUpdateData.websiteUrl,
@@ -119,7 +119,7 @@ describe("Blog API", () => {
 
   it('should delete blog and check after "NOT FOUND"; DELETE /blogs/:id', async () => {
     const createdBlog = await createBlog(app);
-    const createdBlogId = createdBlog.id;
+    const createdBlogId = createdBlog.blogId;
 
     await request(app)
       .delete(`${BLOGS_PATH}/${createdBlogId}`)
@@ -133,14 +133,14 @@ describe("Blog API", () => {
 
   it("should create new post for specific blog and return 201 with correct response structure", async () => {
     const createdBlog = await createBlog(app);
-    const blogId = createdBlog.id;
+    const blogId = createdBlog.blogId;
 
 
     const postData = {
       title: "Test post title",
       shortDescription: "Test short description",
       content: "Test content",
-      blogId: blogId,
+      blogId,
     };
 
     const response = await request(app)
@@ -152,13 +152,13 @@ describe("Blog API", () => {
     // Подстрахуемся: если пришло _id, то преобразуем в id для стабильности теста
     const responseBody = {
       ...response.body,
-      id: response.body.id ?? response.body._id,
+      blogId: response.body.blogId ?? response.body._id,
     };
-    delete responseBody._id;
+    delete responseBody.blogId;
 
     expect(responseBody).toMatchObject({
       id: expect.any(String),
-      blogId: blogId,
+      blogId,
       blogName: expect.any(String),
       title: postData.title,
       shortDescription: postData.shortDescription,
@@ -169,7 +169,7 @@ describe("Blog API", () => {
   it("should return posts for a specific blog with pagination and status 200", async () => {
     // 1. Создаем блог
     const createdBlog = await createBlog(app);
-    const blogId = createdBlog.id;
+    const blogId = createdBlog.blogId;
 
     // 2. Создаем несколько постов для блога
     const postsToCreate = 5; // чтобы проверить пагинацию
