@@ -72,7 +72,7 @@ describe("Blog API body validation check", () => {
 
   it("❌ should not update blog when incorrect data passed; PUT /blogs/:id", async () => {
     const createdBlog = await createBlog(app, correctTestBlogAttributes);
-    const createdBlogId = createdBlog.blogId;
+    const createdBlogId = createdBlog.id;
 
     const invalidDataSet1 = await request(app)
       .put(`${BLOGS_PATH}/${createdBlogId}`)

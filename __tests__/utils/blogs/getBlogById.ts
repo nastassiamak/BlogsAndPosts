@@ -9,10 +9,10 @@ import { BlogDataOutput } from "../../../src/blogs/routers/output/blogDataOutput
 
 export async function getBlogById(
   app: Express,
-  blogId: string,
+  id: string,
 ): Promise<BlogDataOutput> {
   const blogResponse = await request(app)
-    .get(`${BLOGS_PATH}/${blogId}`)
+    .get(`${BLOGS_PATH}/${id}`)
     .expect(HttpStatus.Ok);
 
   console.log(

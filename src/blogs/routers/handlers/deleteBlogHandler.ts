@@ -4,13 +4,13 @@ import { blogService } from "../../application/blogService";
 import { RepositoryNotFoundError } from "../../../core/errors/repositoryNotFoundError";
 
 export async function deleteBlogHandler(
-  req: Request<{ blogId: string }>,
+  req: Request<{ id: string }>,
   res: Response,
 ): Promise<void> {
   try {
-    const blogId = req.params.blogId;
+    const id = req.params.id;
 
-    await blogService.delete(blogId);
+    await blogService.delete(id);
     res.sendStatus(HttpStatus.NoContent);
   } catch (error) {
     if (error instanceof RepositoryNotFoundError) {

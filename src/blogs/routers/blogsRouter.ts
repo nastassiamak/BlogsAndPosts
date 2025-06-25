@@ -10,7 +10,7 @@ import { superAdminGuardMiddleware } from "../../auth/middlewares/superAdminGuar
 import { paginationAndSortingValidation } from "../../core/middlewares/validation/queryPaginationSortingValidation";
 import { BlogSortField } from "./input/blogSortField";
 import {
-  blogCreateInputValidation, blogIdValidation,
+  blogCreateInputValidation,
   blogUpdateInputValidation,
 } from "./blogInputDtoValidationMiddleware";
 import {
@@ -32,8 +32,8 @@ blogsRouter
     inputValidationResultMiddleware,
     getBlogListHandler,
   )
-  .get("/:blogId",
-      blogIdValidation,
+  .get("/:id",
+      idValidation,
       inputValidationResultMiddleware,
       getBlogHandler
   )
@@ -45,16 +45,17 @@ blogsRouter
     createBlogHandler,
   )
   .put(
-    "/:blogId",
+    "/:id",
     superAdminGuardMiddleware,
+    idValidation,
     blogUpdateInputValidation,
     inputValidationResultMiddleware,
     updateBlogHandler,
   )
   .delete(
-    "/:blogId",
+    "/:id",
     superAdminGuardMiddleware,
-    blogIdValidation,
+    idValidation,
     inputValidationResultMiddleware,
     deleteBlogHandler,
   )

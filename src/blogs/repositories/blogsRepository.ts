@@ -55,13 +55,13 @@ export const blogsRepository = {
     return { pagesCount, page: pageNumber, pageSize, totalCount, items };
   },
 
-  async findById(blogId: string): Promise<WithId<Blog> | null> {
-    return blogCollection.findOne({ _id: new ObjectId(blogId) });
+  async findById(id: string): Promise<WithId<Blog> | null> {
+    return blogCollection.findOne({ _id: new ObjectId(id) });
   },
 
-  async findByIdOrFail(blogId: string): Promise<WithId<Blog>> {
+  async findByIdOrFail(id: string): Promise<WithId<Blog>> {
     const res =
-        await blogCollection.findOne({ _id: new ObjectId(blogId) });
+        await blogCollection.findOne({ _id: new ObjectId(id) });
 
     if (!res) {
       throw new RepositoryNotFoundError("Blog not exists");
@@ -76,10 +76,10 @@ export const blogsRepository = {
     return insertResult.insertedId.toString();
   },
 
-  async update(blogId: string, dto: BlogAttributes): Promise<void> {
+  async update(id: string, dto: BlogAttributes): Promise<void> {
     const updateResult = await blogCollection.updateOne(
       {
-        _id: new ObjectId(blogId),
+        _id: new ObjectId(id),
       },
       {
         $set: {
@@ -96,10 +96,10 @@ export const blogsRepository = {
     return;
   },
 
-  async delete(blogId: string): Promise<void> {
+  async delete(id: string): Promise<void> {
     const deleteResult =
         await blogCollection.deleteOne({
-      _id: new ObjectId(blogId),
+      _id: new ObjectId(id),
     });
 
     if (deleteResult.deletedCount < 1) {

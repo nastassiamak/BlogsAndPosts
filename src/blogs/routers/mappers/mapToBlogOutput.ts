@@ -6,7 +6,7 @@ import { BlogDataOutput } from "../output/blogDataOutput";
 export function mapToBlogOutput(blog: WithId<Blog>): BlogDataOutput {
   return {
 
-    blogId: blog._id.toString(),
+    id: blog._id.toString(),
     name: blog.name,
     description: blog.description,
     websiteUrl: blog.websiteUrl,

@@ -1,13 +1,5 @@
 import {body, param} from "express-validator";
 
-export const blogIdValidation = param("blogId")
-    .exists()
-    .withMessage("ID is required")
-    .bail()
-    .isString()
-    .withMessage("ID must be a string")
-    .isMongoId()
-    .withMessage("Incorrect format of ObjectId");
 
 export const nameValidator = body("name")
   .isString()
@@ -57,7 +49,7 @@ export const blogCreateInputValidation = [
 ];
 
 export const blogUpdateInputValidation = [
-    blogIdValidation,
+
   nameValidator,
   descriptionValidator,
   websiteUrlValidator,

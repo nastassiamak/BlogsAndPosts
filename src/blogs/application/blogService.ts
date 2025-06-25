@@ -10,8 +10,8 @@ export const blogService = {
     return blogsRepository.findMany(queryDto);
   },
 
-  async findByIdOrFail(blogId: string): Promise<WithId<Blog>> {
-    return blogsRepository.findByIdOrFail(blogId);
+  async findByIdOrFail(id: string): Promise<WithId<Blog>> {
+    return blogsRepository.findByIdOrFail(id);
   },
 
   async create(dto: BlogAttributes): Promise<string> {
@@ -25,13 +25,13 @@ export const blogService = {
     return await blogsRepository.create(newBlog);
   },
 
-  async update(blogId: string, dto: BlogAttributes): Promise<void> {
-    await blogsRepository.update(blogId, dto);
+  async update(id: string, dto: BlogAttributes): Promise<void> {
+    await blogsRepository.update(id, dto);
     return;
   },
 
-  async delete(blogId: string): Promise<void> {
-    await blogsRepository.delete(blogId);
+  async delete(id: string): Promise<void> {
+    await blogsRepository.delete(id);
     return;
   },
 };

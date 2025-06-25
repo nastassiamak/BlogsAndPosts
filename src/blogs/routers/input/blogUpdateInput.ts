@@ -1,7 +1,7 @@
 
 export type BlogUpdateInput = {
 
-  blogId: string;
+  id: string;
   name: string;
   description: string;
   websiteUrl: string;

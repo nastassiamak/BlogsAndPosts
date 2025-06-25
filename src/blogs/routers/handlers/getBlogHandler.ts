@@ -6,12 +6,12 @@ import { RepositoryNotFoundError } from "../../../core/errors/repositoryNotFound
 //import { errorsHandler } from "../../../core/errors/errorsHandler";
 
 export async function getBlogHandler(
-  req: Request<{ blogId: string }>,
+  req: Request<{ id: string }>,
   res: Response,
 ) {
   try {
-    const blogId = req.params.blogId;
-    const blog = await blogService.findByIdOrFail(blogId);
+    const id = req.params.id;
+    const blog = await blogService.findByIdOrFail(id);
 
     const blogOutput = mapToBlogOutput(blog);
 

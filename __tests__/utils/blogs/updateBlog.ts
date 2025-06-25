@@ -11,12 +11,12 @@ import { getBlogDto } from "./getBlogDto";
 
 export async function updateBlog(
   app: Express,
-  blogId: string,
+  id: string,
   blogDto?: BlogAttributes,
 ): Promise<void> {
   const testBlogData: BlogUpdateInput = {
 
-    blogId,
+    id,
 
     ...getBlogDto(),
     ...blogDto,
@@ -28,7 +28,7 @@ export async function updateBlog(
   );
 
   const updateBlogResponse = await request(app)
-    .put(`${BLOGS_PATH}/${blogId}`)
+    .put(`${BLOGS_PATH}/${id}`)
     .set("Authorization", generateAdminAuthToken())
     .send(testBlogData)
     .expect(HttpStatus.NoContent);

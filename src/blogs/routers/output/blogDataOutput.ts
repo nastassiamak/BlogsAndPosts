@@ -2,7 +2,7 @@ import { ResourceType } from "../../../core/types/resourceType";
 
 export type BlogDataOutput = {
   //type: ResourceType.Blogs;
-  blogId: string;
+  id: string;
   //attributes: {
   name: string;
   description: string;
