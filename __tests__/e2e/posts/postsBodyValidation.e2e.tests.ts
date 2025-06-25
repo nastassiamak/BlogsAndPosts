@@ -69,14 +69,14 @@ describe("Posts API body validation check", () => {
           .set("Authorization", adminToken)
           .send({ title: "   ", shortDescription: "", content: 1 })
           .expect(HttpStatus.BadRequest);
-      expect(invalidDataSet1.body.errorsMessages).toHaveLength(4);
+      expect(invalidDataSet1.body.errorsMessages).toHaveLength(3);
 
       const invalidDataSet2 = await request(app)
           .post(POSTS_PATH)
           .set("Authorization", adminToken)
-          .send({ title: 21, shortDescription: "   ", content: "2vgg", blogId: 1 })
+          .send({ title: 21, shortDescription: "   ", content: "2vgg"})
           .expect(HttpStatus.BadRequest);
-      expect(invalidDataSet2.body.errorsMessages).toHaveLength(3);
+      expect(invalidDataSet2.body.errorsMessages).toHaveLength(2);
     });
   });
 

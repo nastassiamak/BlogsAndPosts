@@ -1,29 +1,45 @@
 import {body, param} from "express-validator";
 import {blogsRepository} from "../../blogs/repositories/blogsRepository";
+import { Request, Response, NextFunction } from "express";
+
+// export const blogIdParamValidator = param("blogId")
+//     .exists().withMessage("blogId is required")
+//     .isMongoId().withMessage("blogId must be a valid ObjectId")
+//     .bail()
+//     .custom(async (blogId) => {
+//         const blogExists = await blogsRepository.findById(blogId);
+//         if (!blogExists) {
+//             return Promise.reject('Blog with the given id does not exist');
+//         }
+//     })
+//
+//
+// export const blogIdValidator = body('blogId')
+//     .exists().withMessage('blogId is required')
+//     .bail()
+//     .isMongoId().withMessage('blogId must be a valid ObjectId')
+//     .bail()
+//     .custom(async (blogId) => {
+//         const blogExists = await blogsRepository.findById(blogId);
+//         if (!blogExists) {
+//             return Promise.reject('Blog with the given id does not exist');
+//         }
+//     })
 
 export const blogIdParamValidator = param("blogId")
     .exists().withMessage("blogId is required")
-    .isMongoId().withMessage("blogId must be a valid ObjectId")
-    .bail()
-    .custom(async (blogId) => {
-        const blogExists = await blogsRepository.findById(blogId);
-        if (!blogExists) {
-            return Promise.reject('Blog with the given id does not exist');
-        }
-    })
+    .isMongoId().withMessage("blogId must be a valid ObjectId");
 
-
-export const blogIdValidator = body('blogId')
-    .exists().withMessage('blogId is required')
-    .bail()
-    .isMongoId().withMessage('blogId must be a valid ObjectId')
-    .bail()
-    .custom(async (blogId) => {
-        const blogExists = await blogsRepository.findById(blogId);
-        if (!blogExists) {
-            return Promise.reject('Blog with the given id does not exist');
-        }
-    })
+export async function checkBlogExists( req: Request, res: Response, next: NextFunction ) {
+    const blogId = req.params.blogId;
+    const blogExists = await blogsRepository.findById(blogId);
+    if (!blogExists) {
+        return res.status(404).json({
+            errorsMessages: [{ field: "blogId", message: "Blog with the given id does not exist" }],
+        });
+    }
+    next();
+}
 
 export const titleValidator = body("title")
   .isString()
@@ -63,7 +79,7 @@ export const postCreateInputValidation = [
   titleValidator,
   shortDescriptionValidator,
   contentValidator,
-    blogIdValidator,
+
   createdAtValidator,
 
 ];
