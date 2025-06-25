@@ -20,6 +20,7 @@ import {
 import { createBlogPostHandler } from "./handlers/createBlogPostHandler";
 import {getBlogPostListHandler} from "./handlers/getBlogPostListHandler";
 import {PostSortField} from "../../posts/routers/input/postSortField";
+import {blogsPaginationValidation} from "./blogsPaginationValidation";
 
 export const blogsRouter = Router({});
 
@@ -28,7 +29,8 @@ export const blogsRouter = Router({});
 
 blogsRouter
   .get("/",
-    paginationAndSortingValidation(BlogSortField),
+    //paginationAndSortingValidation(BlogSortField),
+      blogsPaginationValidation,
     inputValidationResultMiddleware,
     getBlogListHandler,
   )
@@ -65,7 +67,6 @@ blogsRouter
     blogIdParamValidator,
     postCreateWithOutBlogIdValidation,
     inputValidationResultMiddleware,
-    checkBlogExists,
     createBlogPostHandler,
   )
     .get(

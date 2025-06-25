@@ -44,15 +44,14 @@ postsRouter
   )
     .get(
         "/",
-        //paginationAndSortingValidation(PostSortField),
         postsPaginationValidation,
         inputValidationResultMiddleware,
         getPostListHandler,
     )
-  .delete(
-    "/:id",
-    superAdminGuardMiddleware,
-    idValidation,
-    inputValidationResultMiddleware,
-    deletePostHandler,
-  );
+    .delete(
+      "/:id",
+      superAdminGuardMiddleware,
+      idValidation,
+      inputValidationResultMiddleware,
+      deletePostHandler,
+    );
