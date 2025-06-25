@@ -99,7 +99,9 @@ describe("Posts API body validation check", () => {
     });
 
     it("should return 200 with no query parameters", async () => {
-      const res = await request(app).get(POSTS_PATH).expect(HttpStatus.Ok);
+      const res = await request(app)
+          .get(POSTS_PATH)
+          .expect(HttpStatus.Ok);
       expect(res.body).toHaveProperty("items");
       console.log(res.body);
     });

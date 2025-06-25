@@ -9,6 +9,7 @@ import { idValidation } from "../../core/middlewares/validation/paramsIdValidati
 import { getPostHandler } from "./handlers/getPostHandler";
 import { superAdminGuardMiddleware } from "../../auth/middlewares/superAdminGuardMiddleware";
 import {
+  blogIdValidator,
   checkBlogExistsBody,
   postCreateInputValidation,
   postUpdateInputValidation,
@@ -32,6 +33,7 @@ postsRouter
     superAdminGuardMiddleware,
     postCreateInputValidation,
     inputValidationResultMiddleware,
+    blogIdValidator,
     createPostHandler,
   )
   .put(
