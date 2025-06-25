@@ -14,7 +14,7 @@ import {
   blogUpdateInputValidation,
 } from "./blogInputDtoValidationMiddleware";
 import {
-  blogIdParamValidator,
+  blogIdParamValidator, checkBlogExists,
   postCreateWithOutBlogIdValidation,
 } from "../../posts/routers/postInputDtoValidationMiddleware";
 import { createBlogPostHandler } from "./handlers/createBlogPostHandler";
@@ -65,6 +65,7 @@ blogsRouter
     blogIdParamValidator,
     postCreateWithOutBlogIdValidation,
     inputValidationResultMiddleware,
+    checkBlogExists,
     createBlogPostHandler,
   )
     .get(

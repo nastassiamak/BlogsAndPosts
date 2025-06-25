@@ -9,6 +9,7 @@ import { idValidation } from "../../core/middlewares/validation/paramsIdValidati
 import { getPostHandler } from "./handlers/getPostHandler";
 import { superAdminGuardMiddleware } from "../../auth/middlewares/superAdminGuardMiddleware";
 import {
+  checkBlogExistsBody,
   postCreateInputValidation,
   postUpdateInputValidation,
 } from "./postInputDtoValidationMiddleware";
@@ -45,6 +46,7 @@ postsRouter
         "/",
         paginationAndSortingValidation(PostSortField),
         inputValidationResultMiddleware,
+        checkBlogExistsBody,
         getPostListHandler,
     )
   .delete(
