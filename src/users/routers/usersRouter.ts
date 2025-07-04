@@ -4,12 +4,13 @@ import {userCreateInputValidation} from "./userInputDtoValodationMiddleware";
 import {inputValidationResultMiddleware} from "../../core/middlewares/validation/inputValidationResultMiddleware";
 import {createUserHandler} from "./handlers/createdUserHandler";
 import {getUserListHandler} from "./handlers/getUserListHandler";
+import {usersPaginationValidation} from "./usersPaginationValidation";
 
 export const usersRouter = Router({});
 
 usersRouter
     .get("/",
-        userCreateInputValidation,
+        usersPaginationValidation,
         inputValidationResultMiddleware,
         getUserListHandler
     )

@@ -14,10 +14,18 @@ export const usersRepository = {
             pageNumber = 1,
             pageSize = 10,
             sortBy = "createdAt",
-            sortDirection = "desc"
+            sortDirection = "desc",
+            searchLoginTerm,
+            searchEmailTerm,
         } = queryDto;
         const skip = (pageNumber - 1) * pageSize;
         const filter: any = {};
+        if (searchLoginTerm) {
+            filter.login = { $regex: searchLoginTerm, $options: "i" };
+        }
+        if (searchEmailTerm) {
+            filter.email = { $regex: searchEmailTerm, $options: "i" };
+        }
         const direction = sortDirection === "asc" ? 1 : -1;
 
         const totalCount =
@@ -45,6 +53,13 @@ export const usersRepository = {
         const insertResult =
             await userCollection.insertOne(newUser);
         return insertResult.insertedId.toString();
+    },
+
+    async findByLoginOrEmail(loginOrEmail: string) {
+        const user =
+            await userCollection
+                .findOne({$or: [{email: loginOrEmail}, {login: loginOrEmail}]})
+        return user;
     },
 
     async findByIdOrFail(id: string): Promise<WithId<User>> {
