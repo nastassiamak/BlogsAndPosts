@@ -9,7 +9,6 @@ import request from "supertest";
 import { BLOGS_PATH, POSTS_PATH } from "../../../src/core/paths/paths";
 import { HttpStatus } from "../../../src/core/types/httpStatus";
 import { getPostById } from "../../utils/posts/getPostById";
-import { ResourceType } from "../../../src/core/types/resourceType";
 import { PostAttributes } from "../../../src/posts/application/dtos/postAttributes";
 import { createBlog } from "../../utils/blogs/createBlog";
 import { updatePost } from "../../utils/posts/updatePost";
