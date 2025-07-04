@@ -2,8 +2,14 @@ import {UserAttributes} from "./dtos/userAttributes";
 import {User} from "../domain/user";
 import {usersRepository} from "../repositories/usersRepository";
 import {WithId} from "mongodb";
+import {UserQueryInput} from "../routers/input/userQueryInput";
+import {UserListPaginatedOutput} from "../routers/output/userListPaginatedOutput";
 
 export const userService = {
+    async findMany(queryDto: UserQueryInput): Promise<UserListPaginatedOutput> {
+        return await usersRepository.findMany(queryDto);
+    },
+
     async create(dto: UserAttributes): Promise<string> {
         const newUser: User = {
             login: dto.login,

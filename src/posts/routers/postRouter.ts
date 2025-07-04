@@ -1,8 +1,4 @@
 import { Router } from "express";
-import {
-  paginationAndSortingValidation,
-} from "../../core/middlewares/validation/queryPaginationSortingValidation";
-import { PostSortField } from "./input/postSortField";
 import { inputValidationResultMiddleware } from "../../core/middlewares/validation/inputValidationResultMiddleware";
 import { getPostListHandler } from "./handlers/getPostListHandler";
 import { idValidation } from "../../core/middlewares/validation/paramsIdValidationMiddleware";

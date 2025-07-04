@@ -2,8 +2,45 @@ import {User} from "../domain/user";
 import {userCollection} from "../../db/mongoDb";
 import { ObjectId, WithId } from "mongodb";
 import {RepositoryNotFoundError} from "../../core/errors/repositoryNotFoundError";
+import {UserQueryInput} from "../routers/input/userQueryInput";
+import {UserListPaginatedOutput} from "../routers/output/userListPaginatedOutput";
+import {UserDataOutput} from "../routers/output/userDataOutput";
+import {mapToUserOutput} from "../routers/mappers/mapToUserOutput";
 
 export const usersRepository = {
+    async findMany(queryDto: UserQueryInput): Promise<UserListPaginatedOutput> {
+      console.log("usersRepository.findMany started with queryDto:", queryDto);
+        const {
+            pageNumber = 1,
+            pageSize = 10,
+            sortBy = "createdAt",
+            sortDirection = "desc"
+        } = queryDto;
+        const skip = (pageNumber - 1) * pageSize;
+        const filter: any = {};
+        const direction = sortDirection === "asc" ? 1 : -1;
+
+        const totalCount =
+            await userCollection.countDocuments(filter);
+
+        const pagesCount =
+            Math.ceil(totalCount / pageSize);
+
+        const rawItems = await
+            userCollection
+                .find(filter)
+                .sort({ [sortBy]: direction })
+                .skip(skip)
+                .limit(pageSize)
+                .toArray();
+
+        // Преобразуем документы в DTO
+        const items: UserDataOutput[] =
+            rawItems.map(mapToUserOutput);
+
+        return { pagesCount, page: pageNumber, pageSize, totalCount, items };
+    },
+
     async createUser(newUser: User): Promise<string> {
         const insertResult =
             await userCollection.insertOne(newUser);
