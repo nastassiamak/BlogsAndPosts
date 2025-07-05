@@ -1,10 +1,11 @@
 import express, { Express } from "express";
-import {BLOGS_PATH, POSTS_PATH, TESTING_PATH, USERS_PATH} from "./core/paths/paths";
+import {AUTH_PATH, BLOGS_PATH, POSTS_PATH, TESTING_PATH, USERS_PATH} from "./core/paths/paths";
 import { blogsRouter } from "./blogs/routers/blogsRouter";
 import { testingRouter } from "./testing/routers/testingRouter";
 
 import { postsRouter } from "./posts/routers/postRouter";
 import {usersRouter} from "./users/routers/usersRouter";
+import {authSRouter} from "./auth/authRouter";
 
 
 
@@ -26,6 +27,7 @@ export const setupApp = (app: Express) => {
   app.use(POSTS_PATH, postsRouter);
   app.use(TESTING_PATH, testingRouter);
   app.use(USERS_PATH, usersRouter);
+  app.use(AUTH_PATH, authSRouter)
 
   app.use((req, res, next) => {
     console.log(`[Request] ${req.method} ${req.url}`);

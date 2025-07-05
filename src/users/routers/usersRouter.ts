@@ -11,12 +11,10 @@ export const usersRouter = Router({});
 usersRouter
     .get("/",
         usersPaginationValidation,
-        inputValidationResultMiddleware,
         getUserListHandler
     )
     .post("/",
         superAdminGuardMiddleware,
         userCreateInputValidation,
-        inputValidationResultMiddleware,
         createUserHandler
         )

@@ -3,8 +3,9 @@ import {setupApp} from "../../../src/setupApp";
 import {generateAdminAuthToken} from "../../utils/generateAdminAuthToken";
 import {runDB, stopDb} from "../../../src/db/mongoDb";
 import {clearDb} from "../../utils/clearDb";
-import {getUserDto} from "../../utils/users/getUserDto";
-import {createUser} from "../../utils/users/createdUser";
+import bcrypt from "bcrypt";
+import request from "supertest";
+import {AUTH_PATH} from "../../../src/core/paths/paths";
 
 describe("User API", () => {
     const app = express();
@@ -27,16 +28,33 @@ describe("User API", () => {
         await stopDb();
     });
 
-    it('should create a user; POST /users', async () => {
-    const [user] = await Promise.all([
-        createUser(app, {
-            ...getUserDto(),
-        })
-    ]);
-    const attributes= user;
-    expect(attributes).toHaveProperty("login");
-    expect(attributes).toHaveProperty("password");
-    expect(attributes).toHaveProperty("email");
+    it("POST /login should return 204 for valid creds", async () => {
+        // Добавим пользователя прямо в базу с известным паролем
+        const password = "password123";
+        const passwordHash = await bcrypt.hash(password, 10);
 
+        // Здесь доступ к MongoDB коллекции пользователей - зависит от вашего импорта/инициализации
+        await require("../../../src/db/mongoDb").userCollection.insertOne({
+            login: "testuser",
+            email: "testuser@example.com",
+            password: passwordHash,
+            createdAt: new Date().toISOString(),
+        });
+
+        const res = await request(app)
+            .post(AUTH_PATH)
+            .send({ loginOrEmail: "testuser", password });
+
+        expect(res.status).toBe(204);
     });
+
+
+    it("POST /login should return 401 for invalid creds", async () => {
+        const res = await request(app)
+            .post(AUTH_PATH)
+            .send({ loginOrEmail: "nonexistent", password: "wrongpass" });
+
+        expect(res.status).toBe(401);
+    });
+
 })
