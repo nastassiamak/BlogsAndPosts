@@ -3,6 +3,7 @@ import {UserCreateInput} from "../input/userCreateInput";
 import {mapToUserOutput} from "../mappers/mapToUserOutput";
 import {HttpStatus} from "../../../core/types/httpStatus";
 import {userService} from "../../application/userService";
+import {BusinessRuleError} from "../../../core/errors/businessRuleError";
 
 export async function createUserHandler(
     req: Request<{}, {}, UserCreateInput>,
@@ -17,8 +18,11 @@ export async function createUserHandler(
 
         res.status(HttpStatus.Created).send(userOutput);
     } catch (error) {
-        console.error("Error in createUserHandler", error);
-        res.status(HttpStatus.InternalServerError).send("Internal Server Error");
+
+            res.status(HttpStatus.NotFound).send({ message: "User not found" });
+
+        // console.error("Error in createUserHandler", error);
+        // res.status(HttpStatus.InternalServerError).send("Internal Server Error");
     }
 
 }

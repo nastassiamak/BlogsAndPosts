@@ -51,15 +51,6 @@ export const userService = {
         return await bcrypt.hash(password, salt);
     },
 
-    async checkCredentials(loginOrEmail: string, password: string) {
-        const user =
-            await usersRepository.findByLoginOrEmail(loginOrEmail);
-        if (!user) {
-            return false;
-        }
-        const isMatch = await bcrypt.compare(password, user.password);
-        return isMatch;
-    },
 
     async findByIdOrFail(id: string): Promise<WithId<User>> {
       return await usersRepository.findByIdOrFail(id);
