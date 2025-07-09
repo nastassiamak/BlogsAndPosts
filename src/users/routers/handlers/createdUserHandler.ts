@@ -6,23 +6,25 @@ import {userService} from "../../application/userService";
 import {BusinessRuleError} from "../../../core/errors/businessRuleError";
 
 export async function createUserHandler(
-    req: Request<{}, {}, UserCreateInput>,
+    req: Request,
     res: Response,
     ) {
     try{
         const createdUserId = await userService.create(req.body);
+        console.log("Created user ID:", createdUserId);
 
-        const createdUser  = await userService.findByIdOrFail(createdUserId);
+        const createdUser = await userService.findByIdOrFail(createdUserId);
+        console.log("Found user:", createdUser);
 
-        const userOutput  = mapToUserOutput(createdUser);
-
+        const userOutput = mapToUserOutput(createdUser);
         res.status(HttpStatus.Created).send(userOutput);
     } catch (error) {
-
-            res.status(HttpStatus.NotFound).send({ message: "User not found" });
-
-        // console.error("Error in createUserHandler", error);
-        // res.status(HttpStatus.InternalServerError).send("Internal Server Error");
+        console.error("Create user error:", error);
+        if (error instanceof BusinessRuleError) {
+            res.status(HttpStatus.BadRequest).json({ message: error.message });
+        } else {
+            res.status(HttpStatus.InternalServerError).send("Internal Server Error");
+        }
     }
 
 }

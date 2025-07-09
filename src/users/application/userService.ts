@@ -7,7 +7,6 @@ import {UserListPaginatedOutput} from "../routers/output/userListPaginatedOutput
 import bcrypt from "bcrypt";
 import {UserCreateInput} from "../routers/input/userCreateInput";
 import {userCollection} from "../../db/mongoDb";
-import {RepositoryNotFoundError} from "../../core/errors/repositoryNotFoundError";
 import {BusinessRuleError} from "../../core/errors/businessRuleError";
 
 export const userService = {
@@ -16,10 +15,10 @@ export const userService = {
         return await usersRepository.findMany(queryDto);
     },
 
-    async create(dto: UserCreateInput): Promise<string> {
+    async create(input: UserCreateInput): Promise<string> {
         // Проверка уникальности login
         const existingLogin =
-            await userCollection.findOne({login: dto.login});
+            await userCollection.findOne({login: input.login});
         if (existingLogin) {
             throw new BusinessRuleError({
                 errorsMessages: [{ field: "login", message: "login should be unique" }],
@@ -27,7 +26,7 @@ export const userService = {
         }
         // Проверка уникальности email
         const existingEmail =
-            await userCollection.findOne({email: dto.email});
+            await userCollection.findOne({email: input.email});
         if (existingEmail) {
             throw new BusinessRuleError({
                 errorsMessages: [{field: "email", message: "email should be unique"}],
@@ -36,15 +35,17 @@ export const userService = {
 
         const passwordSalt = await bcrypt.genSalt(10);
         const passwordHash =
-            await this._generateHash(dto.password, passwordSalt);
+            await this._generateHash(input.password, passwordSalt);
         const newUser: User = {
-            login: dto.login,
-            email: dto.email,
+            login: input.login,
+            email: input.email,
             password: passwordHash,
             createdAt: new Date().toISOString(),
 
         }
         return await usersRepository.createUser(newUser);
+        //const result = await userCollection.insertOne(newUser);
+        //return result.insertedId.toHexString(); // возвращаем строковое значение ID
     },
 
     async _generateHash(password: string, salt: string){

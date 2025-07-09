@@ -17,7 +17,7 @@ describe("User API — регистрация и логин", () => {
 
     beforeAll(async () => {
         await runDB("mongodb://localhost:27017/test");
-        //await userCollection.deleteMany({}); // очистка базы перед тестом
+        await userCollection.deleteMany({}); // очистка базы перед тестом
 
         // Создаём пользователя через API
         const res = await request(app)
@@ -34,7 +34,7 @@ describe("User API — регистрация и логин", () => {
     });
 
     afterAll(async () => {
-        //await userCollection.deleteMany({});
+        await userCollection.deleteMany({});
         await stopDb();
     });
 
