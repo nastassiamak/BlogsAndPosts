@@ -24,8 +24,6 @@ export async function createUserHandler(
 
         if (error instanceof BusinessRuleError) {
             res.status(HttpStatus.BadRequest).json({ message: error.message });
-        } else if (error instanceof RepositoryNotFoundError) {
-            res.status(HttpStatus.NotFound).json({ message: "User not found" });
         } else {
             res.status(HttpStatus.InternalServerError).send("Internal Server Error");
         }
