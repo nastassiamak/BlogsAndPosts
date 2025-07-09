@@ -44,8 +44,6 @@ export const userService = {
 
         }
         return await usersRepository.createUser(newUser);
-        //const result = await userCollection.insertOne(newUser);
-        //return result.insertedId.toHexString(); // возвращаем строковое значение ID
     },
 
     async _generateHash(password: string, salt: string){

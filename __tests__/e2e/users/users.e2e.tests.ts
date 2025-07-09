@@ -9,10 +9,13 @@ describe("User API — регистрация и логин", () => {
     const app = express();
     setupApp(app);
 
+    const uniquePart = Date.now().toString().slice(-4); // взять 4 последние цифры от timestamp
+    const login = `user${uniquePart}`; // пример: user8534 — 8 символов, удовлетворяет требованиям
+
     const testUser = {
-        login: "testuser",
-        password: "password123",
-        email: "testuser@example.com",
+        login: login,
+        email: `${login}@example.com`,
+        password: 'qwerty1',
     };
 
     beforeAll(async () => {

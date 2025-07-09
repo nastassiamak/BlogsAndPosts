@@ -9,8 +9,12 @@ export const authService = {
             console.log("User not found");
             return false;
         }
+
         const isMatch = await bcrypt.compare(password, user.password);
+        console.log("Input password:", password);
+        console.log("User hashed password from DB:", user.password);
         console.log("Password comparison result:", isMatch);
         return isMatch;
+
     }
 }

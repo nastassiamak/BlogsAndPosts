@@ -9,12 +9,11 @@ export const loginOrEmailValidator = body("loginOrEmail")
 .bail();
 
 export const passwordValidator = body("password")
-.exists()
-.withMessage("passwordValidator failed is required")
-.bail()
-.isString()
-.withMessage("passwordValidator must be a string")
-.bail();
+    .isString()
+    .withMessage('password must be a string')
+    .isLength({ min: 6, max: 20 })
+    .trim()
+    .withMessage('password length must be 6-20 chars')
 
 export const authValidator = [
     loginOrEmailValidator,
