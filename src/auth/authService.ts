@@ -3,12 +3,14 @@ import bcrypt from "bcrypt";
 
 export const authService = {
     async checkCredentials(loginOrEmail: string, password: string) {
-        const user =
-            await usersRepository.findByLoginOrEmail(loginOrEmail);
+        console.log("Checking credentials for:", loginOrEmail);
+        const user = await usersRepository.findByLoginOrEmail(loginOrEmail);
         if (!user) {
+            console.log("User not found");
             return false;
         }
         const isMatch = await bcrypt.compare(password, user.password);
+        console.log("Password comparison result:", isMatch);
         return isMatch;
-    },
+    }
 }

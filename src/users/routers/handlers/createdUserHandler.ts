@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
-import {UserCreateInput} from "../input/userCreateInput";
 import {mapToUserOutput} from "../mappers/mapToUserOutput";
 import {HttpStatus} from "../../../core/types/httpStatus";
 import {userService} from "../../application/userService";
 import {BusinessRuleError} from "../../../core/errors/businessRuleError";
+import {RepositoryNotFoundError} from "../../../core/errors/repositoryNotFoundError";
 
 export async function createUserHandler(
     req: Request,
@@ -18,10 +18,14 @@ export async function createUserHandler(
 
         const userOutput = mapToUserOutput(createdUser);
         res.status(HttpStatus.Created).send(userOutput);
+
     } catch (error) {
         console.error("Create user error:", error);
+
         if (error instanceof BusinessRuleError) {
             res.status(HttpStatus.BadRequest).json({ message: error.message });
+        } else if (error instanceof RepositoryNotFoundError) {
+            res.status(HttpStatus.NotFound).json({ message: "User not found" });
         } else {
             res.status(HttpStatus.InternalServerError).send("Internal Server Error");
         }

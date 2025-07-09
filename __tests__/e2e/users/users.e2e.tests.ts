@@ -42,7 +42,7 @@ describe("User API — регистрация и логин", () => {
         const userCreds = expect.getState().newUserCreds;
         expect(userCreds).not.toBeUndefined();
 
-        const res = await request(app).post(USERS_PATH).send(userCreds);
+        const res = await request(app).post(AUTH_PATH).send(userCreds);
         expect(res.status).toBe(204);
     });
 

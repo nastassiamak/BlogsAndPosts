@@ -7,22 +7,20 @@ export async function loginHandler(
     res: Response,
 ) {
     const {loginOrEmail, password} = req.body;
+
     if (!loginOrEmail || !password) {
-         res.status(HttpStatus.BadRequest)
-            .json({
-                errorsMessages: [
-                    { field: "loginOrEmail", message: "loginOrEmail is required" },
-                    { field: "password", message: "password is required" },
-                ],
-            });
+         res.status(HttpStatus.BadRequest).json({
+            errorsMessages: [
+                { field: !loginOrEmail ? "loginOrEmail" : "password", message: (!loginOrEmail ? "loginOrEmail is required" : "password is required") }
+            ],
+        });
     }
 
-    const credentialsOk =
-        await authService
-            .checkCredentials(loginOrEmail, password);
+    const credentialsOk = await authService.checkCredentials(loginOrEmail, password);
+
     if (!credentialsOk) {
-         res.sendStatus(401)
+        res.sendStatus(401);
     }
-   res.sendStatus(204)
 
+    res.sendStatus(204);
 }

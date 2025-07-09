@@ -62,18 +62,26 @@ export const usersRepository = {
         return user;
     },
 
-    async findByIdOrFail(id: string): Promise<WithId<User>> {
-        const res =
-            await userCollection.findOne({_id: new ObjectId(id)});
+    async findByIdOrFail(id: string) {
+        console.log("findByIdOrFail called with id:", id);
+
+        const objectId = new ObjectId(id);
+        console.log("Converted id to ObjectId:", objectId);
+
+        const res = await userCollection.findOne({_id: objectId});
+
         if (!res) {
+            console.log(`User with id ${id} not found in DB`);
             throw new RepositoryNotFoundError("User does not exist");
         }
+
+        console.log("User found:", res);
         return res;
     },
 
     async deleteUser(id: string): Promise<void> {
         const deleteResult =
-            await userCollection.deleteOne({_id: new Object(id)});
+            await userCollection.deleteOne({_id: new ObjectId(id)});
         if (deleteResult.deletedCount < 1) {
             throw new RepositoryNotFoundError("User not exist");
         }

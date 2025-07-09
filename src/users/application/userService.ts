@@ -52,7 +52,6 @@ export const userService = {
         return await bcrypt.hash(password, salt);
     },
 
-
     async findByIdOrFail(id: string): Promise<WithId<User>> {
       return await usersRepository.findByIdOrFail(id);
     },
