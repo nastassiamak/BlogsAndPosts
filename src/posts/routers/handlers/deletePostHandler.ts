@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-//import { errorsHandler } from "../../../core/errors/errorsHandler";
 import { postService } from "../../application/postService";
 import { HttpStatus } from "../../../core/types/httpStatus";
 import { RepositoryNotFoundError } from "../../../core/errors/repositoryNotFoundError";

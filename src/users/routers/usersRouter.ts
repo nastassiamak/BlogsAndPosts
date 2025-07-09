@@ -5,6 +5,8 @@ import {inputValidationResultMiddleware} from "../../core/middlewares/validation
 import {createUserHandler} from "./handlers/createdUserHandler";
 import {getUserListHandler} from "./handlers/getUserListHandler";
 import {usersPaginationValidation} from "./usersPaginationValidation";
+import {idValidation} from "../../core/middlewares/validation/paramsIdValidationMiddleware";
+import {deleteUserHandler} from "./handlers/deleteUserHandler";
 
 export const usersRouter = Router({});
 
@@ -20,3 +22,7 @@ usersRouter
         inputValidationResultMiddleware,
         createUserHandler
         )
+    .delete('/',
+        superAdminGuardMiddleware,
+        idValidation,
+        deleteUserHandler)
