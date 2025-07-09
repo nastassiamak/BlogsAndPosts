@@ -57,7 +57,7 @@ export const userService = {
     },
 
     async delete(id: string): Promise<void> {
-        await usersRepository.deleteUser(id);
-        return;
+        return await usersRepository.deleteUser(id);
+
     }
 }
