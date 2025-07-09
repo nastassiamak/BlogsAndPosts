@@ -22,7 +22,7 @@ usersRouter
         inputValidationResultMiddleware,
         createUserHandler
         )
-    .delete('/id',
+    .delete('/:id',
         superAdminGuardMiddleware,
         idValidation,
         inputValidationResultMiddleware,
