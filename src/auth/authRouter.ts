@@ -9,7 +9,6 @@ export const authRouter = Router({});
 authRouter
     .post(
         "/",
-        superAdminGuardMiddleware,
         authValidator,
         inputValidationResultMiddleware,
         loginHandler)

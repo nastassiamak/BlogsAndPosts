@@ -12,6 +12,7 @@ export const usersRouter = Router({});
 
 usersRouter
     .get("/",
+        superAdminGuardMiddleware,
         usersPaginationValidation,
         inputValidationResultMiddleware,
         getUserListHandler
