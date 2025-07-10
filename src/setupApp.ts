@@ -5,7 +5,7 @@ import { testingRouter } from "./testing/routers/testingRouter";
 
 import { postsRouter } from "./posts/routers/postRouter";
 import {usersRouter} from "./users/routers/usersRouter";
-import {authRouter} from "./auth/authRouter";
+import {authRouter} from "./users/authUsers/authRouter";
 
 
 
