@@ -9,7 +9,8 @@ import {mapToUserOutput} from "../routers/mappers/mapToUserOutput";
 
 export const usersRepository = {
     async findMany(queryDto: UserQueryInput): Promise<UserListPaginatedOutput> {
-      console.log("usersRepository.findMany started with queryDto:", queryDto);
+        console.log("usersRepository.findMany started with queryDto:", queryDto);
+
         const {
             pageNumber = 1,
             pageSize = 10,
@@ -18,37 +19,39 @@ export const usersRepository = {
             searchLoginTerm,
             searchEmailTerm,
         } = queryDto;
+
         const skip = (pageNumber - 1) * pageSize;
         const filter: any = {};
-        if (searchLoginTerm) {
+
+        if (searchLoginTerm && searchEmailTerm) {
+            // Поиск по логину ИЛИ email
+            filter.$or = [
+                { login: { $regex: searchLoginTerm, $options: "i" } },
+                { email: { $regex: searchEmailTerm, $options: "i" } },
+            ];
+        } else if (searchLoginTerm) {
             filter.login = { $regex: searchLoginTerm, $options: "i" };
-        }
-        if (searchEmailTerm) {
+        } else if (searchEmailTerm) {
             filter.email = { $regex: searchEmailTerm, $options: "i" };
         }
+        // Если ни login, ни email не заданы — filter останется пустым (выборка всех)
+
         const direction = sortDirection === "asc" ? 1 : -1;
 
-        const totalCount =
-            await userCollection.countDocuments(filter);
+        const totalCount = await userCollection.countDocuments(filter);
+        const pagesCount = Math.ceil(totalCount / pageSize);
 
-        const pagesCount =
-            Math.ceil(totalCount / pageSize);
+        const rawItems = await userCollection
+            .find(filter)
+            .sort({ [sortBy]: direction })
+            .skip(skip)
+            .limit(pageSize)
+            .toArray();
 
-        const rawItems = await
-            userCollection
-                .find(filter)
-                .sort({ [sortBy]: direction })
-                .skip(skip)
-                .limit(pageSize)
-                .toArray();
-
-        // Преобразуем документы в DTO
-        const items: UserDataOutput[] =
-            rawItems.map(mapToUserOutput);
+        const items: UserDataOutput[] = rawItems.map(mapToUserOutput);
 
         return { pagesCount, page: pageNumber, pageSize, totalCount, items };
     },
-
     async createUser(newUser: User): Promise<string> {
         const insertResult =
             await userCollection.insertOne(newUser);
