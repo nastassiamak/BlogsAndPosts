@@ -7,6 +7,7 @@ import {ParsedQs} from "qs";
 import {UserSortField} from "../input/userSortField";
 import {userService} from "../../application/userService";
 import {mapToUserListPaginatedOutput} from "../mappers/mapToUserListPaginatedOutput";
+import {BusinessRuleError} from "../../../core/errors/businessRuleError";
 
 export async function getUserListHandler(req: Request<{}, {}, {}, ParsedQs>, res: Response) {
     console.log("Вызван getUserListHandler", req.query);
@@ -45,8 +46,12 @@ export async function getUserListHandler(req: Request<{}, {}, {}, ParsedQs>, res
         res.status(HttpStatus.Ok).json(responsePayload);
 
     } catch (error) {
-        if (error instanceof RepositoryNotFoundError) {
-            res.status(HttpStatus.NotFound).json({message: "Post not found"});
+        if (error instanceof BusinessRuleError) {
+            res.status(HttpStatus.BadRequest).json({
+                errorsMessages: error.errors.errorsMessages.length > 0
+                    ? error.errors.errorsMessages
+                    : [{ message: error.message, field: '' }],
+            });
         }
         res.status(HttpStatus.BadRequest).json({message: (error as Error).message || "Invalid query"});
     }
