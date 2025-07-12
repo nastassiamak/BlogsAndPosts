@@ -43,7 +43,21 @@ export const userService = {
             createdAt: new Date().toISOString(),
 
         }
-        return await usersRepository.createUser(newUser);
+        // Создаём пользователя с обработкой Mongo ошибки дублирования
+        try {
+            const result = await userCollection.insertOne(newUser);
+            return result.insertedId.toString();
+        } catch (error: any) {
+            // MongoDB ошибка уникальности
+            if (error.code === 11000) {
+                const field = Object.keys(error.keyValue)[0];
+                throw new BusinessRuleError({
+                    errorsMessages: [{ field: "login", message: `${field} should be unique` }],
+                });
+            }
+            throw error;
+        }
+        //return await usersRepository.createUser(newUser);
     },
 
     async _generateHash(password: string, salt: string){
