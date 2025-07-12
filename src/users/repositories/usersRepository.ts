@@ -23,14 +23,13 @@ export const usersRepository = {
         const skip = (pageNumber - 1) * pageSize;
         const filter: any = {};
 
-        // if (searchLoginTerm && searchEmailTerm) {
-        //     // Поиск по логину ИЛИ email
-        //     filter.$or = [
-        //         { login: { $regex: searchLoginTerm, $options: "i" } },
-        //         { email: { $regex: searchEmailTerm, $options: "i" } },
-        //     ];
-        // } else
-        if (searchLoginTerm) {
+        if (searchLoginTerm && searchEmailTerm) {
+            // Поиск по логину ИЛИ email
+            filter.$or = [
+                { login: { $regex: searchLoginTerm, $options: "i" } },
+                { email: { $regex: searchEmailTerm, $options: "i" } },
+            ];
+        } else if (searchLoginTerm) {
             filter.login = { $regex: searchLoginTerm, $options: "i" };
         } else if (searchEmailTerm) {
             filter.email = { $regex: searchEmailTerm, $options: "i" };

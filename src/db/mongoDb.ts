@@ -29,6 +29,12 @@ export async function runDB(url: string): Promise<void> {
     await client.connect();
     await db.command({ ping: 1 });
     console.log("✅ Connected to the database");
+
+    // Создаем уникальные индексы для пользователей
+    await userCollection.createIndex({ login: 1 }, { unique: true });
+    await userCollection.createIndex({ email: 1 }, { unique: true });
+    console.log("✅ Unique indexes on login and email created");
+
   } catch (e) {
     await client.close();
     throw new Error(`❌ Database not connected: ${e}`);
