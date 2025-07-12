@@ -19,11 +19,10 @@ export async function runDB(url: string): Promise<void> {
   client = await MongoClient.connect(url);
   const db: Db = client.db(SETTINGS.DB_NAME);
 
-  //Инициализация коллекций
+  // Инициализация коллекций
   blogCollection = db.collection<Blog>(BLOG_COLLECTION_NAME);
   postCollection = db.collection<Post>(POST_COLLECTION_NAME);
   userCollection = db.collection<User>(USER_COLLECTION_NAME);
-
 
   try {
     await client.connect();
