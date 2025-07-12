@@ -23,32 +23,32 @@ export const usersRepository = {
         const skip = (pageNumber - 1) * pageSize;
         const filter: any = {};
 
-        if (searchLoginTerm && searchEmailTerm) {
-            // Поиск по логину ИЛИ email
-            filter.$or = [
-                { login: { $regex: searchLoginTerm, $options: "i" } },
-                { email: { $regex: searchEmailTerm, $options: "i" } },
-            ];
-        } else if (searchLoginTerm) {
+        if (searchLoginTerm) {
             filter.login = { $regex: searchLoginTerm, $options: "i" };
-        } else if (searchEmailTerm) {
+        }
+        if (searchEmailTerm) {
             filter.email = { $regex: searchEmailTerm, $options: "i" };
         }
         // Если ни login, ни email не заданы — filter останется пустым (выборка всех)
 
         const direction = sortDirection === "asc" ? 1 : -1;
 
-        const totalCount = await userCollection.countDocuments(filter);
-        const pagesCount = Math.ceil(totalCount / pageSize);
+        const totalCount =
+            await userCollection.countDocuments(filter);
 
-        const rawItems = await userCollection
+        const pagesCount =
+            Math.ceil(totalCount / pageSize);
+
+        const rawItems = await
+            userCollection
             .find(filter)
             .sort({ [sortBy]: direction })
             .skip(skip)
             .limit(pageSize)
             .toArray();
 
-        const items: UserDataOutput[] = rawItems.map(mapToUserOutput);
+        const items: UserDataOutput[] =
+            rawItems.map(mapToUserOutput);
 
         return { pagesCount, page: pageNumber, pageSize, totalCount, items };
     },
@@ -65,20 +65,14 @@ export const usersRepository = {
         return user;
     },
 
-    async findByIdOrFail(id: string) {
-        console.log("findByIdOrFail called with id:", id);
+    async findByIdOrFail(id: string):Promise<WithId<User>> {
 
-        const objectId = new ObjectId(id);
-        console.log("Converted id to ObjectId:", objectId);
-
-        const res = await userCollection.findOne({_id: objectId});
+        const res =
+            await userCollection.findOne({_id: new ObjectId(id)});
 
         if (!res) {
-            console.log(`User with id ${id} not found in DB`);
-            throw new RepositoryNotFoundError("User does not exist");
+            throw new RepositoryNotFoundError("User not exists");
         }
-
-        console.log("User found:", res);
         return res;
     },
 

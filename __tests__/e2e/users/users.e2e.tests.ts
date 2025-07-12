@@ -1,36 +1,20 @@
-import request from "supertest";
-import express from "express";
-import { setupApp } from "../../../src/setupApp";
-import { runDB, stopDb, userCollection } from "../../../src/db/mongoDb";
-import {AUTH_PATH, USERS_PATH} from "../../../src/core/paths/paths";
+import request from 'supertest';
+import express from 'express';
+import {setupApp} from "../../../src/setupApp";
+import {runDB, stopDb, userCollection} from "../../../src/db/mongoDb";
 import {generateAdminAuthToken} from "../../utils/generateAdminAuthToken";
+import {USERS_PATH} from "../../../src/core/paths/paths";
 
-describe("User API — регистрация и логин", () => {
+describe('Users API - создание пользователя и проверка totalCount', () => {
     const app = express();
     setupApp(app);
 
-    const testUser = {
-        login: "testuser",
-        password: "password123",
-        email: "testuser@example.com",
-    };
-
     beforeAll(async () => {
-        await runDB("mongodb://localhost:27017/test");
-        await userCollection.deleteMany({}); // очистка базы перед тестом
+        await runDB('mongodb://localhost:27017/test');
+    });
 
-        // Создаём пользователя через API
-        const res = await request(app)
-            .post(USERS_PATH)
-            .set("Authorization", generateAdminAuthToken())
-            .send(testUser);
-        expect(res.status).toBe(201);
-
-        // Сохраняем креды для последующего использования в тестах
-        expect.getState().newUserCreds = {
-            loginOrEmail: testUser.login,
-            password: testUser.password,
-        };
+    beforeEach(async () => {
+        await userCollection.deleteMany({});
     });
 
     afterAll(async () => {
@@ -38,18 +22,40 @@ describe("User API — регистрация и логин", () => {
         await stopDb();
     });
 
-    test("POST /auth/login — успешный логин, статус 204", async () => {
-        const userCreds = expect.getState().newUserCreds;
-        expect(userCreds).not.toBeUndefined();
+    test('POST /users увеличивает totalCount на 1', async () => {
+        // Получаем текущее количество пользователей
+        const beforeRes = await request(app)
+            .get(USERS_PATH)
+            .set('Authorization', generateAdminAuthToken());
 
-        const res = await request(app).post(AUTH_PATH).send(userCreds);
-        expect(res.status).toBe(204);
-    });
+        expect(beforeRes.status).toBe(200);
+        const totalCountBefore = beforeRes.body.totalCount;
 
-    test("POST /auth/login — неуспешный логин, статус 401", async () => {
-        const res = await request(app)
-            .post(AUTH_PATH)
-            .send({ loginOrEmail: "wronguser", password: "wrongpass" });
-        expect(res.status).toBe(401);
+        // Создаем уникального пользователя
+        const uniqueSuffix = Date.now().toString().slice(-4);
+        const newUser = {
+            login: `user${uniqueSuffix}`,
+            email: `user${uniqueSuffix}@example.com`,
+            password: 'Password123',
+        };
+
+        const createRes = await request(app)
+            .post(USERS_PATH)
+            .set('Authorization', generateAdminAuthToken())
+            .send(newUser);
+
+        expect(createRes.status).toBe(201);
+        expect(createRes.body.login).toBe(newUser.login);
+
+        // Получаем новое количество пользователей
+        const afterRes = await request(app)
+            .get(USERS_PATH)
+            .set('Authorization', generateAdminAuthToken());
+
+        expect(afterRes.status).toBe(200);
+        const totalCountAfter = afterRes.body.totalCount;
+
+        // Проверяем, что totalCount увеличился на 1
+        expect(totalCountAfter).toBe(totalCountBefore + 1);
     });
 });

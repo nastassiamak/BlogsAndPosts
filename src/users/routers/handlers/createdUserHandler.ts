@@ -22,7 +22,7 @@ export async function createUserHandler(
 
     } catch (error) {
         if (error instanceof BusinessRuleError) {
-            return res.status(HttpStatus.BadRequest).json({
+             res.status(HttpStatus.BadRequest).json({
                 errorsMessages: error.errors.errorsMessages.length > 0
                     ? error.errors.errorsMessages
                     : [{ message: error.message, field: '' }],
