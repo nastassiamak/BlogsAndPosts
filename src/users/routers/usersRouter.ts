@@ -13,8 +13,9 @@ export const usersRouter = Router({});
 usersRouter
     .get("/",
         superAdminGuardMiddleware,
-        usersPaginationValidation,
         inputValidationResultMiddleware,
+        usersPaginationValidation,
+        //inputValidationResultMiddleware,
         getUserListHandler
     )
     .post("/",
