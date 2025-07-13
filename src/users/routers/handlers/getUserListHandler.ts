@@ -47,12 +47,7 @@ export async function getUserListHandler(req: Request<{}, {}, {}, ParsedQs>, res
 
     } catch (error) {
         if (error instanceof BusinessRuleError) {
-            res.status(HttpStatus.BadRequest).json({
-                errorsMessages: error.errors.errorsMessages.length > 0
-                    ? error.errors.errorsMessages
-                    : [{ message: error.message, field: '' }],
-            });
+            return res.status(HttpStatus.BadRequest).json({ errorsMessages: error.errors.errorsMessages });
         }
-        res.status(HttpStatus.BadRequest).json({message: (error as Error).message || "Invalid query"});
     }
 }
