@@ -11,7 +11,6 @@ export function mapToUserListPaginatedOutput(
     users: UserDataOutput[],
 ): UserListPaginatedOutput{
     return {
-
         pagesCount,
         page,
         pageSize,

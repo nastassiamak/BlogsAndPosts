@@ -40,8 +40,8 @@ export const usersRepository = {
         const totalCount =
             await userCollection.countDocuments(filter);
 
-        const pagesCount =
-            Math.ceil(totalCount / pageSize);
+        const pagesCount = totalCount === 0 ? 1 : Math.ceil(totalCount / pageSize);
+
 
         const rawItems = await
             userCollection

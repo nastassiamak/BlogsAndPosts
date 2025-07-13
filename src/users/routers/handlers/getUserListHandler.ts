@@ -18,8 +18,8 @@ export async function getUserListHandler(req: Request<{}, {}, {}, ParsedQs>, res
             pageSize: Number(req.query.pageSize) || 10,
             sortBy: (req.query.sortBy as UserSortField) || "createdAt",
             sortDirection: req.query.sortDirection === "asc" ? SortDirection.Asc : SortDirection.Desc,
-            searchLoginTerm: req.query.searchLoginTerm as string,
-            searchEmailTerm: req.query.searchEmailTerm as string,
+            searchLoginTerm: req.query.searchLoginTerm as string | undefined,
+            searchEmailTerm: req.query.searchEmailTerm as string | undefined,
         };
 
         // При необходимости установите дефолты
@@ -34,18 +34,17 @@ export async function getUserListHandler(req: Request<{}, {}, {}, ParsedQs>, res
         const pagesCount =
             Math.ceil(paginatedPosts.totalCount / queryWithDefaults.pageSize);
 
-        const responsePayload =
-            mapToUserListPaginatedOutput(
-                queryWithDefaults.pageNumber,
-                pagesCount,
-                queryWithDefaults.pageSize,
-                paginatedPosts.totalCount,
-                paginatedPosts.items
-            );
+        const responsePayload = mapToUserListPaginatedOutput(
+            pagesCount,
+            queryWithDefaults.pageNumber,
+            queryWithDefaults.pageSize,
+            paginatedPosts.totalCount,
+            paginatedPosts.items
+        );
 
         console.log("Ответ API: ", responsePayload);
 
-        res.status(HttpStatus.Ok).json(responsePayload);
+        res.status(HttpStatus.Ok).send(responsePayload);
 
     } catch (error) {
         if (error instanceof BusinessRuleError) {

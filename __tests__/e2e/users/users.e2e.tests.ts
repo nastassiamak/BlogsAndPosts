@@ -58,4 +58,51 @@ describe('Users API - создание пользователя и провер�
         // Проверяем, что totalCount увеличился на 1
         expect(totalCountAfter).toBe(totalCountBefore + 1);
     });
+    it('should return status 200 and paginated users list with default pagination', async () => {
+        const response = await request(app)
+            .get('/users')       // без query параметров — первая страница по умолчанию
+            .set('Authorization', generateAdminAuthToken())
+            .expect(200);
+
+        const data = response.body;
+
+        // Проверка структуры и типов
+        expect(data).toHaveProperty('pagesCount');
+        expect(data).toHaveProperty('page');
+        expect(data).toHaveProperty('pageSize');
+        expect(data).toHaveProperty('totalCount');
+        expect(Array.isArray(data.items)).toBe(true);
+
+        // Проверка значений пагинации
+        expect(data.page).toBe(1);           // первая страница
+        expect(data.pageSize).toBe(10);      // размер страницы по умолчанию
+        //expect(data.pagesCount).toBeGreaterThanOrEqual(1);
+        expect(data.totalCount).toBeGreaterThanOrEqual(0);
+
+        // Проверка, что количество записей в массиве не превышает pageSize
+        expect(data.items.length).toBeLessThanOrEqual(data.pageSize);
+
+        // При наличии тестовых данных можно проверить отдельные свойства пользователей
+        if (data.items.length > 0) {
+            const user = data.items[0];
+            expect(user).toHaveProperty('id');
+            expect(user).toHaveProperty('login');
+            expect(user).toHaveProperty('email');
+            expect(user).toHaveProperty('createdAt');
+        }
+    });
+
+    it('should return correct users for page 2 when page query param is set', async () => {
+        const response = await request(app)
+            .get('/users?pageNumber=2&pageSize=10')
+            .set('Authorization', generateAdminAuthToken())
+            .expect(200);
+
+        const data = response.body;
+
+        expect(data.page).toBe(2);
+        expect(data.pageSize).toBe(10);
+        //expect(data.pagesCount).toBeGreaterThanOrEqual(2);
+        expect(data.items.length).toBeLessThanOrEqual(10);
+    });
 });
