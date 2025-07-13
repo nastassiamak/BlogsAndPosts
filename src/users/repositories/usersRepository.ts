@@ -23,11 +23,15 @@ export const usersRepository = {
         const skip = (pageNumber - 1) * pageSize;
         const filter: any = {};
 
-        if (searchLoginTerm) {
-            filter.login = { $regex: searchLoginTerm, $options: "i" };
-        }
-        if (searchEmailTerm) {
-            filter.email = { $regex: searchEmailTerm, $options: "i" };
+        if (searchLoginTerm && searchEmailTerm) {
+            filter.$or = [
+                { login: { $regex: searchLoginTerm, $options: 'i' } },
+                { email: { $regex: searchEmailTerm, $options: 'i' } },
+            ];
+        } else if (searchLoginTerm) {
+            filter.login = { $regex: searchLoginTerm, $options: 'i' };
+        } else if (searchEmailTerm) {
+            filter.email = { $regex: searchEmailTerm, $options: 'i' };
         }
         // Если ни login, ни email не заданы — filter останется пустым (выборка всех)
 
