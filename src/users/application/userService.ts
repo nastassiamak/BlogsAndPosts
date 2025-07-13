@@ -8,6 +8,7 @@ import bcrypt from "bcrypt";
 import {UserCreateInput} from "../routers/input/userCreateInput";
 import {userCollection} from "../../db/mongoDb";
 import {BusinessRuleError} from "../../core/errors/businessRuleError";
+import {FieldNamesType} from "../../core/utils/errorUtils";
 
 export const userService = {
 
@@ -16,49 +17,46 @@ export const userService = {
     },
 
     async create(input: UserCreateInput): Promise<string> {
-        // Проверка уникальности login
-        const existingLogin =
-            await userCollection.findOne({login: input.login});
+        // Проверка уникальности логина
+        const existingLogin = await userCollection.findOne({ login: input.login });
         if (existingLogin) {
             throw new BusinessRuleError({
                 errorsMessages: [{ field: "login", message: "login should be unique" }],
             });
         }
+
         // Проверка уникальности email
-        const existingEmail =
-            await userCollection.findOne({email: input.email});
+        const existingEmail = await userCollection.findOne({ email: input.email });
         if (existingEmail) {
             throw new BusinessRuleError({
-                errorsMessages: [{field: "email", message: "email should be unique"}],
+                errorsMessages: [{ field: "email", message: "email should be unique" }],
             });
         }
 
+        // Хеширование пароля
         const passwordSalt = await bcrypt.genSalt(10);
-        const passwordHash =
-            await this._generateHash(input.password, passwordSalt);
+        const passwordHash = await this._generateHash(input.password, passwordSalt);
+
         const newUser: User = {
             login: input.login,
             email: input.email,
             password: passwordHash,
             createdAt: new Date().toISOString(),
+        };
 
-        }
-        // Создаём пользователя с обработкой Mongo ошибки дублирования
+        // Создание пользователя с обработкой ошибок Mongo
         try {
             const result = await userCollection.insertOne(newUser);
             return result.insertedId.toString();
         } catch (error: any) {
-            // MongoDB ошибка уникальности
             if (error.code === 11000) {
-                const field = Object.keys(error.keyValue)[0];
+                const field = Object.keys(error.keyValue)[0] as FieldNamesType;
                 throw new BusinessRuleError({
-                    errorsMessages: [{ field: "login", message: `${field} should be unique` },
-                        { field: "email", message: `${field} should be unique`}],
+                    errorsMessages: [{ field, message: `${field} should be unique` }],
                 });
             }
             throw error;
         }
-        //return await usersRepository.createUser(newUser);
     },
 
     async _generateHash(password: string, salt: string){
