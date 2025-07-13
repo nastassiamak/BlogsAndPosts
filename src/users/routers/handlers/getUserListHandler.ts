@@ -34,8 +34,8 @@ export async function getUserListHandler(req: Request<{}, {}, {}, ParsedQs>, res
 
         const responsePayload =
             mapToUserListPaginatedOutput(
-                queryWithDefaults.pageNumber,
                 pagesCount,
+                queryWithDefaults.pageNumber,
                 queryWithDefaults.pageSize,
                 paginatedPosts.totalCount,
                 paginatedPosts.items
