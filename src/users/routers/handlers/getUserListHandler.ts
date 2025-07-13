@@ -17,7 +17,9 @@ export async function getUserListHandler(req: Request<{}, {}, {}, ParsedQs>, res
             pageNumber: Number(req.query.pageNumber) || 1,
             pageSize: Number(req.query.pageSize) || 10,
             sortBy: (req.query.sortBy as UserSortField) || "createdAt",
-            sortDirection: req.query.sortDirection === "asc" ? SortDirection.Asc : SortDirection.Desc
+            sortDirection: req.query.sortDirection === "asc" ? SortDirection.Asc : SortDirection.Desc,
+            searchLoginTerm: req.query.searchLoginTerm as string,
+            searchEmailTerm: req.query.searchEmailTerm as string,
         };
 
         // При необходимости установите дефолты
