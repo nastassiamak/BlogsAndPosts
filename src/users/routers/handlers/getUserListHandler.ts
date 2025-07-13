@@ -47,7 +47,7 @@ export async function getUserListHandler(req: Request<{}, {}, {}, ParsedQs>, res
 
     } catch (error) {
         if (error instanceof BusinessRuleError) {
-            return res.status(HttpStatus.BadRequest).json({ errorsMessages: error.errors.errorsMessages });
+             res.status(HttpStatus.BadRequest).json({ errorsMessages: error.errors.errorsMessages });
         }
     }
 }
