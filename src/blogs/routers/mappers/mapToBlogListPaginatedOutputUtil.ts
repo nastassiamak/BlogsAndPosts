@@ -2,15 +2,16 @@ import { BlogListPaginatedOutput } from "../output/blogListPaginatedOutput";
 import {BlogDataOutput} from "../output/blogDataOutput";
 
 export function mapToBlogListPaginatedOutput(
-    pagesCount: number,
+
     page: number,
+    pagesCount: number,
     pageSize: number,
     totalCount: number,
     blogs: BlogDataOutput[],
 ): BlogListPaginatedOutput {
     return {
-        pagesCount,
         page,
+        pagesCount,
         pageSize,
         totalCount,
         items: blogs.map(blog => ({

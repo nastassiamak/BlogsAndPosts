@@ -3,15 +3,17 @@ import {UserListPaginatedOutput} from "../output/userListPaginatedOutput";
 import {usersRepository} from "../../repositories/usersRepository";
 
 export function mapToUserListPaginatedOutput(
-    page: number,
+
     pagesCount: number,
+    page: number,
     pageSize: number,
     totalCount: number,
     users: UserDataOutput[],
 ): UserListPaginatedOutput{
     return {
-        page,
+
         pagesCount,
+        page,
         pageSize,
         totalCount,
         items: users.map(user => ({
