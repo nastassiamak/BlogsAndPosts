@@ -24,7 +24,7 @@ export async function getUserListHandler(req: Request<{}, {}, {}, ParsedQs>, res
 
         // При необходимости установите дефолты
         const queryWithDefaults =
-            setDefaultSortAndPaginationIfNotExist(queryInput);
+            queryInput;
 
 
         // Вызываем метод репозитория для получения данных с пагинацией
