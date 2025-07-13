@@ -52,7 +52,8 @@ export const userService = {
             if (error.code === 11000) {
                 const field = Object.keys(error.keyValue)[0];
                 throw new BusinessRuleError({
-                    errorsMessages: [{ field: "login", message: `${field} should be unique` }],
+                    errorsMessages: [{ field: "login", message: `${field} should be unique` },
+                        { field: "email", message: `${field} should be unique`}],
                 });
             }
             throw error;
