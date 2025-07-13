@@ -30,7 +30,7 @@ export async function runDB(url: string): Promise<void> {
     await db.command({ ping: 1 });
     console.log("✅ Connected to the database");
     // Создаём уникальные индексы для пользователей
-    await userCollection.deleteMany({});
+
     await userCollection.createIndex({ login: 1 }, { unique: true });
     await userCollection.createIndex({ email: 1 }, { unique: true });
     console.log("✅ Unique indexes for login and email created");

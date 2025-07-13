@@ -57,8 +57,8 @@ export const usersRepository = {
         return { pagesCount, page: pageNumber, pageSize, totalCount, items };
     },
     async createUser(newUser: User): Promise<string> {
-        const insertResult =
-            await userCollection.insertOne(newUser);
+        const insertResult = await userCollection.insertOne(newUser);
+        console.log("Insert result:", insertResult);
         return insertResult.insertedId.toString();
     },
 

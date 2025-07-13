@@ -59,6 +59,7 @@ describe('Users API - создание пользователя и провер�
         expect(totalCountAfter).toBe(totalCountBefore + 1);
     });
     it('should return status 200 and paginated users list with default pagination', async () => {
+        await userCollection.deleteMany({});
         const response = await request(app)
             .get('/users')       // без query параметров — первая страница по умолчанию
             .set('Authorization', generateAdminAuthToken())
@@ -76,7 +77,7 @@ describe('Users API - создание пользователя и провер�
         // Проверка значений пагинации
         expect(data.page).toBe(1);           // первая страница
         expect(data.pageSize).toBe(10);      // размер страницы по умолчанию
-        //expect(data.pagesCount).toBeGreaterThanOrEqual(1);
+        expect(data.pagesCount).toBeGreaterThanOrEqual(1);
         expect(data.totalCount).toBeGreaterThanOrEqual(0);
 
         // Проверка, что количество записей в массиве не превышает pageSize
@@ -93,6 +94,7 @@ describe('Users API - создание пользователя и провер�
     });
 
     it('should return correct users for page 2 when page query param is set', async () => {
+        await userCollection.deleteMany({});
         const response = await request(app)
             .get('/users?pageNumber=2&pageSize=10')
             .set('Authorization', generateAdminAuthToken())
@@ -102,7 +104,7 @@ describe('Users API - создание пользователя и провер�
 
         expect(data.page).toBe(2);
         expect(data.pageSize).toBe(10);
-        //expect(data.pagesCount).toBeGreaterThanOrEqual(2);
+        expect(data.pagesCount).toBeGreaterThanOrEqual(2);
         expect(data.items.length).toBeLessThanOrEqual(10);
     });
 });

@@ -44,19 +44,21 @@ export const userService = {
             createdAt: new Date().toISOString(),
         };
 
-        // Создание пользователя с обработкой ошибок Mongo
-        try {
-            const result = await userCollection.insertOne(newUser);
-            return result.insertedId.toString();
-        } catch (error: any) {
-            if (error.code === 11000) {
-                const field = Object.keys(error.keyValue)[0] as FieldNamesType;
-                throw new BusinessRuleError({
-                    errorsMessages: [{ field, message: `${field} should be unique` }],
-                });
-            }
-            throw error;
-        }
+        return await usersRepository.createUser(newUser);
+
+        // // Создание пользователя с обработкой ошибок Mongo
+        // try {
+        //     const result = await userCollection.insertOne(newUser);
+        //     return result.insertedId.toString();
+        // } catch (error: any) {
+        //     if (error.code === 11000) {
+        //         const field = Object.keys(error.keyValue)[0] as FieldNamesType;
+        //         throw new BusinessRuleError({
+        //             errorsMessages: [{ field, message: `${field} should be unique` }],
+        //         });
+        //     }
+        //     throw error;
+        // }
     },
 
     async _generateHash(password: string, salt: string){
