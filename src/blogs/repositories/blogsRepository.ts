@@ -5,9 +5,9 @@ import { ObjectId, WithId } from "mongodb";
 import { blogCollection } from "../../db/mongoDb";
 import { BlogQueryInput } from "../routers/input/blogQueryInput";
 import { RepositoryNotFoundError } from "../../core/errors/repositoryNotFoundError";
-import {BlogListPaginatedOutput} from "../routers/output/blogListPaginatedOutput";
-import {BlogDataOutput} from "../routers/output/blogDataOutput";
-import {mapToBlogOutput} from "../routers/mappers/mapToBlogOutput";
+import { BlogListPaginatedOutput } from "../routers/output/blogListPaginatedOutput";
+import { BlogDataOutput } from "../routers/output/blogDataOutput";
+import { mapToBlogOutput } from "../routers/mappers/mapToBlogOutput";
 
 export const blogsRepository = {
   async findMany(queryDto: BlogQueryInput): Promise<BlogListPaginatedOutput> {
@@ -34,23 +34,19 @@ export const blogsRepository = {
 
     const direction = sortDirection === "asc" ? 1 : -1;
 
-    const totalCount =
-        await blogCollection.countDocuments(filter);
+    const totalCount = await blogCollection.countDocuments(filter);
 
-    const pagesCount =
-        Math.ceil(totalCount / pageSize);
+    const pagesCount = Math.ceil(totalCount / pageSize);
 
-    const rawItems = await
-        blogCollection
-          .find(filter)
-          .sort({ [sortBy]: direction })
-          .skip(skip)
-          .limit(pageSize)
-          .toArray();
+    const rawItems = await blogCollection
+      .find(filter)
+      .sort({ [sortBy]: direction })
+      .skip(skip)
+      .limit(pageSize)
+      .toArray();
 
     // Преобразуем документы в DTO
-    const items: BlogDataOutput[] =
-        rawItems.map(mapToBlogOutput);
+    const items: BlogDataOutput[] = rawItems.map(mapToBlogOutput);
 
     return { pagesCount, page: pageNumber, pageSize, totalCount, items };
   },
@@ -60,8 +56,7 @@ export const blogsRepository = {
   },
 
   async findByIdOrFail(id: string): Promise<WithId<Blog>> {
-    const res =
-        await blogCollection.findOne({ _id: new ObjectId(id) });
+    const res = await blogCollection.findOne({ _id: new ObjectId(id) });
 
     if (!res) {
       throw new RepositoryNotFoundError("Blog not exists");
@@ -70,8 +65,7 @@ export const blogsRepository = {
   },
 
   async create(newBlog: Blog): Promise<string> {
-    const insertResult =
-        await blogCollection.insertOne(newBlog);
+    const insertResult = await blogCollection.insertOne(newBlog);
 
     return insertResult.insertedId.toString();
   },
@@ -97,8 +91,7 @@ export const blogsRepository = {
   },
 
   async delete(id: string): Promise<void> {
-    const deleteResult =
-        await blogCollection.deleteOne({
+    const deleteResult = await blogCollection.deleteOne({
       _id: new ObjectId(id),
     });
 

@@ -69,17 +69,19 @@ describe("Posts API", () => {
       // Если в вашем API нельзя задать createdAt вручную, то сортировка по createdAt будет по времени вставки
     }
 
-    console.log(postsData)
+    console.log(postsData);
     // Дополнительный GET без параметров — проверяем, что посты в базе
     const getAllResponse = await request(app)
-        .get(POSTS_PATH)
-        .expect(HttpStatus.Ok);
+      .get(POSTS_PATH)
+      .expect(HttpStatus.Ok);
 
     console.log("GET /posts без параметров вернул:", getAllResponse.body);
 
     expect(getAllResponse.body).toHaveProperty("items");
     expect(Array.isArray(getAllResponse.body.items)).toBe(true);
-    expect(getAllResponse.body.items.length).toBeGreaterThanOrEqual(postsData.length);
+    expect(getAllResponse.body.items.length).toBeGreaterThanOrEqual(
+      postsData.length,
+    );
 
     // Далее — ваш исходный GET с пагинацией и сортировкой
 

@@ -11,18 +11,13 @@ import {
 import { createPostHandler } from "./handlers/createPostHandler";
 import { updatePostHandler } from "./handlers/updatePostHandler";
 import { deletePostHandler } from "./handlers/deletePostHandler";
-import {postsPaginationValidation} from "./postsPaginationValidation";
-
+import { postsPaginationValidation } from "./postsPaginationValidation";
 
 export const postsRouter = Router({});
 
 postsRouter
 
-  .get("/:id",
-      idValidation,
-      inputValidationResultMiddleware,
-      getPostHandler
-  )
+  .get("/:id", idValidation, inputValidationResultMiddleware, getPostHandler)
   .post(
     "/",
     superAdminGuardMiddleware,
@@ -38,16 +33,16 @@ postsRouter
     inputValidationResultMiddleware,
     updatePostHandler,
   )
-    .get(
-        "/",
-        postsPaginationValidation,
-        inputValidationResultMiddleware,
-        getPostListHandler,
-    )
-    .delete(
-      "/:id",
-      superAdminGuardMiddleware,
-      idValidation,
-      inputValidationResultMiddleware,
-      deletePostHandler,
-    );
+  .get(
+    "/",
+    postsPaginationValidation,
+    inputValidationResultMiddleware,
+    getPostListHandler,
+  )
+  .delete(
+    "/:id",
+    superAdminGuardMiddleware,
+    idValidation,
+    inputValidationResultMiddleware,
+    deletePostHandler,
+  );

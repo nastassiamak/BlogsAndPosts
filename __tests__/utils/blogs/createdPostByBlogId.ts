@@ -4,7 +4,7 @@ import { getPostDto } from "../posts/getPostDto";
 import { BLOGS_PATH, POSTS_PATH } from "../../../src/core/paths/paths";
 import { generateAdminAuthToken } from "../generateAdminAuthToken";
 import { HttpStatus } from "../../../src/core/types/httpStatus";
-import {PostCreateInput} from "../../../src/posts/routers/input/postCreateInput";
+import { PostCreateInput } from "../../../src/posts/routers/input/postCreateInput";
 
 export async function createPostByBlogId(
   app: Express,

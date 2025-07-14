@@ -1,4 +1,3 @@
-
 import { PostDataOutput } from "./postDataOutput";
 
 export type PostListPaginatedOutput = {

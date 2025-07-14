@@ -5,14 +5,18 @@ import { SortDirection } from "../../../core/types/sortDirection";
 import { PostSortField } from "../../../posts/routers/input/postSortField";
 import { HttpStatus } from "../../../core/types/httpStatus";
 import { RepositoryNotFoundError } from "../../../core/errors/repositoryNotFoundError";
-import {blogService} from "../../application/blogService";
-
+import { blogService } from "../../application/blogService";
 
 export async function getBlogPostListHandler(
-  req: Request<{blogId: string}, {}, {}, ParsedQs>,
+  req: Request<{ blogId: string }, {}, {}, ParsedQs>,
   res: Response,
 ) {
-  console.log("Хендлер: getBlogPostListHandler, params:", req.params, "query:", req.query);
+  console.log(
+    "Хендлер: getBlogPostListHandler, params:",
+    req.params,
+    "query:",
+    req.query,
+  );
   try {
     const blogId = await blogService.findByIdOrFail(req.params.blogId);
     console.log("Получен запрос на blogId:", blogId);
@@ -23,11 +27,13 @@ export async function getBlogPostListHandler(
 
     const pageNumber = rawPageNumber && +rawPageNumber > 0 ? +rawPageNumber : 1;
     const pageSize = rawPageSize && +rawPageSize > 0 ? +rawPageSize : 10;
-    const sortBy = rawSortBy && Object.values(PostSortField).includes(rawSortBy as PostSortField)
-        ? rawSortBy as PostSortField
+    const sortBy =
+      rawSortBy &&
+      Object.values(PostSortField).includes(rawSortBy as PostSortField)
+        ? (rawSortBy as PostSortField)
         : PostSortField.CreatedAt;
-    const sortDirection = rawSortDir === 'asc' ? SortDirection.Asc : SortDirection.Desc;
-
+    const sortDirection =
+      rawSortDir === "asc" ? SortDirection.Asc : SortDirection.Desc;
 
     // const pageNumber = req.query.pageNumber ? Number(req.query.pageNumber) : 1;
     // const pageSizeRaw = req.query.pageSize ? Number(req.query.pageSize) : 10;
@@ -36,8 +42,8 @@ export async function getBlogPostListHandler(
     // const sortDirection = (req.query.sortDirection as string) === "asc" ? SortDirection.Asc : SortDirection.Desc
 
     const paginatedPosts = await postService.findPostsByBlogId(
-        { pageNumber, pageSize, sortBy, sortDirection },
-        blogId._id.toString(),
+      { pageNumber, pageSize, sortBy, sortDirection },
+      blogId._id.toString(),
     );
 
     const pagesCount = Math.ceil(paginatedPosts.totalCount / pageSize);

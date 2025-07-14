@@ -4,14 +4,17 @@ import { Post } from "../domain/post";
 import { postsRepository } from "../repositories/postsRepository";
 import { PostAttributes } from "./dtos/postAttributes";
 import { blogService } from "../../blogs/application/blogService";
-import {PostListPaginatedOutput} from "../routers/output/postListPaginatedOutput";
+import { PostListPaginatedOutput } from "../routers/output/postListPaginatedOutput";
 
 export const postService = {
   async findMany(queryDto: PostQueryInput): Promise<PostListPaginatedOutput> {
     return postsRepository.findMany(queryDto);
   },
 
-  async findPostsByBlogId(queryDto: PostQueryInput, blogId: string): Promise<PostListPaginatedOutput> {
+  async findPostsByBlogId(
+    queryDto: PostQueryInput,
+    blogId: string,
+  ): Promise<PostListPaginatedOutput> {
     return postsRepository.findPostsByBlog(queryDto, blogId);
   },
 

@@ -14,14 +14,15 @@ import {
   blogUpdateInputValidation,
 } from "./blogInputDtoValidationMiddleware";
 import {
-  blogIdParamValidator, checkBlogExists,
+  blogIdParamValidator,
+  checkBlogExists,
   postCreateWithOutBlogIdValidation,
 } from "../../posts/routers/postInputDtoValidationMiddleware";
 import { createBlogPostHandler } from "./handlers/createBlogPostHandler";
-import {getBlogPostListHandler} from "./handlers/getBlogPostListHandler";
-import {PostSortField} from "../../posts/routers/input/postSortField";
-import {blogsPaginationValidation} from "./blogsPaginationValidation";
-import {postsPaginationValidation} from "../../posts/routers/postsPaginationValidation";
+import { getBlogPostListHandler } from "./handlers/getBlogPostListHandler";
+import { PostSortField } from "../../posts/routers/input/postSortField";
+import { blogsPaginationValidation } from "./blogsPaginationValidation";
+import { postsPaginationValidation } from "../../posts/routers/postsPaginationValidation";
 
 export const blogsRouter = Router({});
 
@@ -29,16 +30,13 @@ export const blogsRouter = Router({});
 //blogsRouter.use(superAdminGuardMiddleware);
 
 blogsRouter
-  .get("/",
-      blogsPaginationValidation,
+  .get(
+    "/",
+    blogsPaginationValidation,
     inputValidationResultMiddleware,
     getBlogListHandler,
   )
-  .get("/:id",
-      idValidation,
-      inputValidationResultMiddleware,
-      getBlogHandler
-  )
+  .get("/:id", idValidation, inputValidationResultMiddleware, getBlogHandler)
   .post(
     "/",
     superAdminGuardMiddleware,
@@ -69,10 +67,10 @@ blogsRouter
     inputValidationResultMiddleware,
     createBlogPostHandler,
   )
-    .get(
-        "/:blogId/posts",
-        blogIdParamValidator,
-        postsPaginationValidation,
-        inputValidationResultMiddleware,
-        getBlogPostListHandler,
-    );
+  .get(
+    "/:blogId/posts",
+    blogIdParamValidator,
+    postsPaginationValidation,
+    inputValidationResultMiddleware,
+    getBlogPostListHandler,
+  );

@@ -15,12 +15,10 @@ export async function updateBlog(
   blogDto?: BlogAttributes,
 ): Promise<void> {
   const testBlogData: BlogUpdateInput = {
-
     id,
 
     ...getBlogDto(),
     ...blogDto,
-
   };
   console.log(
     "Sending update request with data:",

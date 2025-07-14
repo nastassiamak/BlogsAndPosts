@@ -1,5 +1,5 @@
-import {body, param} from "express-validator";
-import {blogsRepository} from "../../blogs/repositories/blogsRepository";
+import { body, param } from "express-validator";
+import { blogsRepository } from "../../blogs/repositories/blogsRepository";
 import { Request, Response, NextFunction } from "express";
 
 // export const blogIdParamValidator = param("blogId")
@@ -26,36 +26,51 @@ import { Request, Response, NextFunction } from "express";
 //         }
 //     })
 
-
 export const blogIdParamValidator = param("blogId")
-    .exists().withMessage("blogId is required")
-    .isMongoId().withMessage("blogId must be a valid ObjectId");
+  .exists()
+  .withMessage("blogId is required")
+  .isMongoId()
+  .withMessage("blogId must be a valid ObjectId");
 
-export async function checkBlogExists( req: Request, res: Response, next: NextFunction ) {
-    const blogId = req.params.blogId;
-    const blogExists = await blogsRepository.findById(blogId);
-    if (!blogExists) {
-        res.status(404).json({
-            errorsMessages: [{ field: "blogId", message: "Blog with the given id does not exist" }],
-        });
-        return;
-    }
-    next();
+export async function checkBlogExists(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  const blogId = req.params.blogId;
+  const blogExists = await blogsRepository.findById(blogId);
+  if (!blogExists) {
+    res.status(404).json({
+      errorsMessages: [
+        { field: "blogId", message: "Blog with the given id does not exist" },
+      ],
+    });
+    return;
+  }
+  next();
 }
 export const blogIdValidator = body("blogId")
-    .exists().withMessage("blogId is required")
-    .isMongoId().withMessage("blogId must be a valid ObjectId");
+  .exists()
+  .withMessage("blogId is required")
+  .isMongoId()
+  .withMessage("blogId must be a valid ObjectId");
 
-export async function checkBlogExistsBody( req: Request, res: Response, next: NextFunction ) {
-    const blogId = req.body.blogId;
-    const blogExists = await blogsRepository.findById(blogId);
-    if (!blogExists) {
-         res.status(404).json({
-            errorsMessages: [{ field: "blogId", message: "Blog with the given id does not exist" }],
-        });
-        return;
-    }
-    next();
+export async function checkBlogExistsBody(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  const blogId = req.body.blogId;
+  const blogExists = await blogsRepository.findById(blogId);
+  if (!blogExists) {
+    res.status(404).json({
+      errorsMessages: [
+        { field: "blogId", message: "Blog with the given id does not exist" },
+      ],
+    });
+    return;
+  }
+  next();
 }
 export const titleValidator = body("title")
   .isString()
@@ -78,7 +93,6 @@ export const contentValidator = body("content")
   .isLength({ min: 1, max: 1000 })
   .withMessage("more then 1000 or 0");
 
-
 export const createdAtValidator = body("createdAt")
   .optional() // Делает поле необязательным
   .isString()
@@ -89,29 +103,24 @@ export const createdAtValidator = body("createdAt")
   )
   .withMessage("not valid date format");
 
-
-
 export const postCreateInputValidation = [
   titleValidator,
   shortDescriptionValidator,
   contentValidator,
   createdAtValidator,
-    blogIdParamValidator,
-
+  blogIdParamValidator,
 ];
 
 export const postCreateWithOutBlogIdValidation = [
-    titleValidator,
-    shortDescriptionValidator,
-    contentValidator,
-    createdAtValidator,
-]
+  titleValidator,
+  shortDescriptionValidator,
+  contentValidator,
+  createdAtValidator,
+];
 
 export const postUpdateInputValidation = [
   titleValidator,
   shortDescriptionValidator,
   contentValidator,
   createdAtValidator,
-
-
 ];

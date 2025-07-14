@@ -4,9 +4,9 @@ import { Post } from "../domain/post";
 import { postCollection } from "../../db/mongoDb";
 import { RepositoryNotFoundError } from "../../core/errors/repositoryNotFoundError";
 import { PostAttributes } from "../application/dtos/postAttributes";
-import {PostListPaginatedOutput} from "../routers/output/postListPaginatedOutput";
-import {PostDataOutput} from "../routers/output/postDataOutput";
-import {mapToPostOutput} from "../routers/mappers/mapToPostOutput";
+import { PostListPaginatedOutput } from "../routers/output/postListPaginatedOutput";
+import { PostDataOutput } from "../routers/output/postDataOutput";
+import { mapToPostOutput } from "../routers/mappers/mapToPostOutput";
 
 export const postsRepository = {
   async findMany(queryDto: PostQueryInput): Promise<PostListPaginatedOutput> {
@@ -18,34 +18,31 @@ export const postsRepository = {
       sortDirection = "desc",
     } = queryDto;
 
-
     const skip = (pageNumber - 1) * pageSize;
     const filter: any = {};
 
     const direction = sortDirection === "asc" ? 1 : -1;
 
-    const totalCount =
-        await postCollection.countDocuments(filter);
+    const totalCount = await postCollection.countDocuments(filter);
 
-    const pagesCount =
-        Math.ceil(totalCount / pageSize);
+    const pagesCount = Math.ceil(totalCount / pageSize);
 
-    const rawItems = await
-      postCollection
-          .find(filter)
-          .sort({ [sortBy]: direction })
-          .skip(skip)
-          .limit(pageSize)
-          .toArray();
+    const rawItems = await postCollection
+      .find(filter)
+      .sort({ [sortBy]: direction })
+      .skip(skip)
+      .limit(pageSize)
+      .toArray();
 
-    const items: PostDataOutput[] =
-        rawItems.map(mapToPostOutput);
+    const items: PostDataOutput[] = rawItems.map(mapToPostOutput);
 
     return { pagesCount, page: pageNumber, pageSize, totalCount, items };
-
   },
 
-  async findPostsByBlog(queryDto: PostQueryInput, blogId: string): Promise<PostListPaginatedOutput> {
+  async findPostsByBlog(
+    queryDto: PostQueryInput,
+    blogId: string,
+  ): Promise<PostListPaginatedOutput> {
     console.log("postsRepository.findMany started with queryDto:", queryDto);
     const {
       pageNumber = 1,
@@ -54,29 +51,24 @@ export const postsRepository = {
       sortDirection = "desc",
     } = queryDto;
 
-
     const skip = (pageNumber - 1) * pageSize;
     const filter: any = { blogId: blogId };
 
     const direction = sortDirection === "asc" ? 1 : -1;
 
-    const totalCount =
-        await postCollection.countDocuments(filter);
+    const totalCount = await postCollection.countDocuments(filter);
     const pagesCount = Math.ceil(totalCount / pageSize);
 
-    const rawItems = await
-        postCollection
-            .find(filter)
-            .sort({ [sortBy]: direction })
-            .skip(skip)
-            .limit(pageSize)
-            .toArray();
+    const rawItems = await postCollection
+      .find(filter)
+      .sort({ [sortBy]: direction })
+      .skip(skip)
+      .limit(pageSize)
+      .toArray();
 
-    const items: PostDataOutput[] =
-        rawItems.map(mapToPostOutput);
+    const items: PostDataOutput[] = rawItems.map(mapToPostOutput);
 
     return { pagesCount, page: pageNumber, pageSize, totalCount, items };
-
   },
 
   async findById(id: string): Promise<WithId<Post> | null> {

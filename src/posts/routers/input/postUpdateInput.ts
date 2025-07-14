@@ -2,7 +2,6 @@ import { ResourceType } from "../../../core/types/resourceType";
 import { PostAttributes } from "../../application/dtos/postAttributes";
 
 export type PostUpdateInput = {
-
   id: string;
 
   title: string;

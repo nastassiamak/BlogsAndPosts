@@ -2,12 +2,11 @@ import { Collection, Db, MongoClient } from "mongodb";
 import { Blog } from "../blogs/domain/blog";
 import { SETTINGS } from "../core/settings/settings";
 import { Post } from "../posts/domain/post";
-import {User} from "../users/domain/user";
+import { User } from "../users/domain/user";
 
 const BLOG_COLLECTION_NAME = "blogs";
 const POST_COLLECTION_NAME = "posts";
 const USER_COLLECTION_NAME = "users";
-
 
 export let client: MongoClient;
 export let blogCollection: Collection<Blog>;
@@ -24,7 +23,6 @@ export async function runDB(url: string): Promise<void> {
   postCollection = db.collection<Post>(POST_COLLECTION_NAME);
   userCollection = db.collection<User>(USER_COLLECTION_NAME);
 
-
   try {
     await client.connect();
     await db.command({ ping: 1 });
@@ -34,7 +32,6 @@ export async function runDB(url: string): Promise<void> {
     await userCollection.createIndex({ login: 1 }, { unique: true });
     await userCollection.createIndex({ email: 1 }, { unique: true });
     console.log("✅ Unique indexes for login and email created");
-
   } catch (e) {
     await client.close();
     throw new Error(`❌ Database not connected: ${e}`);

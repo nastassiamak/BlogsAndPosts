@@ -135,7 +135,6 @@ describe("Blog API", () => {
     const createdBlog = await createBlog(app);
     const blogId = createdBlog.id;
 
-
     const postData = {
       title: "Test post title",
       shortDescription: "Test short description",
@@ -184,9 +183,14 @@ describe("Blog API", () => {
     const pageNumber = 1;
     const pageSize = 10;
     const response = await request(app)
-        .get(`${BLOGS_PATH}/${blogId}${POSTS_PATH}`)
-        .query({ pageNumber, pageSize, sortBy: "createdAt", sortDirection: "desc" })
-        .expect(HttpStatus.Ok);
+      .get(`${BLOGS_PATH}/${blogId}${POSTS_PATH}`)
+      .query({
+        pageNumber,
+        pageSize,
+        sortBy: "createdAt",
+        sortDirection: "desc",
+      })
+      .expect(HttpStatus.Ok);
 
     // 4. Проверяем структуру и содержимое ответа
     expect(response.body).toHaveProperty("pagesCount");

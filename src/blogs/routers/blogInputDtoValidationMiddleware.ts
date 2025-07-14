@@ -1,5 +1,4 @@
-import {body} from "express-validator";
-
+import { body } from "express-validator";
 
 export const nameValidator = body("name")
   .isString()

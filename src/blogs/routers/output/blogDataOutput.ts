@@ -1,4 +1,3 @@
-
 export type BlogDataOutput = {
   id: string;
   name: string;
@@ -6,5 +5,4 @@ export type BlogDataOutput = {
   websiteUrl: string;
   createdAt?: string;
   isMembership?: boolean;
-
 };

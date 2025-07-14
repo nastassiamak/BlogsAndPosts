@@ -4,16 +4,14 @@ import { mapToPostOutput } from "../../../posts/routers/mappers/mapToPostOutput"
 import { postService } from "../../../posts/application/postService";
 import { HttpStatus } from "../../../core/types/httpStatus";
 import { RepositoryNotFoundError } from "../../../core/errors/repositoryNotFoundError";
-import {blogsRepository} from "../../repositories/blogsRepository";
+import { blogsRepository } from "../../repositories/blogsRepository";
 
 export async function createBlogPostHandler(
-  req: Request<{blogId: string}, {}, PostCreateInput>,
+  req: Request<{ blogId: string }, {}, PostCreateInput>,
   res: Response,
-){
-
+) {
   const blogId = req.params.blogId;
   try {
-
     // Проверяем, что блог существует
     const blog = await blogsRepository.findByIdOrFail(blogId);
     const postData = req.body;

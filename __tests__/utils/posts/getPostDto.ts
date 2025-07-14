@@ -1,4 +1,4 @@
-import {PostCreateInput} from "../../../src/posts/routers/input/postCreateInput";
+import { PostCreateInput } from "../../../src/posts/routers/input/postCreateInput";
 
 export function getPostDto(blogId: string): PostCreateInput {
   return {

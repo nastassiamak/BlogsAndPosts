@@ -3,7 +3,7 @@ import { Blog } from "../domain/blog";
 import { BlogQueryInput } from "../routers/input/blogQueryInput";
 import { blogsRepository } from "../repositories/blogsRepository";
 import { BlogAttributes } from "./dtos/blogAttributes";
-import {BlogListPaginatedOutput} from "../routers/output/blogListPaginatedOutput";
+import { BlogListPaginatedOutput } from "../routers/output/blogListPaginatedOutput";
 
 export const blogService = {
   async findMany(queryDto: BlogQueryInput): Promise<BlogListPaginatedOutput> {
