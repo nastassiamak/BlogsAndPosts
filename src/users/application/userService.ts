@@ -1,14 +1,13 @@
-import {UserAttributes} from "./dtos/userAttributes";
 import {User} from "../domain/user";
 import {usersRepository} from "../repositories/usersRepository";
-import {ObjectId, WithId} from "mongodb";
+import {WithId} from "mongodb";
 import {UserQueryInput} from "../routers/input/userQueryInput";
 import {UserListPaginatedOutput} from "../routers/output/userListPaginatedOutput";
 import bcrypt from "bcrypt";
 import {UserCreateInput} from "../routers/input/userCreateInput";
 import {userCollection} from "../../db/mongoDb";
 import {BusinessRuleError} from "../../core/errors/businessRuleError";
-import {FieldNamesType} from "../../core/utils/errorUtils";
+
 
 export const userService = {
 
@@ -45,20 +44,6 @@ export const userService = {
         };
 
         return await usersRepository.createUser(newUser);
-
-        // // Создание пользователя с обработкой ошибок Mongo
-        // try {
-        //     const result = await userCollection.insertOne(newUser);
-        //     return result.insertedId.toString();
-        // } catch (error: any) {
-        //     if (error.code === 11000) {
-        //         const field = Object.keys(error.keyValue)[0] as FieldNamesType;
-        //         throw new BusinessRuleError({
-        //             errorsMessages: [{ field, message: `${field} should be unique` }],
-        //         });
-        //     }
-        //     throw error;
-        // }
     },
 
     async _generateHash(password: string, salt: string){

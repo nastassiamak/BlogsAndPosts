@@ -15,7 +15,6 @@ usersRouter
         superAdminGuardMiddleware,
         inputValidationResultMiddleware,
         usersPaginationValidation,
-        //inputValidationResultMiddleware,
         getUserListHandler
     )
     .post("/",
