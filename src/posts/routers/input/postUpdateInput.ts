@@ -3,7 +3,6 @@ import { PostAttributes } from "../../application/dtos/postAttributes";
 
 export type PostUpdateInput = {
   id: string;
-
   title: string;
   shortDescription: string;
   content: string;

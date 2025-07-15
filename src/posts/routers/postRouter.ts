@@ -12,37 +12,49 @@ import { createPostHandler } from "./handlers/createPostHandler";
 import { updatePostHandler } from "./handlers/updatePostHandler";
 import { deletePostHandler } from "./handlers/deletePostHandler";
 import { postsPaginationValidation } from "./postsPaginationValidation";
+import {commentCreateInputValidation} from "../../comments/routers/commentInputDtoValidationMiddleware";
+import {createCommentHandler} from "../../comments/routers/handler/createCommentHandler";
 
 export const postsRouter = Router({});
 
 postsRouter
-
-  .get("/:id", idValidation, inputValidationResultMiddleware, getPostHandler)
-  .post(
-    "/",
-    superAdminGuardMiddleware,
-    postCreateWithOutBlogIdValidation,
-    inputValidationResultMiddleware,
-    createPostHandler,
-  )
-  .put(
-    "/:id",
-    superAdminGuardMiddleware,
-    idValidation,
-    postUpdateInputValidation,
-    inputValidationResultMiddleware,
-    updatePostHandler,
-  )
-  .get(
-    "/",
-    postsPaginationValidation,
-    inputValidationResultMiddleware,
-    getPostListHandler,
-  )
-  .delete(
-    "/:id",
-    superAdminGuardMiddleware,
-    idValidation,
-    inputValidationResultMiddleware,
-    deletePostHandler,
-  );
+    .get("/",
+        postsPaginationValidation,
+        inputValidationResultMiddleware,
+        getPostListHandler,
+    )
+    .get("/:id",
+        idValidation,
+        inputValidationResultMiddleware,
+        getPostHandler
+    )
+    .get("/:postId/comments",
+        //commentsPaginationValidation,
+        inputValidationResultMiddleware,
+        //getCommentHandler,
+        )
+    .post("/",
+        superAdminGuardMiddleware,
+        postCreateWithOutBlogIdValidation,
+        inputValidationResultMiddleware,
+        createPostHandler,
+    )
+    .post("/:postId/comments",
+        //token
+        commentCreateInputValidation,
+        inputValidationResultMiddleware,
+        createCommentHandler,
+    )
+    .put("/:id",
+        superAdminGuardMiddleware,
+        idValidation,
+        postUpdateInputValidation,
+        inputValidationResultMiddleware,
+        updatePostHandler,
+    )
+    .delete("/:id",
+        superAdminGuardMiddleware,
+        idValidation,
+        inputValidationResultMiddleware,
+        deletePostHandler,
+    );

@@ -7,27 +7,21 @@ import { deleteBlogHandler } from "./handlers/deleteBlogHandler";
 import { idValidation } from "../../core/middlewares/validation/paramsIdValidationMiddleware";
 import { inputValidationResultMiddleware } from "../../core/middlewares/validation/inputValidationResultMiddleware";
 import { superAdminGuardMiddleware } from "../../auth/middlewares/superAdminGuardMiddleware";
-import { paginationAndSortingValidation } from "../../core/middlewares/validation/queryPaginationSortingValidation";
-import { BlogSortField } from "./input/blogSortField";
 import {
   blogCreateInputValidation,
   blogUpdateInputValidation,
 } from "./blogInputDtoValidationMiddleware";
 import {
   blogIdParamValidator,
-  checkBlogExists,
   postCreateWithOutBlogIdValidation,
 } from "../../posts/routers/postInputDtoValidationMiddleware";
 import { createBlogPostHandler } from "./handlers/createBlogPostHandler";
 import { getBlogPostListHandler } from "./handlers/getBlogPostListHandler";
-import { PostSortField } from "../../posts/routers/input/postSortField";
+
 import { blogsPaginationValidation } from "./blogsPaginationValidation";
 import { postsPaginationValidation } from "../../posts/routers/postsPaginationValidation";
 
 export const blogsRouter = Router({});
-
-//middleware на весь маршрут
-//blogsRouter.use(superAdminGuardMiddleware);
 
 blogsRouter
   .get(
