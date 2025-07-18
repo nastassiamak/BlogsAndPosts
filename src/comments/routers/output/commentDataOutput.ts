@@ -1,9 +1,8 @@
+import { CommentatorInfo } from "../../domain/comment";
+
 export type CommentDataOutput = {
-    id: string;
-    content: string;
-    commentatorInfo: {
-        userId: string;
-        userLogin: string;
-    };
-    createdAt: string;
-}
+  id: string;
+  content: string;
+  commentatorInfo: CommentatorInfo;
+  createdAt: string;
+};

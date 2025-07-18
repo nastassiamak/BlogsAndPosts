@@ -3,7 +3,7 @@ import { Blog } from "../blogs/domain/blog";
 import { SETTINGS } from "../core/settings/settings";
 import { Post } from "../posts/domain/post";
 import { User } from "../users/domain/user";
-import {Comments} from "../comments/domain/comment";
+import { Comments } from "../comments/domain/comment";
 
 const BLOG_COLLECTION_NAME = "blogs";
 const POST_COLLECTION_NAME = "posts";

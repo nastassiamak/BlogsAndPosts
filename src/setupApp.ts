@@ -2,6 +2,7 @@ import express, { Express } from "express";
 import {
   AUTH_PATH,
   BLOGS_PATH,
+  COMMENTS_PATH,
   POSTS_PATH,
   TESTING_PATH,
   USERS_PATH,
@@ -12,6 +13,7 @@ import { postsRouter } from "./posts/routers/postRouter";
 import { usersRouter } from "./users/routers/usersRouter";
 import { authRouter } from "./users/authUsers/authRouter";
 import { setupSwagger } from "./core/swagger/setupSwagger";
+import { commentRouter } from "./comments/routers/commentRouter";
 
 export const setupApp = (app: Express) => {
   app.use(express.json()); // middleware для парсинга JSON в теле запроса
@@ -29,8 +31,10 @@ export const setupApp = (app: Express) => {
   app.get("/", (req, res) => {
     res.send("Hello from API");
   });
+
   app.use(BLOGS_PATH, blogsRouter);
   app.use(POSTS_PATH, postsRouter);
+  app.use(COMMENTS_PATH, commentRouter);
   app.use(TESTING_PATH, testingRouter);
   app.use(USERS_PATH, usersRouter);
   app.use(AUTH_PATH, authRouter);
@@ -49,7 +53,7 @@ export const setupApp = (app: Express) => {
     next();
   });
 
-  setupSwagger(app);
+  //setupSwagger(app);
 
   return app;
 };

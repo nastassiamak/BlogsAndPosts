@@ -1,3 +1,3 @@
 export enum CommentSortField {
-    CreatedAt = "createdAt",
+  CreatedAt = "createdAt",
 }

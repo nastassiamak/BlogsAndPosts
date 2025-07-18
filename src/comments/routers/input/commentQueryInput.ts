@@ -1,5 +1,5 @@
-import {PaginationAndSorting} from "../../../core/types/paginationAndSorting";
-import {CommentSortField} from "./commentSortField";
+import { PaginationAndSorting } from "../../../core/types/paginationAndSorting";
+import { CommentSortField } from "./commentSortField";
 
-export type CommentQueryInput =
-    PaginationAndSorting<CommentSortField> & Partial<{}>;
+export type CommentQueryInput = PaginationAndSorting<CommentSortField> &
+  Partial<{}>;

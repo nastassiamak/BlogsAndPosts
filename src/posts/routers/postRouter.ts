@@ -12,49 +12,55 @@ import { createPostHandler } from "./handlers/createPostHandler";
 import { updatePostHandler } from "./handlers/updatePostHandler";
 import { deletePostHandler } from "./handlers/deletePostHandler";
 import { postsPaginationValidation } from "./postsPaginationValidation";
-import {commentCreateInputValidation} from "../../comments/routers/commentInputDtoValidationMiddleware";
-import {createCommentHandler} from "../../comments/routers/handler/createCommentHandler";
+import { commentCreateInputValidation } from "../../comments/routers/commentInputDtoValidationMiddleware";
+import { createCommentHandler } from "../../comments/routers/handler/createCommentHandler";
+import { getCommentListHandler } from "../../comments/routers/handler/getCommentListHandler";
+import { commentsPaginationValidation } from "../../comments/routers/commentsPaginationValidation";
 
 export const postsRouter = Router({});
 
 postsRouter
-    .get("/",
-        postsPaginationValidation,
-        inputValidationResultMiddleware,
-        getPostListHandler,
-    )
-    .get("/:id",
-        idValidation,
-        inputValidationResultMiddleware,
-        getPostHandler
-    )
-    .get("/:postId/comments",
-        //commentsPaginationValidation,
-        inputValidationResultMiddleware,
-        //getCommentHandler,
-        )
-    .post("/",
-        superAdminGuardMiddleware,
-        postCreateWithOutBlogIdValidation,
-        inputValidationResultMiddleware,
-        createPostHandler,
-    )
-    .post("/:postId/comments",
-        //token
-        commentCreateInputValidation,
-        inputValidationResultMiddleware,
-        createCommentHandler,
-    )
-    .put("/:id",
-        superAdminGuardMiddleware,
-        idValidation,
-        postUpdateInputValidation,
-        inputValidationResultMiddleware,
-        updatePostHandler,
-    )
-    .delete("/:id",
-        superAdminGuardMiddleware,
-        idValidation,
-        inputValidationResultMiddleware,
-        deletePostHandler,
-    );
+  .get(
+    "/",
+    postsPaginationValidation,
+    inputValidationResultMiddleware,
+    getPostListHandler,
+  )
+  .get("/:id", idValidation, inputValidationResultMiddleware, getPostHandler)
+  .get(
+    "/:postId/comments",
+    idValidation,
+    commentsPaginationValidation,
+    inputValidationResultMiddleware,
+    getCommentListHandler,
+  )
+  .post(
+    "/",
+    superAdminGuardMiddleware,
+    postCreateWithOutBlogIdValidation,
+    inputValidationResultMiddleware,
+    createPostHandler,
+  )
+  .post(
+    "/:postId/comments",
+    //token
+    idValidation,
+    commentCreateInputValidation,
+    inputValidationResultMiddleware,
+    createCommentHandler,
+  )
+  .put(
+    "/:id",
+    superAdminGuardMiddleware,
+    idValidation,
+    postUpdateInputValidation,
+    inputValidationResultMiddleware,
+    updatePostHandler,
+  )
+  .delete(
+    "/:id",
+    superAdminGuardMiddleware,
+    idValidation,
+    inputValidationResultMiddleware,
+    deletePostHandler,
+  );
