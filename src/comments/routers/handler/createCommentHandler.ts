@@ -8,13 +8,13 @@ import { RepositoryNotFoundError } from "../../../core/errors/repositoryNotFound
 
 export async function createCommentHandler(req: Request, res: Response) {
   try {
-    const postId = req.params.postId;
-    if (!postId) {
+    const id = req.params.postId;
+    if (!id) {
        res.status(400).json({ errorsMessages: [{ field: 'postId', message: 'PostId is required' }] });
     }
     const { content } = req.body as CommentCreateInput;
 
-    await postService.findByIdOrFail(postId);
+   const postId = await postService.findByIdOrFail(id);
 
     const commentInput = {
       ...req.body,
