@@ -12,6 +12,11 @@ export async function loginHandler(req: Request, res: Response) {
 
     const isValid = await authService.checkCredentials(loginOrEmail, password);
 
+    // Валидация входных типов
+    if (typeof loginOrEmail !== "string" || typeof password !== "string") {
+      return res.status(HttpStatus.BadRequest).json({ message: "Invalid input data" });
+    }
+
     if (!isValid) {
       res.status(HttpStatus.Unauthorized).json({ message: "Unauthorized" });
       return;

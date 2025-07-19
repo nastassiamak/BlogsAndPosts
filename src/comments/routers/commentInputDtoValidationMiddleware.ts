@@ -6,6 +6,7 @@ export const postIdParamValidator = param("postId")
     .isMongoId()
     .withMessage("postId must be a valid ObjectId");
 
+
 export const contentValidator = body("content")
   .isString()
   .withMessage("not string")
