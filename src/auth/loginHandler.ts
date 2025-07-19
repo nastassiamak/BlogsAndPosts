@@ -18,16 +18,16 @@ export async function loginHandler(req: Request, res: Response) {
       return;
     }
 
-    if (!isValid) {
-      res.status(HttpStatus.Unauthorized).json({ message: "Unauthorized" });
-      return;
-    }
+    // if (!isValid) {
+    //   res.status(HttpStatus.Unauthorized).json({ message: "Unauthorized" });
+    //   return;
+    // }
 
     const user = await userService.findByLoginOrEmail(loginOrEmail);
-    if (!user) {
-       res.status(HttpStatus.Unauthorized).json({ message: "Unauthorized" });
-       return;
-    }
+    // if (!user) {
+    //    res.status(HttpStatus.Unauthorized).json({ message: "Unauthorized" });
+    //    return;
+    // }
 
     const userDto = mapToUserOutput(user);
 
@@ -41,7 +41,7 @@ export async function loginHandler(req: Request, res: Response) {
 
   } catch (error) {
     console.error(error);
-    res.status(HttpStatus.Unauthorized);
+    res.status(HttpStatus.Unauthorized).json({ message: "Unauthorized" });
     return;
   }
 }
