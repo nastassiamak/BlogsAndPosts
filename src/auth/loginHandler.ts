@@ -41,7 +41,7 @@ export async function loginHandler(req: Request, res: Response) {
 
   } catch (error) {
     console.error(error);
-    res.status(HttpStatus.InternalServerError).json({ message: "internal server error" });
+    res.status(HttpStatus.Unauthorized);
     return;
   }
 }
