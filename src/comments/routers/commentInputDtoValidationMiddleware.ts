@@ -1,4 +1,10 @@
-import { body } from "express-validator";
+import {body, param} from "express-validator";
+
+export const postIdParamValidator = param("postId")
+    .exists()
+    .withMessage("postId is required")
+    .isMongoId()
+    .withMessage("postId must be a valid ObjectId");
 
 export const contentValidator = body("content")
   .isString()

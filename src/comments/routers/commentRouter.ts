@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { idValidation } from "../../core/middlewares/validation/paramsIdValidationMiddleware";
-import { commentUpdateInputValidation } from "./commentInputDtoValidationMiddleware";
+import {commentUpdateInputValidation, postIdParamValidator} from "./commentInputDtoValidationMiddleware";
 import { updateCommentHandler } from "./handler/updateCommentHandler";
 import { inputValidationResultMiddleware } from "../../core/middlewares/validation/inputValidationResultMiddleware";
 import { deleteCommentHandler } from "./handler/deleteCommentHandler";
@@ -14,7 +14,7 @@ commentRouter
   .put(
     "/:id",
     authMiddleware,
-    idValidation,
+    postIdParamValidator,
     commentUpdateInputValidation,
     inputValidationResultMiddleware,
     updateCommentHandler,
@@ -22,7 +22,7 @@ commentRouter
   .delete(
     "/:id",
     authMiddleware,
-    idValidation,
+    postIdParamValidator,
     inputValidationResultMiddleware,
     deleteCommentHandler,
   );

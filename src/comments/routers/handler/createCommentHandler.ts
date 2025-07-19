@@ -24,12 +24,12 @@ export async function createCommentHandler(req: Request, res: Response) {
 
     const commentOutput = mapToCommentOutput(createdComment);
 
-    return res.status(HttpStatus.Created).send(commentOutput);
+     res.status(HttpStatus.Created).send(commentOutput);
   } catch (error) {
     if (error instanceof RepositoryNotFoundError) {
-      return res.status(HttpStatus.NotFound).send({ message: "PostId Not Found" });
+       res.status(HttpStatus.NotFound).send({ message: "PostId Not Found" });
     }
     console.log("Error in createCommentHandler:", error);
-    return res.status(HttpStatus.InternalServerError).send({ message: "Internal Server Error" });
+     res.status(HttpStatus.InternalServerError).send({ message: "Internal Server Error" });
   }
 }
