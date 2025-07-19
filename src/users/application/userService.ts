@@ -7,6 +7,7 @@ import bcrypt from "bcrypt";
 import { UserCreateInput } from "../routers/input/userCreateInput";
 import { userCollection } from "../../db/mongoDb";
 import { BusinessRuleError } from "../../core/errors/businessRuleError";
+import {RepositoryNotFoundError} from "../../core/errors/repositoryNotFoundError";
 
 export const userService = {
   async findMany(queryDto: UserQueryInput): Promise<UserListPaginatedOutput> {
@@ -51,10 +52,7 @@ export const userService = {
   async findByLoginOrEmail(loginOrEmail: string): Promise<WithId<User>> {
     const res = await usersRepository.findByLoginOrEmail(loginOrEmail);
     if (!res) {
-      throw new BusinessRuleError({
-        errorsMessages: [{ field: "login", message: "login should be unique" },
-          {field: "email", message: "email should be unique" },],
-      })
+      throw new RepositoryNotFoundError("User not exists");
     }
     return res;
   },
