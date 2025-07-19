@@ -8,6 +8,7 @@ import { UserDataOutput } from "../routers/output/userDataOutput";
 import { mapToUserOutput } from "../routers/mappers/mapToUserOutput";
 
 export const usersRepository = {
+
   async findMany(queryDto: UserQueryInput): Promise<UserListPaginatedOutput> {
     console.log("usersRepository.findMany started with queryDto:", queryDto);
 
@@ -52,6 +53,7 @@ export const usersRepository = {
 
     return { pagesCount, page: pageNumber, pageSize, totalCount, items };
   },
+
   async createUser(newUser: User): Promise<string> {
     const insertResult = await userCollection.insertOne(newUser);
     console.log("Insert result:", insertResult);

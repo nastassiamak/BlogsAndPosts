@@ -1,8 +1,10 @@
-//index.d.ts
+// index.d.ts
+import * as express from 'express';
+
 declare global {
   namespace Express {
-    export interface Request {
-      userId: string | null;
+    interface Request {
+      user?: JwtPayload;
     }
   }
 }

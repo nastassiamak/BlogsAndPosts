@@ -11,7 +11,7 @@ import { blogsRouter } from "./blogs/routers/blogsRouter";
 import { testingRouter } from "./testing/routers/testingRouter";
 import { postsRouter } from "./posts/routers/postRouter";
 import { usersRouter } from "./users/routers/usersRouter";
-import { authRouter } from "./users/authUsers/authRouter";
+import { authRouter } from "./auth/authRouter";
 import { setupSwagger } from "./core/swagger/setupSwagger";
 import { commentRouter } from "./comments/routers/commentRouter";
 

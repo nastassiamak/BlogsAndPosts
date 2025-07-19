@@ -1,7 +1,7 @@
 import { Router, Request, Response } from "express";
 import { HttpStatus } from "../../core/types/httpStatus";
 import {
-  blogCollection,
+  blogCollection, commentCollection,
   postCollection,
   userCollection,
 } from "../../db/mongoDb";
@@ -15,6 +15,7 @@ testingRouter.delete("/all-data", async (req: Request, res: Response) => {
   await Promise.all([
     postCollection.deleteMany({}),
     blogCollection.deleteMany({}),
+    commentCollection.deleteMany({}),
     userCollection.deleteMany({}),
   ]);
   res.sendStatus(HttpStatus.NoContent);

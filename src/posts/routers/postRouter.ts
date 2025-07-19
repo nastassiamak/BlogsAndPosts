@@ -16,6 +16,7 @@ import { commentCreateInputValidation } from "../../comments/routers/commentInpu
 import { createCommentHandler } from "../../comments/routers/handler/createCommentHandler";
 import { getCommentListHandler } from "../../comments/routers/handler/getCommentListHandler";
 import { commentsPaginationValidation } from "../../comments/routers/commentsPaginationValidation";
+import {authMiddleware} from "../../auth/authMiddleware";
 
 export const postsRouter = Router({});
 
@@ -43,8 +44,8 @@ postsRouter
   )
   .post(
     "/:postId/comments",
-    //token
     idValidation,
+    authMiddleware,
     commentCreateInputValidation,
     inputValidationResultMiddleware,
     createCommentHandler,

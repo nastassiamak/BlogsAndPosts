@@ -48,6 +48,17 @@ export const userService = {
     return await bcrypt.hash(password, salt);
   },
 
+  async findByLoginOrEmail(loginOrEmail: string): Promise<WithId<User>> {
+    const res = await usersRepository.findByLoginOrEmail(loginOrEmail);
+    if (!res) {
+      throw new BusinessRuleError({
+        errorsMessages: [{ field: "login", message: "login should be unique" },
+          {field: "email", message: "email should be unique" },],
+      })
+    }
+    return res;
+  },
+
   async findByIdOrFail(id: string): Promise<WithId<User>> {
     return await usersRepository.findByIdOrFail(id);
   },

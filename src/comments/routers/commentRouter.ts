@@ -5,6 +5,7 @@ import { updateCommentHandler } from "./handler/updateCommentHandler";
 import { inputValidationResultMiddleware } from "../../core/middlewares/validation/inputValidationResultMiddleware";
 import { deleteCommentHandler } from "./handler/deleteCommentHandler";
 import { getCommentHandler } from "./handler/getCommentHandler";
+import {authMiddleware} from "../../auth/authMiddleware";
 
 export const commentRouter = Router({});
 
@@ -12,7 +13,7 @@ commentRouter
   .get("/:id", idValidation, inputValidationResultMiddleware, getCommentHandler)
   .put(
     "/:id",
-    //token
+    authMiddleware,
     idValidation,
     commentUpdateInputValidation,
     inputValidationResultMiddleware,
@@ -20,7 +21,7 @@ commentRouter
   )
   .delete(
     "/:id",
-    //token
+    authMiddleware,
     idValidation,
     inputValidationResultMiddleware,
     deleteCommentHandler,

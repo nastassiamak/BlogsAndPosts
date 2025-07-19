@@ -1,12 +1,13 @@
 import bcrypt from "bcrypt";
-import { usersRepository } from "../repositories/usersRepository";
+import { usersRepository } from "../users/repositories/usersRepository";
+import {userService} from "../users/application/userService";
 
 export const authService = {
   async checkCredentials(
     loginOrEmail: string,
     password: string,
   ): Promise<boolean> {
-    const user = await usersRepository.findByLoginOrEmail(loginOrEmail);
+    const user = await userService.findByLoginOrEmail(loginOrEmail);
 
     if (!user) {
       return false;
