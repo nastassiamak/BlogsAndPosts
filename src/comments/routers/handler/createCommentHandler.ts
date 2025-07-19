@@ -10,7 +10,7 @@ export async function createCommentHandler(req: Request, res: Response) {
   try {
     const postId = req.params.postId;
     if (!postId) {
-      return res.status(400).json({ errorsMessages: [{ field: 'postId', message: 'PostId is required' }] });
+       res.status(400).json({ errorsMessages: [{ field: 'postId', message: 'PostId is required' }] });
     }
     const { content } = req.body as CommentCreateInput;
 

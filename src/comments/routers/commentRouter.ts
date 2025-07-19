@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { idValidation } from "../../core/middlewares/validation/paramsIdValidationMiddleware";
-import { commentUpdateInputValidation } from "./commentInputDtoValidationMiddleware";
+import {commentIdParamValidator, commentUpdateInputValidation} from "./commentInputDtoValidationMiddleware";
 import { updateCommentHandler } from "./handler/updateCommentHandler";
 import { inputValidationResultMiddleware } from "../../core/middlewares/validation/inputValidationResultMiddleware";
 import { deleteCommentHandler } from "./handler/deleteCommentHandler";
@@ -10,19 +10,19 @@ import {authMiddleware} from "../../auth/authMiddleware";
 export const commentRouter = Router({});
 
 commentRouter
-  .get("/:id", idValidation, inputValidationResultMiddleware, getCommentHandler)
+  .get("/:commentId", idValidation, inputValidationResultMiddleware, getCommentHandler)
   .put(
-    "/:id",
+    "/:commentId",
     authMiddleware,
-    idValidation,
+    commentIdParamValidator,
     commentUpdateInputValidation,
     inputValidationResultMiddleware,
     updateCommentHandler,
   )
   .delete(
-    "/:id",
+    "/:commentId",
     authMiddleware,
-    idValidation,
+    commentIdParamValidator,
     inputValidationResultMiddleware,
     deleteCommentHandler,
   );

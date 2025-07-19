@@ -14,7 +14,8 @@ export async function loginHandler(req: Request, res: Response) {
 
     // Валидация входных типов
     if (typeof loginOrEmail !== "string" || typeof password !== "string") {
-      return res.status(HttpStatus.BadRequest).json({ message: "Invalid input data" });
+      res.status(HttpStatus.BadRequest).json({ message: "Invalid input data" });
+      return;
     }
 
     if (!isValid) {

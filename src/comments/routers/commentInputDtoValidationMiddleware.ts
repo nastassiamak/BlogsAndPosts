@@ -7,6 +7,15 @@ export const postIdParamValidator = param("postId")
     .withMessage("postId must be a valid ObjectId");
 
 
+export const commentIdParamValidator = param("commentId")
+    .exists()
+    .withMessage("commentId is required")
+    .isMongoId()
+    .withMessage("commentId must be a valid ObjectId");
+
+
+
+
 export const contentValidator = body("content")
   .isString()
   .withMessage("not string")
