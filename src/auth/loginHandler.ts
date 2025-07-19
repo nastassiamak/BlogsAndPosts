@@ -6,28 +6,30 @@ import {jwtService} from "./JWT/jwtService";
 import {mapToUserOutput} from "../users/routers/mappers/mapToUserOutput";
 
 export async function loginHandler(req: Request, res: Response) {
-  const { loginOrEmail, password } = req.body;
   try {
-    const isValid = await authService.checkCredentials(loginOrEmail, password);
+      const { loginOrEmail, password } = req.body;
 
-    // if (!isValid) {
-    //   res.status(HttpStatus.Unauthorized).json({message: "Unauthorized"});
-    // }
+        const isValid = await authService.checkCredentials(loginOrEmail, password);
 
-    const user = await userService.findByLoginOrEmail(loginOrEmail);
-    // if (!user) {
-    //   res.status(HttpStatus.Unauthorized).json({message: "Unauthorized"});
-    // }
+        if (!isValid) {
+          res.status(HttpStatus.Unauthorized).json({message: "Unauthorized"});
+        }
 
-    const userDto = mapToUserOutput(user);
+        const user = await userService.findByLoginOrEmail(loginOrEmail);
+        if (!user) {
+          res.status(HttpStatus.Unauthorized).json({message: "Unauthorized"});
+        }
 
-    const token = jwtService.generateToken({
-      userId: userDto.id,
-      login: loginOrEmail,
-      email: userDto.email,
-    });
-    res.json({accessToken: token});
-  } catch (error) {
-    res.status(HttpStatus.Unauthorized).json({message: "Unauthorized"});
-  }
+        const userDto = mapToUserOutput(user);
+
+        const token = jwtService.generateToken({
+          userId: userDto.id,
+          login: loginOrEmail,
+          email: userDto.email,
+        });
+    res.status(HttpStatus.Ok).json({accessToken: token});
+
+    } catch (error) {
+      res.status(HttpStatus.InternalServerError).json({message: "internal server error"});
+    }
 }
