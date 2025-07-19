@@ -8,23 +8,28 @@ import { RepositoryNotFoundError } from "../../../core/errors/repositoryNotFound
 
 export async function createCommentHandler(req: Request, res: Response) {
   try {
-    const postId = req.params.id;
+    const postId = req.params.postId;
+
     const { content } = req.body as CommentCreateInput;
 
     await postService.findByIdOrFail(postId);
-    const createdCommentId = await commentService.create(req.body);
-    const createdComment =
-      await commentService.findByIdOrFail(createdCommentId);
+
+    const commentInput = {
+      ...req.body,
+      postId: postId,
+    };
+
+    const createdCommentId = await commentService.create(commentInput);
+    const createdComment = await commentService.findByIdOrFail(createdCommentId);
 
     const commentOutput = mapToCommentOutput(createdComment);
-    res.status(HttpStatus.Created).send(commentOutput);
+
+    return res.status(HttpStatus.Created).send(commentOutput);
   } catch (error) {
     if (error instanceof RepositoryNotFoundError) {
-      res.status(HttpStatus.NotFound).send({ message: "PostId Not Found" });
+      return res.status(HttpStatus.NotFound).send({ message: "PostId Not Found" });
     }
     console.log("Error in createCommentHandler:", error);
-    res
-      .status(HttpStatus.InternalServerError)
-      .send({ message: "Internal Server Error" });
+    return res.status(HttpStatus.InternalServerError).send({ message: "Internal Server Error" });
   }
 }
