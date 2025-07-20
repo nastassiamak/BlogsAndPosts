@@ -7,6 +7,7 @@ import { query } from "express-validator";
 import { CommentAttributes } from "./dto/commentAttributes";
 import { postService } from "../../posts/application/postService";
 import { userService } from "../../users/application/userService";
+import {RepositoryNotFoundError} from "../../core/errors/repositoryNotFoundError";
 
 export const commentService = {
   async findMany(
@@ -19,11 +20,13 @@ export const commentService = {
     return commentsRepository.findByIdOrFail(id);
   },
 
-  async create(dto: CommentAttributes) {
-    const post = await postService.findByIdOrFail(dto.postId);
+  async create(postId: string, dto: CommentAttributes) {
+    const post = await postService.findByIdOrFail(postId);
+    if (!post) {
+      throw new RepositoryNotFoundError("Invalid post ID");
+    }
     const userId = await userService.findByIdOrFail(dto.commentatorInfo.userId);
     const newComment: Comments = {
-      postId: post._id.toString(),
       content: dto.content,
       commentatorInfo: {
         userId: userId._id.toString(),

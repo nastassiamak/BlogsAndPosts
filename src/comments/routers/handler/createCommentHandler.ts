@@ -18,10 +18,10 @@ export async function createCommentHandler(req: Request, res: Response) {
 
     const commentInput = {
       ...req.body,
-      postId: postId,
+      //postId: postId,
     };
 
-    const createdCommentId = await commentService.create(commentInput);
+    const createdCommentId = await commentService.create(id, commentInput);
     const createdComment = await commentService.findByIdOrFail(createdCommentId);
 
     const commentOutput = mapToCommentOutput(createdComment);
