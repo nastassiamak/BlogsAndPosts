@@ -22,10 +22,8 @@ export const commentService = {
 
   async create(postId: string, dto: CommentAttributes) {
     const post = await postService.findByIdOrFail(postId);
-    if (!post) {
-      throw new RepositoryNotFoundError("Invalid post ID");
-    }
-    const userId = await userService.findByIdOrFail(dto.commentatorInfo.userId);
+    const userId =
+        await userService.findByIdOrFail(dto.commentatorInfo.userId);
     const newComment: Comments = {
       content: dto.content,
       commentatorInfo: {

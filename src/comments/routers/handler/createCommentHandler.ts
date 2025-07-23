@@ -5,23 +5,33 @@ import { mapToCommentOutput } from "../mappers/mapToCommentOutput";
 import { commentService } from "../../application/commentService";
 import { HttpStatus } from "../../../core/types/httpStatus";
 import { RepositoryNotFoundError } from "../../../core/errors/repositoryNotFoundError";
+import {CommentAttributes} from "../../application/dto/commentAttributes";
 
-export async function createCommentHandler(req: Request, res: Response) {
+export async function createCommentHandler(
+    req: Request, res: Response): Promise<void> {
   try {
-    const id = req.params.postId;
-    if (!id) {
-       res.status(400).json({ errorsMessages: [{ field: 'postId', message: 'PostId is required' }] });
+    const postId = req.params.postId;
+    if (!postId) {
+       res
+           .status(HttpStatus.BadRequest)
+           .json({ errorsMessages: [{ field: 'postId', message: 'PostId is required' }] });
     }
-    const { content } = req.body as CommentCreateInput;
 
-   const postId = await postService.findByIdOrFail(id);
+      const user = req.user;
+      if (!user) {
+          res.status(HttpStatus.Unauthorized).json({ message: "Unauthorized" });
+      }
+    const { content, commentatorInfo } = req.body as CommentAttributes;
+
+    await postService.findByIdOrFail(postId);
 
     const commentInput = {
-      ...req.body,
-      //postId: postId,
+      content,
+    commentatorInfo,
+
     };
 
-    const createdCommentId = await commentService.create(id, commentInput);
+    const createdCommentId = await commentService.create(postId, commentInput);
     const createdComment = await commentService.findByIdOrFail(createdCommentId);
 
     const commentOutput = mapToCommentOutput(createdComment);
