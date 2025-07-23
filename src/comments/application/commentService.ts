@@ -30,6 +30,7 @@ export const commentService = {
         userId: userId._id.toString(),
         userLogin: userId.login,
       },
+      postId,
       createdAt: new Date().toString(),
     };
     return await commentsRepository.createComment(newComment);

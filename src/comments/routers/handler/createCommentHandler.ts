@@ -38,10 +38,10 @@ export async function createCommentHandler(
 
      res.status(HttpStatus.Created).send(commentOutput);
   } catch (error) {
+    console.error("Error in createCommentHandler:", error);
     if (error instanceof RepositoryNotFoundError) {
-       res.status(HttpStatus.NotFound).send({ message: "PostId Not Found" });
+      res.status(HttpStatus.NotFound).send({ message: "PostId Not Found" });
     }
-    console.log("Error in createCommentHandler:", error);
-     res.status(HttpStatus.InternalServerError).send({ message: "Internal Server Error" });
+    res.status(HttpStatus.InternalServerError).send({ message: "Internal Server Error" });
   }
 }

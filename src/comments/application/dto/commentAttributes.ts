@@ -1,8 +1,10 @@
-import { CommentatorInfo } from "../../domain/comment";
 
 export type CommentAttributes = {
   //postId: string;
   content: string;
-  commentatorInfo: CommentatorInfo;
+  commentatorInfo: {
+    userId: string;
+    userLogin?: string;
+  } // если не приходит с клиента, не обязательно
   createdAt?: string;
 };
