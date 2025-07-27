@@ -28,9 +28,6 @@ export async function loginHandler(req: Request, res: Response) {
     res.status(HttpStatus.Ok).json({ accessToken: token });
 
   }  catch (error) {
-    if (error instanceof RepositoryNotFoundError) {
-      res.status(HttpStatus.BadRequest).send("bad request");
-    }
     res.status(HttpStatus.InternalServerError).send("Internal Server Error");
   }
 }
