@@ -14,7 +14,8 @@ export async function loginHandler(req: Request, res: Response) {
 
     if (!user) {
       // Если пользователь не найден или пароль неверен
-       res.status(HttpStatus.Unauthorized).json({ message: "Invalid login or password" });
+      res.status(HttpStatus.Unauthorized).json({ message: "Invalid login or password" });
+      return;
     }
 
     // Можно при желании преобразовать user к виду для токена
