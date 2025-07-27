@@ -4,6 +4,7 @@ import {userService} from "../users/application/userService";
 import {jwtService} from "./JWT/jwtService";
 import {mapToUserOutput} from "../users/routers/mappers/mapToUserOutput";
 import {BusinessRuleError} from "../core/errors/businessRuleError";
+import {RepositoryNotFoundError} from "../core/errors/repositoryNotFoundError";
 
 
 export async function loginHandler(req: Request, res: Response) {
@@ -27,13 +28,8 @@ export async function loginHandler(req: Request, res: Response) {
     res.status(HttpStatus.Ok).json({ accessToken: token });
 
   }  catch (error) {
-    if (error instanceof BusinessRuleError) {
-      res.status(HttpStatus.BadRequest).json({
-        errorsMessages:
-            error.errors.errorsMessages.length > 0
-                ? error.errors.errorsMessages
-                : [{ message: error.message, field: "" }],
-      });
+    if (error instanceof RepositoryNotFoundError) {
+      res.status(HttpStatus.BadRequest).send("bad request");
     }
     res.status(HttpStatus.InternalServerError).send("Internal Server Error");
   }
