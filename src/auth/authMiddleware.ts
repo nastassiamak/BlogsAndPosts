@@ -1,20 +1,32 @@
 import { Request, Response, NextFunction } from "express";
 import {jwtService} from "./JWT/jwtService";
+import {HttpStatus} from "../core/types/httpStatus";
+import {userService} from "../users/application/userService";
 
-export function authMiddleware(req: Request, res: Response, next: NextFunction) {
-    const authHeader = req.headers.authorization;
-    if (!authHeader?.startsWith('Bearer ')) {
-        res.sendStatus(401)
-        return;
-    };
-
-    const token = authHeader.split(' ')[1];
-    const payload = jwtService.verifyToken(token);
-    if (!payload) {
-       res.sendStatus(401)
+export async function authMiddleware(req: Request, res: Response, next: NextFunction) {
+    if (!req.headers.authorization) {
+        res.send(HttpStatus.Unauthorized)
         return;
     }
 
-    req.user = payload; // нужно расширить тип Request для TypeScript
+    const token = req.headers.authorization.split(' ')[1];
+    if (!token) {
+        res.status(HttpStatus.Unauthorized)
+        return;
+    }
+
+    const userIdFromToken = await jwtService.getUserIdByToken(token);
+    if (!userIdFromToken) {
+        res.status(HttpStatus.Unauthorized)
+        return;
+    }
+
+    const user = await userService.findByIdOrFail(userIdFromToken)
+    if (!user) {
+        res.status(HttpStatus.Unauthorized)
+        return;
+    }
+
+
     next();
 }

@@ -17,7 +17,7 @@ export async function createCommentHandler(
            .json({ errorsMessages: [{ field: 'postId', message: 'PostId is required' }] });
     }
 
-      const user = req.user;
+      const user = req;
       if (!user) {
           res.status(HttpStatus.Unauthorized).json({ message: "Unauthorized" });
       }

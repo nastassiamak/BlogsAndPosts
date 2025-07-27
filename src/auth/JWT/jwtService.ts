@@ -1,15 +1,23 @@
 import jwt from "jsonwebtoken";
 import {SETTINGS} from "../../core/settings/settings";
+import {User} from "../../users/domain/user";
+import {ObjectId} from "mongodb";
+import {UserAttributes} from "../../users/application/dtos/userAttributes";
+import {UserDataOutput} from "../../users/routers/output/userDataOutput";
 import {JwtPayload} from "./JwtPayload";
 
 export const jwtService = {
-    generateToken(payload: JwtPayload) {
-        return jwt.sign(payload, SETTINGS.JWT_SECRET, { expiresIn: "1h" });
+    async generateToken(user: UserDataOutput) {
+        const token =
+            jwt
+                .sign({userId: user.id}, SETTINGS.JWT_SECRET, { expiresIn: "1h" });
+        return token;
     },
 
-    verifyToken(token: string) {
+    async getUserIdByToken(token: string) {
         try {
-            return jwt.verify(token, SETTINGS.JWT_SECRET) as JwtPayload;
+            const result: any = jwt.verify(token, SETTINGS.JWT_SECRET) ;
+            return result.userId;
         } catch (error) {
             return null;
         }

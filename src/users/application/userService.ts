@@ -49,12 +49,29 @@ export const userService = {
     return await bcrypt.hash(password, salt);
   },
 
-  async findByLoginOrEmail(loginOrEmail: string): Promise<WithId<User>> {
+  async findByLoginOrEmail(loginOrEmail: string) {
     const res = await usersRepository.findByLoginOrEmail(loginOrEmail);
     if (!res) {
       throw new RepositoryNotFoundError("User not exists");
     }
     return res;
+  },
+
+  async checkCredentials(
+      loginOrEmail: string,
+      password: string,
+  ): Promise<WithId<User>> {
+    const user = await userService.findByLoginOrEmail(loginOrEmail);
+
+    if (!user) {
+
+    }
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return user;
+    }
+
+    return user;
   },
 
   async findByIdOrFail(id: string): Promise<WithId<User>> {

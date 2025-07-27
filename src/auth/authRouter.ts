@@ -14,10 +14,10 @@ authRouter
       inputValidationResultMiddleware,
       loginHandler,
     )
-    .get(
-        "/me",
-        authMiddleware,
-        authValidator,
-        inputValidationResultMiddleware,
-        meHandler,
-    )
+    // .get(
+    //     "/me",
+    //     authMiddleware,
+    //     authValidator,
+    //     inputValidationResultMiddleware,
+    //     meHandler,
+    // )

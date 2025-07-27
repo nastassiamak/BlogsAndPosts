@@ -3,14 +3,12 @@ import {MeViewModel} from "./me";
 import {HttpStatus} from "../../core/types/httpStatus";
 
 export async function meHandler(req: Request, res: Response) {
-    if (!req.user) {
+    if (!req.userId) {
         res.sendStatus(401);
     }
 
-    const user: MeViewModel = {
-        userId: req.user.userId,
-        login: req.user.login,
-        email: req.user.email,
+    const user = {
+
     };
 
     res.status(HttpStatus.Ok).json(user);
