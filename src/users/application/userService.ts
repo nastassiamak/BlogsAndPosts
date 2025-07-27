@@ -60,18 +60,24 @@ export const userService = {
   async checkCredentials(
       loginOrEmail: string,
       password: string,
-  ): Promise<WithId<User>> {
-    const user = await userService.findByLoginOrEmail(loginOrEmail);
+  ): Promise<WithId<User> | null> {
+    try {
+      const user = await userService.findByLoginOrEmail(loginOrEmail);
 
-    if (!user) {
+      const isMatch = await bcrypt.compare(password, user.password);
+      if (!isMatch) {
+        return null; // пароль неверный
+      }
 
-    }
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
       return user;
+    } catch (error) {
+      if (error instanceof RepositoryNotFoundError) {
+        // Пользователь не найден
+        return null;
+      }
+      // Иные ошибки пробрасываем дальше
+      throw error;
     }
-
-    return user;
   },
 
   async findByIdOrFail(id: string): Promise<WithId<User>> {

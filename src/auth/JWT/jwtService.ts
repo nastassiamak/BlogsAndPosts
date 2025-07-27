@@ -1,10 +1,6 @@
 import jwt from "jsonwebtoken";
 import {SETTINGS} from "../../core/settings/settings";
-import {User} from "../../users/domain/user";
-import {ObjectId} from "mongodb";
-import {UserAttributes} from "../../users/application/dtos/userAttributes";
 import {UserDataOutput} from "../../users/routers/output/userDataOutput";
-import {JwtPayload} from "./JwtPayload";
 
 export const jwtService = {
     async generateToken(user: UserDataOutput) {
