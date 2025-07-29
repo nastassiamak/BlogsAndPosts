@@ -21,12 +21,13 @@ export async function authMiddleware(req: Request, res: Response, next: NextFunc
         return;
     }
 
-    const user = await userService.findByIdOrFail(userIdFromToken)
-    if (!user) {
-        res.status(HttpStatus.Unauthorized)
-        return;
-    }
-
+    // const user = await userService.findByIdOrFail(userIdFromToken)
+    // if (!user) {
+    //     res.status(HttpStatus.Unauthorized)
+    //     return;
+    // }
+    const user = await userService.findByIdOrFail(userIdFromToken);
+    req.user = user;
 
     next();
 }
