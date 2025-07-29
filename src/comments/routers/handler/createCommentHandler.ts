@@ -29,7 +29,10 @@ export async function createCommentHandler(
 
     const commentInput = {
       content,
-    commentatorInfo,
+      commentatorInfo: {
+        userId: user._id.toString(),
+        userLogin: user.login
+      }
 
     };
 
