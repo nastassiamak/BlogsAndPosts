@@ -25,7 +25,11 @@ export async function createCommentHandler(
 
     const { content, commentatorInfo } = req.body as CommentAttributes;
 
-    await postService.findByIdOrFail(postId);
+    const post = await postService.findByIdOrFail(postId);
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
 
     const commentInput = {
       content,
@@ -39,9 +43,15 @@ export async function createCommentHandler(
     const createdCommentId = await commentService.create(commentInput);
     const createdComment = await commentService.findByIdOrFail(createdCommentId);
 
-    const commentOutput = mapToCommentOutput(createdComment);
+    const commentOutput = {
+      id: createdComment._id.toString(),
+      content: createdComment.content,
+      commentatorInfo: createdComment.commentatorInfo,
+      createdAt: createdComment.createdAt.toString(),
+    };
 
-     res.status(HttpStatus.Created).send(commentOutput);
+
+    res.status(HttpStatus.Created).send(commentOutput);
   } catch (error) {
     console.error("Error in createCommentHandler:", error);
     if (error instanceof RepositoryNotFoundError) {
