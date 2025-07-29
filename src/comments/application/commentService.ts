@@ -20,8 +20,8 @@ export const commentService = {
     return commentsRepository.findByIdOrFail(id);
   },
 
-  async create(postId: string, dto: CommentAttributes) {
-    const post = await postService.findByIdOrFail(postId);
+  async create( dto: CommentAttributes) {
+    //const post = await postService.findByIdOrFail(postId);
     const userId =
         await userService.findByIdOrFail(dto.commentatorInfo.userId);
     const newComment: Comments = {
@@ -30,7 +30,7 @@ export const commentService = {
         userId: userId._id.toString(),
         userLogin: userId.login,
       },
-      postId,
+      //postId,
       createdAt: new Date().toString(),
     };
     return await commentsRepository.createComment(newComment);
