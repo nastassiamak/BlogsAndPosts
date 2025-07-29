@@ -12,7 +12,8 @@ export async function createCommentHandler(
   try {
     const user = req.user;  // должен быть установлен в authMiddleware
     if (!user) {
-      return res.status(401).json({ message: "Unauthorized" });
+      res.status(401).json({ message: "Unauthorized" })
+      return;
     }
 
     const postId = req.params.postId;
