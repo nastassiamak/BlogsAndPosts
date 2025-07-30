@@ -14,7 +14,6 @@ commentRouter
   .put(
     "/:id",
     authMiddleware,
-    //commentIdParamValidator,
       idValidation,
     commentUpdateInputValidation,
     inputValidationResultMiddleware,
@@ -23,7 +22,7 @@ commentRouter
   .delete(
     "/:id",
     authMiddleware,
-    commentIdParamValidator,
+    idValidation,
     inputValidationResultMiddleware,
     deleteCommentHandler,
   );
