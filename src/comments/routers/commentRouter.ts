@@ -14,7 +14,8 @@ commentRouter
   .put(
     "/:id",
     authMiddleware,
-    commentIdParamValidator,
+    //commentIdParamValidator,
+      idValidation,
     commentUpdateInputValidation,
     inputValidationResultMiddleware,
     updateCommentHandler,
