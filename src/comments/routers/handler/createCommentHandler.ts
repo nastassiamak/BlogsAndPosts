@@ -23,11 +23,13 @@ export async function createCommentHandler(
            .json({ errorsMessages: [{ field: 'postId', message: 'PostId is required' }] });
     }
 
-    const { content, commentatorInfo } = req.body as CommentAttributes;
+    const { content, commentatorInfo, createdAt} = req.body as CommentAttributes;
 
     const post = await postService.findByIdOrFail(postId);
     if (!post) {
-      return res.status(404).json({ message: "Post not found" });
+       res.status(404).json({ message: "Post not found" });
+
+      return;
     }
 
 
@@ -36,8 +38,8 @@ export async function createCommentHandler(
       commentatorInfo: {
         userId: user._id.toString(),
         userLogin: user.login
-      }
-
+      },
+      createdAt
     };
 
     const createdCommentId = await commentService.create(commentInput);

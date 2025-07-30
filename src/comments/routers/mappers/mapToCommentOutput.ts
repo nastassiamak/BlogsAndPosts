@@ -12,6 +12,7 @@ export function mapToCommentOutput(
       userId: comment.commentatorInfo.userId,
       userLogin: comment.commentatorInfo.userLogin,
     },
-    createdAt: comment.createdAt.toString(),
+    createdAt: comment.createdAt
+
   };
 }
