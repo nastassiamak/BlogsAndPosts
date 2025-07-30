@@ -39,7 +39,7 @@ export async function createCommentHandler(
         userId: user._id.toString(),
         userLogin: user.login
       },
-      createdAt
+      createdAt: new Date().toISOString(),
     };
 
     const createdCommentId = await commentService.create(commentInput);
