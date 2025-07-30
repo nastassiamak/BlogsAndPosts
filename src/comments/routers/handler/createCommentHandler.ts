@@ -49,7 +49,7 @@ export async function createCommentHandler(
       id: createdComment._id.toString(),
       content: createdComment.content,
       commentatorInfo: createdComment.commentatorInfo,
-      createdAt: createdComment.createdAt.toString(),
+      createdAt: new Date(createdComment.createdAt).toISOString(),
     };
 
 
