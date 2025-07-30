@@ -9,6 +9,10 @@ export async function deleteCommentHandler(
 ): Promise<void> {
   try {
     const id = req.params.id;
+    const comment = await commentService.findByIdOrFail(id);
+    if (!comment) {
+      res.status(HttpStatus.NotFound).json({ error: "Could not find a comment" });
+    }
     await commentService.delete(id);
 
     res.sendStatus(HttpStatus.NoContent);

@@ -11,6 +11,9 @@ export async function getCommentHandler(
   try {
     const id = req.params.id;
     const comment = await commentService.findByIdOrFail(id);
+    if (!comment) {
+      res.status(HttpStatus.NotFound).json({ error: "Could not find comment" });
+    }
     const commentOutput = mapToCommentOutput(comment);
 
     res.status(HttpStatus.Ok).json(commentOutput);
