@@ -3,7 +3,7 @@ import { CommentDataOutput } from "../output/commentDataOutput";
 import { Comments } from "../../domain/comment";
 
 export function mapToCommentOutput(
-  comment: WithId<Comments>,
+    comment: WithId<Comments>,
 ): CommentDataOutput {
   return {
     id: comment._id.toString(),
@@ -12,7 +12,6 @@ export function mapToCommentOutput(
       userId: comment.commentatorInfo.userId,
       userLogin: comment.commentatorInfo.userLogin,
     },
-    createdAt: comment.createdAt
-
+    createdAt: new Date(comment.createdAt).toISOString(),
   };
 }
