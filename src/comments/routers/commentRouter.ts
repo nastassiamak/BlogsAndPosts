@@ -10,9 +10,9 @@ import {authMiddleware} from "../../auth/authMiddleware";
 export const commentRouter = Router({});
 
 commentRouter
-  .get("/:commentId", idValidation, inputValidationResultMiddleware, getCommentHandler)
+  .get("/:id", idValidation, inputValidationResultMiddleware, getCommentHandler)
   .put(
-    "/:commentId",
+    "/:id",
     authMiddleware,
     commentIdParamValidator,
     commentUpdateInputValidation,
@@ -20,7 +20,7 @@ commentRouter
     updateCommentHandler,
   )
   .delete(
-    "/:commentId",
+    "/:id",
     authMiddleware,
     commentIdParamValidator,
     inputValidationResultMiddleware,
