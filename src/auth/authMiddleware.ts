@@ -5,7 +5,7 @@ import {userService} from "../users/application/userService";
 
 export async function authMiddleware(req: Request, res: Response, next: NextFunction) {
     if (!req.headers.authorization) {
-        res.send(HttpStatus.Unauthorized)
+        res.status(401).json({ message: "Unauthorized" });
         return;
     }
 

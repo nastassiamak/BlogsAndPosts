@@ -18,7 +18,7 @@ export async function getCommentListHandler(
   try {
     const postId = req.params.id;
     if (!postId) {
-      res.status(HttpStatus.BadRequest).json({
+      res.status(HttpStatus.NotFound).json({
         errorsMessages: [{ field: "postId", message: "postId is required" }],
       });
       return;
