@@ -7,6 +7,7 @@ import { commentService } from "../../application/commentService";
 import { mapToCommentListPaginatedOutput } from "../mappers/mapToCommentListPaginatedOutput";
 import { HttpStatus } from "../../../core/types/httpStatus";
 import { BusinessRuleError } from "../../../core/errors/businessRuleError";
+import {postService} from "../../../posts/application/postService";
 
 export async function getCommentListHandler(
   req: Request<{id: string}, {}, {}, ParsedQs>,
@@ -16,6 +17,18 @@ export async function getCommentListHandler(
   console.log("Вызван getCommentListHandler", req.query);
   try {
     const postId = req.params.id;
+    if (!postId) {
+      res.status(HttpStatus.BadRequest).json({
+        errorsMessages: [{ field: "postId", message: "postId is required" }],
+      });
+      return;
+    }
+    const post = await postService.findByIdOrFail(postId);
+    if (!post) {
+        res.status(HttpStatus.NotFound).json({ message: "Post not found" });
+        return;
+    }
+
     const queryInput = {
       pageNumber: Number(req.query.pageNumber) || 1,
       pageSize: Number(req.query.pageSize) || 10,
