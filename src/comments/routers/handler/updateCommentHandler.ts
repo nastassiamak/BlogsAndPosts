@@ -16,19 +16,21 @@ export async function updateCommentHandler(
     const comment = await commentService
         .findByIdOrFail(id);
 
-    if (!comment) {
-      res.status(HttpStatus.NotFound).json({ message: "Comment not found" })
-      return;
-    }
+    // if (!comment) {
+    //   res.status(HttpStatus.NotFound).json({ message: "Comment not found" })
+    //   return;
+    // }
     await commentService.update(id, updateData);
-    res.status(HttpStatus.NoContent);
+    res.sendStatus(HttpStatus.NoContent);
   } catch (error) {
     if (error instanceof RepositoryNotFoundError) {
       res.status(HttpStatus.NotFound).send({ message: "Comment not found" });
+      return;
     } else {
       res
         .status(HttpStatus.InternalServerError)
         .send({ message: "Internal Server Error" });
+      return;
     }
   }
 }
