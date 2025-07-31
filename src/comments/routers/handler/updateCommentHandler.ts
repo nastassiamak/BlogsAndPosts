@@ -1,7 +1,6 @@
 import { CommentUpdateInput } from "../input/commentUpdateInput";
 import { Request, Response } from "express";
 import { commentService } from "../../application/commentService";
-import { CommentAttributes } from "../../application/dto/commentAttributes";
 import { HttpStatus } from "../../../core/types/httpStatus";
 import { RepositoryNotFoundError } from "../../../core/errors/repositoryNotFoundError";
 
@@ -10,11 +9,16 @@ export async function updateCommentHandler(
   res: Response,
 ) {
   try {
+    const user = req.user!;
     const id = req.params.id;
     const updateData = req.body;
 
     const comment = await commentService
         .findByIdOrFail(id);
+
+    if (comment.commentatorInfo.userId !== user._id.toString()) {
+      return res.status(403).json({ message: "Forbidden" });
+    }
 
     // if (!comment) {
     //   res.status(HttpStatus.NotFound).json({ message: "Comment not found" })
