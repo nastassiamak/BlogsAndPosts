@@ -11,16 +11,17 @@ export async function updateCommentHandler(
 ) {
   try {
     const id = req.params.id;
-    const updateData: CommentAttributes = {} as CommentAttributes;
+    const updateData = req.body;
 
     const comment = await commentService
         .findByIdOrFail(id);
 
     if (!comment) {
       res.status(HttpStatus.NotFound).json({ message: "Comment not found" })
+      return;
     }
     await commentService.update(id, updateData);
-    res.status(HttpStatus.NoContent).json(updateData);
+    res.status(HttpStatus.NoContent);
   } catch (error) {
     if (error instanceof RepositoryNotFoundError) {
       res.status(HttpStatus.NotFound).send({ message: "Comment not found" });

@@ -8,6 +8,7 @@ import { CommentAttributes } from "./dto/commentAttributes";
 import { postService } from "../../posts/application/postService";
 import { userService } from "../../users/application/userService";
 import {RepositoryNotFoundError} from "../../core/errors/repositoryNotFoundError";
+import {CommentUpdateInput} from "../routers/input/commentUpdateInput";
 
 export const commentService = {
   async findMany(
@@ -36,7 +37,7 @@ export const commentService = {
     return await commentsRepository.createComment(newComment);
   },
 
-  async update(id: string, dto: CommentAttributes): Promise<void> {
+  async update(id: string, dto: CommentUpdateInput): Promise<void> {
     return await commentsRepository.updateComment(id, dto);
   },
 

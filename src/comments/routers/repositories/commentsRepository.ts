@@ -7,6 +7,7 @@ import { ObjectId, WithId } from "mongodb";
 import { RepositoryNotFoundError } from "../../../core/errors/repositoryNotFoundError";
 import { Comments } from "../../domain/comment";
 import { CommentAttributes } from "../../application/dto/commentAttributes";
+import {CommentUpdateInput} from "../input/commentUpdateInput";
 
 export const commentsRepository = {
   async findMany(
@@ -52,7 +53,7 @@ export const commentsRepository = {
     return res;
   },
 
-  async updateComment(id: string, dto: CommentAttributes): Promise<void> {
+  async updateComment(id: string, dto: CommentUpdateInput): Promise<void> {
     const updateResult = await commentCollection.updateOne(
       {
         _id: new ObjectId(id),
