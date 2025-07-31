@@ -16,10 +16,10 @@ export async function updateCommentHandler(
     const comment = await commentService
         .findByIdOrFail(id);
 
-    if (comment.commentatorInfo.userId !== user._id.toString()) {
-      res.status(HttpStatus.Forbidden).json({ message: "Forbidden" });
-      return;
-    }
+    // if (comment.commentatorInfo.userId !== user._id.toString()) {
+    //   res.status(HttpStatus.Forbidden).json({ message: "Forbidden" });
+    //   return;
+    // }
 
     // if (!comment) {
     //   res.status(HttpStatus.NotFound).json({ message: "Comment not found" })
