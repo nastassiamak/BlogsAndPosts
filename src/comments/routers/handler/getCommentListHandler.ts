@@ -19,20 +19,23 @@ export async function getCommentListHandler(
       pageSize: Number(req.query.pageSize) || 10,
       sortBy: (req.query.sortBy as CommentSortField) || "createdAt",
       sortDirection:
-        req.query.sortDirection === "asc"
-          ? SortDirection.Asc
-          : SortDirection.Desc,
+        req.query.sortDirection === "desc"
+          ? SortDirection.Desc
+          : SortDirection.Asc,
     };
 
     // При необходимости установите дефолты
-    const queryWithDefaults = setDefaultSortAndPaginationIfNotExist(queryInput);
+    const queryWithDefaults =
+        setDefaultSortAndPaginationIfNotExist(queryInput);
 
-    const paginatedComment = await commentService.findMany(queryWithDefaults);
+    const paginatedComment =
+        await commentService.findMany(queryWithDefaults);
 
     const pagesCount = Math.ceil(
       paginatedComment.totalCount / queryWithDefaults.pageSize,
     );
-    const responsePayload = mapToCommentListPaginatedOutput(
+    const responsePayload =
+        mapToCommentListPaginatedOutput(
       pagesCount,
       queryWithDefaults.pageNumber,
       queryWithDefaults.pageSize,
