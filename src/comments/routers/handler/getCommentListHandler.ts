@@ -9,11 +9,13 @@ import { HttpStatus } from "../../../core/types/httpStatus";
 import { BusinessRuleError } from "../../../core/errors/businessRuleError";
 
 export async function getCommentListHandler(
-  req: Request<{}, {}, {}, ParsedQs>,
+  req: Request<{id: string}, {}, {}, ParsedQs>,
   res: Response,
 ) {
+
   console.log("Вызван getCommentListHandler", req.query);
   try {
+    const postId = req.params.id;
     const queryInput = {
       pageNumber: Number(req.query.pageNumber) || 1,
       pageSize: Number(req.query.pageSize) || 10,
@@ -22,6 +24,7 @@ export async function getCommentListHandler(
         req.query.sortDirection === "desc"
           ? SortDirection.Desc
           : SortDirection.Asc,
+      postId
     };
 
     // При необходимости установите дефолты
