@@ -14,13 +14,17 @@ export async function getCommentListHandler(
   res: Response,
 ) {
 
-  console.log("Вызван getCommentListHandler", req.query);
-  try {
   const postId = req.params.postId;
+
   if (!postId) {
-    res.status(HttpStatus.NotFound);
+    res.status(400).json({
+      errorsMessages: [{ field: "postId", message: "postId is required" }]
+    });
     return;
   }
+  console.log("Вызван getCommentListHandler", req.query);
+  try {
+
     const queryInput = {
       pageNumber: Number(req.query.pageNumber) || 1,
       pageSize: Number(req.query.pageSize) || 10,
@@ -36,7 +40,7 @@ export async function getCommentListHandler(
         setDefaultSortAndPaginationIfNotExist(queryInput);
 
     const paginatedComment =
-        await commentService.findMany(postId, queryWithDefaults);
+        await commentService.findMany(queryWithDefaults);
 
     const pagesCount = Math.ceil(
       paginatedComment.totalCount / queryWithDefaults.pageSize,

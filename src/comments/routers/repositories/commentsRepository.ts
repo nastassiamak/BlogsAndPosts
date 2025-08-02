@@ -11,7 +11,6 @@ import {CommentUpdateInput} from "../input/commentUpdateInput";
 
 export const commentsRepository = {
   async findMany(
-      postId: string,
     queryDto: CommentQueryInput,
   ): Promise<CommentListPaginatedOutput> {
     console.log("commentsRepository.findMany started with queryDto:", queryDto);
@@ -23,7 +22,7 @@ export const commentsRepository = {
     } = queryDto;
 
     const skip = (pageNumber - 1) * pageSize;
-    const filter: any = {postId};
+    const filter: any = {};
     const direction = sortDirection === "asc" ? 1 : -1;
 
     const totalCount = await commentCollection.countDocuments(filter);
