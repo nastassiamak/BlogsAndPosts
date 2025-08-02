@@ -10,21 +10,25 @@ import { BusinessRuleError } from "../../../core/errors/businessRuleError";
 import {postService} from "../../../posts/application/postService";
 
 export async function getCommentListHandler(
-  req: Request<{}, {}, {}, ParsedQs>,
+  req: Request<{postId: string}, {}, {}, ParsedQs>,
   res: Response,
 ) {
 
   console.log("Вызван getCommentListHandler", req.query);
   try {
-
+  const postId = req.params.postId;
+  if (!postId) {
+    res.status(HttpStatus.NotFound);
+    return;
+  }
     const queryInput = {
       pageNumber: Number(req.query.pageNumber) || 1,
       pageSize: Number(req.query.pageSize) || 10,
       sortBy: (req.query.sortBy as CommentSortField) || "createdAt",
       sortDirection:
-        req.query.sortDirection === "desc"
-          ? SortDirection.Desc
-          : SortDirection.Asc,
+        req.query.sortDirection === "asc"
+          ? SortDirection.Asc
+          : SortDirection.Desc,
     };
 
     // При необходимости установите дефолты
@@ -32,7 +36,7 @@ export async function getCommentListHandler(
         setDefaultSortAndPaginationIfNotExist(queryInput);
 
     const paginatedComment =
-        await commentService.findMany(queryWithDefaults);
+        await commentService.findMany(postId, queryWithDefaults);
 
     const pagesCount = Math.ceil(
       paginatedComment.totalCount / queryWithDefaults.pageSize,
