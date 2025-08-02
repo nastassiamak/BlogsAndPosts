@@ -10,24 +10,12 @@ import { BusinessRuleError } from "../../../core/errors/businessRuleError";
 import {postService} from "../../../posts/application/postService";
 
 export async function getCommentListHandler(
-  req: Request<{id: string}, {}, {}, ParsedQs>,
+  req: Request<{}, {}, {}, ParsedQs>,
   res: Response,
 ) {
 
   console.log("Вызван getCommentListHandler", req.query);
   try {
-    const postId = req.params.id;
-    if (!postId) {
-      res.status(HttpStatus.NotFound).json({
-        errorsMessages: [{ field: "postId", message: "postId is required" }],
-      });
-      return;
-    }
-    const post = await postService.findByIdOrFail(postId);
-    if (!post) {
-        res.status(HttpStatus.NotFound).json({ message: "Post not found" });
-        return;
-    }
 
     const queryInput = {
       pageNumber: Number(req.query.pageNumber) || 1,
@@ -37,7 +25,6 @@ export async function getCommentListHandler(
         req.query.sortDirection === "desc"
           ? SortDirection.Desc
           : SortDirection.Asc,
-      postId
     };
 
     // При необходимости установите дефолты
