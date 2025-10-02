@@ -13,6 +13,7 @@ export async function getCommentHandler(
     const comment = await commentService.findByIdOrFail(id);
     if (!comment) {
       res.status(HttpStatus.NotFound).json({ error: "Could not find comment" });
+      return;
     }
     const commentOutput = mapToCommentOutput(comment);
 
