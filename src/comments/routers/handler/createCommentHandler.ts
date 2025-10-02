@@ -42,7 +42,7 @@ export async function createCommentHandler(
       createdAt: new Date().toISOString(),
     };
 
-    const createdCommentId = await commentService.create(commentInput);
+    const createdCommentId = await commentService.create(postId, commentInput);
     const createdComment = await commentService.findByIdOrFail(createdCommentId);
 
     const commentOutput = {

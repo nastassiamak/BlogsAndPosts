@@ -22,11 +22,12 @@ export const commentService = {
     return commentsRepository.findByIdOrFail(id);
   },
 
-  async create( dto: CommentAttributes) {
+  async create( postId: string, dto: CommentAttributes) {
     //const post = await postService.findByIdOrFail(postId);
     const userId =
         await userService.findByIdOrFail(dto.commentatorInfo.userId);
     const newComment: Comments = {
+      postId,
       content: dto.content,
       commentatorInfo: {
         userId: userId._id.toString(),
