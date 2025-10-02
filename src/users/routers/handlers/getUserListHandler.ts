@@ -13,6 +13,7 @@ export async function getUserListHandler(
   req: Request<{}, {}, {}, ParsedQs>,
   res: Response,
 ) {
+
   console.log("Вызван getUserListHandler", req.query);
   try {
     // Парсим параметры из query и задаём дефолты
