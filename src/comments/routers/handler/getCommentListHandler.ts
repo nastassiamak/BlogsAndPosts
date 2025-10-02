@@ -57,11 +57,13 @@ export async function getCommentListHandler(
     console.log("Ответ API: ", responsePayload);
 
     res.status(HttpStatus.Ok).send(responsePayload);
+    return;
   } catch (error) {
     if (error instanceof BusinessRuleError) {
       res
         .status(HttpStatus.BadRequest)
         .json({ errorsMessages: error.errors.errorsMessages });
     }
+    return;
   }
 }
