@@ -23,7 +23,7 @@ export const commentsRepository = {
     } = queryDto;
 
     const skip = (pageNumber - 1) * pageSize;
-    const filter: any = {postId};
+    const filter: any = {postId: postId };
     const direction = sortDirection === "asc" ? 1 : -1;
 
     const totalCount = await commentCollection.countDocuments(filter);
