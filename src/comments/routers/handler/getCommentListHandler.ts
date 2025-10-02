@@ -40,7 +40,7 @@ export async function getCommentListHandler(
         setDefaultSortAndPaginationIfNotExist(queryInput);
 
     const paginatedComment =
-        await commentService.findMany(queryWithDefaults);
+        await commentService.findMany(postId,queryWithDefaults);
 
     const pagesCount = Math.ceil(
       paginatedComment.totalCount / queryWithDefaults.pageSize,
