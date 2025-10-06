@@ -21,14 +21,14 @@ export async function createCommentHandler(
        res
            .status(HttpStatus.BadRequest)
            .json({ errorsMessages: [{ field: 'postId', message: 'PostId is required' }] });
+       return;
     }
 
-    const { content, commentatorInfo, createdAt} = req.body as CommentAttributes;
+    const { content} = req.body as CommentAttributes;
 
     const post = await postService.findByIdOrFail(postId);
     if (!post) {
        res.status(404).json({ message: "Post not found" });
-
       return;
     }
 
