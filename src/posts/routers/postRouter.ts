@@ -31,7 +31,8 @@ postsRouter
     getPostListHandler,
   )
   .get("/:id", idValidation, inputValidationResultMiddleware, getPostHandler)
-  .get(
+
+    .get(
     "/:postId/comments",
     postIdParamValidator,
     commentsPaginationValidation,

@@ -3,7 +3,7 @@ import { HttpStatus } from "../../../core/types/httpStatus";
 import { mapToBlogOutput } from "../mappers/mapToBlogOutput";
 import { BlogCreateInput } from "../input/blogCreateInput";
 import { blogService } from "../../application/blogService";
-import { getPostListHandler } from "../../../posts/routers/handlers/getPostListHandler";
+
 
 export async function createBlogHandler(
   req: Request<{}, {}, BlogCreateInput>,
