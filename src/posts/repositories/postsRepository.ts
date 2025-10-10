@@ -29,7 +29,7 @@ export const postsRepository = {
 
     const rawItems = await postCollection
       .find(filter)
-      .sort({ [sortBy]: direction, _id: -1 })
+      .sort({ [sortBy]: direction, _id: 1 })
       .skip(skip)
       .limit(pageSize)
       .toArray();
