@@ -7,6 +7,7 @@ export function mapToCommentOutput(
 ): CommentDataOutput {
   return {
     id: comment._id.toString(),
+    postId: comment.postId,
     content: comment.content,
     commentatorInfo: {
       userId: comment.commentatorInfo.userId,

@@ -12,10 +12,9 @@ import {CommentUpdateInput} from "../routers/input/commentUpdateInput";
 
 export const commentService = {
   async findMany(
-      postId: string,
     queryDto: CommentQueryInput,
   ): Promise<CommentListPaginatedOutput> {
-    return await commentsRepository.findMany(postId,queryDto);
+    return await commentsRepository.findMany(queryDto);
   },
 
   async findByIdOrFail(id: string): Promise<WithId<Comments>> {
@@ -23,17 +22,16 @@ export const commentService = {
   },
 
   async create( postId: string, dto: CommentAttributes) {
-    //const post = await postService.findByIdOrFail(postId);
+   // const post = await postService.findByIdOrFail(postId);
     const userId =
         await userService.findByIdOrFail(dto.commentatorInfo.userId);
     const newComment: Comments = {
-      postId,
+      postId: postId,
       content: dto.content,
       commentatorInfo: {
         userId: userId._id.toString(),
         userLogin: userId.login,
       },
-      //postId,
       createdAt: new Date().toString(),
     };
     return await commentsRepository.createComment(newComment);

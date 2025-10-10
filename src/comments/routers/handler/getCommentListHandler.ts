@@ -10,18 +10,18 @@ import { BusinessRuleError } from "../../../core/errors/businessRuleError";
 import {postService} from "../../../posts/application/postService";
 
 export async function getCommentListHandler(
-  req: Request<{postId: string}, {}, {}, ParsedQs>,
+  req: Request<{}, {}, {}, ParsedQs>,
   res: Response,
 ) {
 
-  const postId = req.params.postId;
+  //const postId = req.params.postId;
 
-  if (!postId) {
-    res.status(400).json({
-      errorsMessages: [{ field: "postId", message: "postId is required" }]
-    });
-    return;
-  }
+  // if (!postId) {
+  //   res.status(400).json({
+  //     errorsMessages: [{ field: "postId", message: "postId is required" }]
+  //   });
+  //   return;
+  // }
   console.log("Вызван getCommentListHandler", req.query);
   try {
 
@@ -40,7 +40,7 @@ export async function getCommentListHandler(
         setDefaultSortAndPaginationIfNotExist(queryInput);
 
     const paginatedComment =
-        await commentService.findMany(postId,queryWithDefaults);
+        await commentService.findMany(queryWithDefaults);
 
     const pagesCount = Math.ceil(
       paginatedComment.totalCount / queryWithDefaults.pageSize,

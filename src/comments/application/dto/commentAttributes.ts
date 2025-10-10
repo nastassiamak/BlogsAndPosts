@@ -1,6 +1,6 @@
 
 export type CommentAttributes = {
-  //postId: string;
+  postId?: string;
   content: string;
   commentatorInfo: {
     userId: string;
