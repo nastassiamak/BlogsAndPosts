@@ -26,14 +26,9 @@ export async function createCommentHandler(
 
     const { content} = req.body as CommentAttributes;
 
-    const post = await postService.findByIdOrFail(postId);
-    if (!post) {
-       res.status(404).json({ message: "Post not found" });
-      return;
-    }
-
 
     const commentInput = {
+     // postId: post,
       content,
       commentatorInfo: {
         userId: user._id.toString(),
@@ -47,6 +42,7 @@ export async function createCommentHandler(
 
     const commentOutput = {
       id: createdComment._id.toString(),
+      postId: postId,
       content: createdComment.content,
       commentatorInfo: createdComment.commentatorInfo,
       createdAt: new Date(createdComment.createdAt).toISOString(),
