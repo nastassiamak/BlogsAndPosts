@@ -30,7 +30,7 @@ export const commentsRepository = {
     const pagesCount = Math.ceil(totalCount / pageSize);
     const rawItems = await commentCollection
       .find(filter)
-      .sort({ [sortBy]: direction, _id: 1 })
+      .sort({ [sortBy]: direction})
       .skip(skip)
       .limit(pageSize)
       .toArray();
