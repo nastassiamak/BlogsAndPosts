@@ -26,12 +26,12 @@ export const commentService = {
     const userId =
         await userService.findByIdOrFail(dto.commentatorInfo.userId);
     const newComment: Comments = {
-      postId: postId,
       content: dto.content,
       commentatorInfo: {
         userId: userId._id.toString(),
         userLogin: userId.login,
       },
+      postId: postId,
       createdAt: new Date().toString(),
     };
     return await commentsRepository.createComment(newComment);

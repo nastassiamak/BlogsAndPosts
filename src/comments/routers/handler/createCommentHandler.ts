@@ -1,38 +1,35 @@
 import { Request, Response } from "express";
-import { CommentCreateInput } from "../input/commentCreateInput";
-import { postService } from "../../../posts/application/postService";
-import { mapToCommentOutput } from "../mappers/mapToCommentOutput";
 import { commentService } from "../../application/commentService";
 import { HttpStatus } from "../../../core/types/httpStatus";
 import { RepositoryNotFoundError } from "../../../core/errors/repositoryNotFoundError";
 import {CommentAttributes} from "../../application/dto/commentAttributes";
-
-export async function createCommentHandler(
-    req: Request, res: Response){
+import {postService} from "../../../posts/application/postService";
+export async function createCommentHandler(req: Request, res: Response) {
   try {
-    const user = req.user;  // должен быть установлен в authMiddleware
+    const user = req.user;
     if (!user) {
-      res.status(401).json({ message: "Unauthorized" })
-      return;
+      return res.status(401).json({ message: "Unauthorized" });
     }
 
     const postId = req.params.postId;
     if (!postId) {
-       res
-           .status(HttpStatus.BadRequest)
-           .json({ errorsMessages: [{ field: 'postId', message: 'PostId is required' }] });
-       return;
+      return res.status(HttpStatus.BadRequest).json({
+        errorsMessages: [{ field: 'postId', message: 'PostId is required' }]
+      });
     }
 
-    const { content} = req.body as CommentAttributes;
+    const postExists = await postService.findByIdOrFail(postId);
+    if (!postExists) {
+      return res.status(HttpStatus.NotFound).json({ message: "Post not found" });
+    }
 
+    const { content } = req.body as CommentAttributes;
 
     const commentInput = {
-     // postId: post,
       content,
       commentatorInfo: {
         userId: user._id.toString(),
-        userLogin: user.login
+        userLogin: user.login,
       },
       createdAt: new Date().toISOString(),
     };
@@ -48,13 +45,12 @@ export async function createCommentHandler(
       createdAt: new Date(createdComment.createdAt).toISOString(),
     };
 
-
-    res.status(HttpStatus.Created).send(commentOutput);
+    return res.status(HttpStatus.Created).send(commentOutput);
   } catch (error) {
     console.error("Error in createCommentHandler:", error);
     if (error instanceof RepositoryNotFoundError) {
-      res.status(HttpStatus.NotFound).send({ message: "PostId Not Found" });
+      return res.status(HttpStatus.NotFound).send({ message: "PostId Not Found" });
     }
-    res.status(HttpStatus.InternalServerError).send({ message: "Internal Server Error" });
+    return res.status(HttpStatus.InternalServerError).send({ message: "Internal Server Error" });
   }
 }

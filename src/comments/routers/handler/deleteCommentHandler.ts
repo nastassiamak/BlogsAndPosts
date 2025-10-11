@@ -8,10 +8,22 @@ export async function deleteCommentHandler(
   res: Response,
 ): Promise<void> {
   try {
+    const user = req.user;
+    if (!user) {
+      res.status(HttpStatus.Unauthorized).json({ message: "Unauthorized" });
+      return
+    }
+
     const id = req.params.id;
     const comment = await commentService.findByIdOrFail(id);
     if (!comment) {
       res.status(HttpStatus.NotFound).json({ error: "Could not find a comment" });
+      return;
+    }
+
+    if (comment.commentatorInfo.userId !== user._id.toString()) {
+       res.status(HttpStatus.Forbidden).json({ message: "Forbidden" });
+       return;
     }
     await commentService.delete(id);
 
@@ -19,10 +31,12 @@ export async function deleteCommentHandler(
   } catch (error) {
     if (error instanceof RepositoryNotFoundError) {
       res.status(HttpStatus.NotFound).send({ message: "Comment not found" });
+      return;
     } else {
       res
         .status(HttpStatus.InternalServerError)
         .send({ message: "Internal Server Error" });
     }
+    return
   }
 }

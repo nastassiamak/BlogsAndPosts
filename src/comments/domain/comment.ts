@@ -4,8 +4,8 @@ export type CommentatorInfo = {
 };
 
 export type Comments = {
-  postId: string;
   content: string;
   commentatorInfo: CommentatorInfo;
+  postId: string;
   createdAt: string;
 };
