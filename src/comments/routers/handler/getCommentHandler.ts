@@ -20,9 +20,9 @@ export async function getCommentHandler(
     res.status(HttpStatus.Ok).json(commentOutput);
   } catch (error) {
     if (error instanceof RepositoryNotFoundError) {
-      res.status(HttpStatus.NotFound).send({ message: "Comment not found" });
+       return res.status(HttpStatus.NotFound).send({ message: "Comment not found" });
     } else {
-      res
+      return res
         .status(HttpStatus.InternalServerError)
         .send({ message: "Internal Server Error" });
     }

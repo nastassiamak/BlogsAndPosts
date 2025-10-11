@@ -18,7 +18,7 @@ export const commentsRepository = {
       pageNumber = 1,
       pageSize = 10,
       sortBy = "createdAt",
-      sortDirection = "asc",
+      sortDirection = "desc",
     } = queryDto;
 
     const skip = (pageNumber - 1) * pageSize;
@@ -29,7 +29,7 @@ export const commentsRepository = {
     const pagesCount = Math.ceil(totalCount / pageSize);
     const rawItems = await commentCollection
       .find(filter)
-      .sort({ [sortBy]: direction, id: 1 })
+      .sort({ [sortBy]: direction, _id: 1 })
       .skip(skip)
       .limit(pageSize)
       .toArray();

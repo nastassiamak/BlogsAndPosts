@@ -7,7 +7,7 @@ import { commentService } from "../../application/commentService";
 import { mapToCommentListPaginatedOutput } from "../mappers/mapToCommentListPaginatedOutput";
 import { HttpStatus } from "../../../core/types/httpStatus";
 import { BusinessRuleError } from "../../../core/errors/businessRuleError";
-import {postService} from "../../../posts/application/postService";
+
 
 export async function getCommentListHandler(
   req: Request<{}, {}, {}, ParsedQs>,
