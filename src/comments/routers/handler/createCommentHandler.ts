@@ -4,7 +4,10 @@ import { HttpStatus } from "../../../core/types/httpStatus";
 import { RepositoryNotFoundError } from "../../../core/errors/repositoryNotFoundError";
 import {CommentAttributes} from "../../application/dto/commentAttributes";
 import {postService} from "../../../posts/application/postService";
-export async function createCommentHandler(req: Request, res: Response) {
+
+export async function createCommentHandler(
+    req: Request<{postId: string}>,
+    res: Response) {
   try {
     const user = req.user;
     if (!user) {
@@ -31,6 +34,7 @@ export async function createCommentHandler(req: Request, res: Response) {
         userId: user._id.toString(),
         userLogin: user.login,
       },
+      postId: postId,
       createdAt: new Date().toISOString(),
     };
 
@@ -39,9 +43,9 @@ export async function createCommentHandler(req: Request, res: Response) {
 
     const commentOutput = {
       id: createdComment._id.toString(),
-      postId: postId,
       content: createdComment.content,
       commentatorInfo: createdComment.commentatorInfo,
+      postId: postId,
       createdAt: new Date(createdComment.createdAt).toISOString(),
     };
 
