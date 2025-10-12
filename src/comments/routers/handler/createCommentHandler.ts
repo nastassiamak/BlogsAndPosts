@@ -46,7 +46,7 @@ export async function createCommentHandler(
       content: createdComment.content,
       commentatorInfo: createdComment.commentatorInfo,
       postId: postId,
-      createdAt: createdComment.createdAt,
+      createdAt: new Date(createdComment.createdAt).toISOString(),
     };
 
     return res.status(HttpStatus.Created).send(commentOutput);
