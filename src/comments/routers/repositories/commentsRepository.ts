@@ -8,6 +8,7 @@ import { RepositoryNotFoundError } from "../../../core/errors/repositoryNotFound
 import { Comments } from "../../domain/comment";
 import { CommentAttributes } from "../../application/dto/commentAttributes";
 import {CommentUpdateInput} from "../input/commentUpdateInput";
+import {testingRouter} from "../../../testing/routers/testingRouter";
 
 export const commentsRepository = {
   async findMany(
@@ -64,6 +65,10 @@ export const commentsRepository = {
         },
       },
     );
+    if (updateResult.matchedCount < 1) {
+      throw new RepositoryNotFoundError('Comment not exists');
+    }
+    return ;
   },
 
   async deleteComment(id: string): Promise<void> {

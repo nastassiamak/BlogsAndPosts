@@ -7,12 +7,12 @@ export function mapToCommentOutput(
 ): CommentDataOutput {
   return {
     id: comment._id.toString(),
-    postId: comment.postId,
     content: comment.content,
     commentatorInfo: {
       userId: comment.commentatorInfo.userId,
       userLogin: comment.commentatorInfo.userLogin,
     },
+    postId: comment.postId,
     createdAt: new Date(comment.createdAt).toISOString(),
   };
 }

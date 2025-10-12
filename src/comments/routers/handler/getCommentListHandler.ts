@@ -30,9 +30,9 @@ export async function getCommentListHandler(
       pageSize: Number(req.query.pageSize) || 10,
       sortBy: (req.query.sortBy as CommentSortField) || "createdAt",
       sortDirection:
-        req.query.sortDirection === "asc"
-          ? SortDirection.Asc
-          : SortDirection.Desc,
+        req.query.sortDirection === "desc"
+          ? SortDirection.Desc
+          : SortDirection.Asc,
     };
 
     // При необходимости установите дефолты

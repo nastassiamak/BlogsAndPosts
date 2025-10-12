@@ -1,4 +1,4 @@
 export type CommentCreateInput = {
-  postId: string;
+  //postId: string;
   content: string;
 };
