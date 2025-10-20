@@ -5,6 +5,6 @@ export type CommentAttributes = {
     userId: string;
     userLogin?: string;
   } // если не приходит с клиента, не обязательно
-  postId?: string;
+  postId: string;
   createdAt?: string;
 };
