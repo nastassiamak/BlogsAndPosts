@@ -34,7 +34,6 @@ export async function createCommentHandler(
         userId: user._id.toString(),
         userLogin: user.login,
       },
-      postId: postId,
       createdAt: new Date().toISOString(),
     };
 
@@ -45,7 +44,6 @@ export async function createCommentHandler(
       id: createdComment._id.toString(),
       content: createdComment.content,
       commentatorInfo: createdComment.commentatorInfo,
-      postId: postId,
       createdAt: new Date(createdComment.createdAt).toISOString(),
     };
 

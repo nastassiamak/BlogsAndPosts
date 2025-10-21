@@ -6,6 +6,5 @@ export type CommentatorInfo = {
 export type Comments = {
   content: string;
   commentatorInfo: CommentatorInfo;
-  postId: string;
   createdAt: string;
 };

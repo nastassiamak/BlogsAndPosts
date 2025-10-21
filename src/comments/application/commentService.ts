@@ -9,6 +9,7 @@ import { postService } from "../../posts/application/postService";
 import { userService } from "../../users/application/userService";
 import {RepositoryNotFoundError} from "../../core/errors/repositoryNotFoundError";
 import {CommentUpdateInput} from "../routers/input/commentUpdateInput";
+import {resolve} from "node:dns";
 
 export const commentService = {
   async findMany(
@@ -22,7 +23,10 @@ export const commentService = {
   },
 
   async create( postId: string, dto: CommentAttributes) {
-   // const post = await postService.findByIdOrFail(postId);
+   const post = await postService.findByIdOrFail(postId);
+   if (!post) {
+
+   }
     const userId =
         await userService.findByIdOrFail(dto.commentatorInfo.userId);
     const newComment: Comments = {
@@ -31,7 +35,7 @@ export const commentService = {
         userId: userId._id.toString(),
         userLogin: userId.login,
       },
-      postId,
+
       createdAt: new Date().toISOString(),
     };
     return await commentsRepository.createComment(newComment);

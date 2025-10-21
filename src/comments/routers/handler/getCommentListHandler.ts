@@ -10,18 +10,18 @@ import { BusinessRuleError } from "../../../core/errors/businessRuleError";
 
 
 export async function getCommentListHandler(
-  req: Request<{}, {}, {}, ParsedQs>,
+  req: Request<{id: string}, {}, {}, ParsedQs>,
   res: Response,
 ) {
 
-  //const postId = req.params.postId;
+  const postId = req.params.id;
 
-  // if (!postId) {
-  //   res.status(400).json({
-  //     errorsMessages: [{ field: "postId", message: "postId is required" }]
-  //   });
-  //   return;
-  // }
+  if (!postId) {
+    res.status(400).json({
+      errorsMessages: [{ field: "postId", message: "postId is required" }]
+    });
+    return;
+  }
   console.log("Вызван getCommentListHandler", req.query);
   try {
 

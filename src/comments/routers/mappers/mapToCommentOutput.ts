@@ -12,7 +12,6 @@ export function mapToCommentOutput(
       userId: comment.commentatorInfo.userId,
       userLogin: comment.commentatorInfo.userLogin,
     },
-    postId: comment.postId.toString(),
     createdAt: new Date(comment.createdAt).toISOString(),
   };
 }

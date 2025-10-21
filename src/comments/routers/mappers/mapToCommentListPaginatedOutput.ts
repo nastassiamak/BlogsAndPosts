@@ -15,7 +15,6 @@ export function mapToCommentListPaginatedOutput(
     totalCount,
     items: comments.map((comment) => ({
       id: comment.id,
-      postId: comment.postId,
       content: comment.content,
       commentatorInfo: {
         userId: comment.commentatorInfo.userId,
