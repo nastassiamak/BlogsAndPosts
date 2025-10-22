@@ -19,9 +19,7 @@ export async function getCommentListHandler(
 
   const post = await postService.findByIdOrFail(postId);
   if (!post) {
-    res.status(HttpStatus.NotFound).json({
-      errorsMessages: [{ field: "post", message: "Post not found"  }]
-    });
+    res.status(HttpStatus.NotFound).send({message: "Post not found"} )
     return;
   }
   console.log("Вызван getCommentListHandler", req.query);

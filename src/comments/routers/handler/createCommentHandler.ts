@@ -24,7 +24,7 @@ export async function createCommentHandler(
 
     const postExists = await postService.findByIdOrFail(postId);
     if (!postExists) {
-      res.status(HttpStatus.NotFound).json({ message: "Post not found" });
+      res.status(HttpStatus.NotFound).send({message: "Post not found"} )
       return;
     }
 
