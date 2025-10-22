@@ -22,24 +22,31 @@ export const commentService = {
     return commentsRepository.findByIdOrFail(id);
   },
 
-  async create( postId: string, dto: CommentAttributes) {
-   const post = await postService.findByIdOrFail(postId);
-   if (!post) {
+    async create(postId: string, dto: CommentAttributes): Promise<string> {
+        // Проверяем, что пост существует
+        const post = await postService.findByIdOrFail(postId);
+        if (!post) {
+            throw new Error("Post not found");
+        }
 
-   }
-    const userId =
-        await userService.findByIdOrFail(dto.commentatorInfo.userId);
-    const newComment: Comments = {
-      content: dto.content,
-      commentatorInfo: {
-        userId: userId._id.toString(),
-        userLogin: userId.login,
-      },
+        // Проверяем, что пользователь существует
+        const user = await userService.findByIdOrFail(dto.commentatorInfo.userId);
+        if (!user) {
+            throw new Error("User not found");
+        }
 
-      createdAt: new Date().toISOString(),
-    };
-    return await commentsRepository.createComment(newComment);
-  },
+        const newComment: Comments = {
+            postId: postId,
+            content: dto.content,
+            commentatorInfo: {
+                userId: user._id.toString(),
+                userLogin: user.login,
+            },
+            createdAt: new Date().toISOString(),
+        };
+
+        return await commentsRepository.createComment(newComment);
+    },
 
   async update(id: string, dto: CommentUpdateInput): Promise<void> {
     return await commentsRepository.updateComment(id, dto);

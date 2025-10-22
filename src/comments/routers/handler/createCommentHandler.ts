@@ -6,7 +6,7 @@ import {CommentAttributes} from "../../application/dto/commentAttributes";
 import {postService} from "../../../posts/application/postService";
 
 export async function createCommentHandler(
-    req: Request<{postId: string}>,
+    req: Request,
     res: Response) {
   try {
     const user = req.user;
