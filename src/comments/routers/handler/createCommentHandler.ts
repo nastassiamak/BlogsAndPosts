@@ -11,19 +11,21 @@ export async function createCommentHandler(
   try {
     const user = req.user;
     if (!user) {
-      return res.status(401).json({ message: "Unauthorized" });
+      res.status(HttpStatus.Unauthorized).json({ message: "Unauthorized" });
+      return;
     }
 
     const postId = req.params.postId;
-    if (!postId) {
-      return res.status(HttpStatus.BadRequest).json({
-        errorsMessages: [{ field: 'postId', message: 'PostId is required' }]
-      });
-    }
+    // if (!postId) {
+    //   return res.status(HttpStatus.BadRequest).json({
+    //     errorsMessages: [{ field: 'postId', message: 'PostId is required' }]
+    //   });
+    // }
 
     const postExists = await postService.findByIdOrFail(postId);
     if (!postExists) {
-      return res.status(HttpStatus.NotFound).json({ message: "Post not found" });
+      res.status(HttpStatus.NotFound).json({ message: "Post not found" });
+      return;
     }
 
     const { content } = req.body as CommentAttributes;
@@ -47,12 +49,15 @@ export async function createCommentHandler(
       createdAt: new Date(createdComment.createdAt).toISOString(),
     };
 
-    return res.status(HttpStatus.Created).send(commentOutput);
+    res.status(HttpStatus.Created).send(commentOutput);
+    return
   } catch (error) {
     console.error("Error in createCommentHandler:", error);
     if (error instanceof RepositoryNotFoundError) {
-      return res.status(HttpStatus.NotFound).send({ message: "PostId Not Found" });
+      res.status(HttpStatus.NotFound).send({ message: "PostId Not Found" });
+      return;
     }
-    return res.status(HttpStatus.InternalServerError).send({ message: "Internal Server Error" });
+    res.status(HttpStatus.InternalServerError).send({ message: "Internal Server Error" });
+    return;
   }
 }

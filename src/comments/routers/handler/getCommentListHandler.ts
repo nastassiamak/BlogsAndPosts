@@ -7,6 +7,7 @@ import { commentService } from "../../application/commentService";
 import { mapToCommentListPaginatedOutput } from "../mappers/mapToCommentListPaginatedOutput";
 import { HttpStatus } from "../../../core/types/httpStatus";
 import { BusinessRuleError } from "../../../core/errors/businessRuleError";
+import {postService} from "../../../posts/application/postService";
 
 
 export async function getCommentListHandler(
@@ -16,9 +17,10 @@ export async function getCommentListHandler(
 
   const postId = req.params.id;
 
-  if (!postId) {
-    res.status(400).json({
-      errorsMessages: [{ field: "postId", message: "postId is required" }]
+  const post = await postService.findByIdOrFail(postId);
+  if (!post) {
+    res.status(HttpStatus.NotFound).json({
+      errorsMessages: [{ field: "post", message: "Post not found"  }]
     });
     return;
   }
