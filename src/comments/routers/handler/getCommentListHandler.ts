@@ -11,11 +11,11 @@ import {postService} from "../../../posts/application/postService";
 
 
 export async function getCommentListHandler(
-  req: Request<{id: string}, {}, {}, ParsedQs>,
+  req: Request<{postId: string}, {}, {}, ParsedQs>,
   res: Response,
 ) {
 
-  const postId = req.params.id;
+  const postId = req.params.postId;
 
   const post = await postService.findByIdOrFail(postId);
   if (!post) {
