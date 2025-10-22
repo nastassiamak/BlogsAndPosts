@@ -13,8 +13,8 @@ import { updatePostHandler } from "./handlers/updatePostHandler";
 import { deletePostHandler } from "./handlers/deletePostHandler";
 import { postsPaginationValidation } from "./postsPaginationValidation";
 import {
+  checkPostExists,
   commentCreateInputValidation,
-  postIdParamValidator
 } from "../../comments/routers/commentInputDtoValidationMiddleware";
 import { createCommentHandler } from "../../comments/routers/handler/createCommentHandler";
 import { getCommentListHandler } from "../../comments/routers/handler/getCommentListHandler";
@@ -34,7 +34,7 @@ postsRouter
 
     .get(
     "/:postId/comments",
-    postIdParamValidator,
+    checkPostExists,
     commentsPaginationValidation,
     inputValidationResultMiddleware,
     getCommentListHandler,
@@ -48,7 +48,7 @@ postsRouter
   )
   .post(
     "/:postId/comments",
-    postIdParamValidator,
+    checkPostExists,
     authMiddleware,
     commentCreateInputValidation,
     inputValidationResultMiddleware,

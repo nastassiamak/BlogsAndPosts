@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { idValidation } from "../../core/middlewares/validation/paramsIdValidationMiddleware";
-import {commentIdParamValidator, commentUpdateInputValidation} from "./commentInputDtoValidationMiddleware";
+import { commentUpdateInputValidation} from "./commentInputDtoValidationMiddleware";
 import { updateCommentHandler } from "./handler/updateCommentHandler";
 import { inputValidationResultMiddleware } from "../../core/middlewares/validation/inputValidationResultMiddleware";
 import { deleteCommentHandler } from "./handler/deleteCommentHandler";
