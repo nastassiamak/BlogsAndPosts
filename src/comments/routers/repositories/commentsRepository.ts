@@ -25,7 +25,7 @@ export const commentsRepository = {
 
     const skip = (pageNumber - 1) * pageSize;
     const filter: any = {postId};
-    const direction = sortDirection === "asc" ? 1 : -1;
+    const direction = sortDirection === "desc" ? -1 : 1;
 
     const totalCount = await commentCollection.countDocuments(filter);
     const pagesCount = Math.ceil(totalCount / pageSize);
