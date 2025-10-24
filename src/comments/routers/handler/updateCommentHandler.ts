@@ -36,6 +36,7 @@ export async function updateCommentHandler(
       res.status(HttpStatus.NotFound).send({ message: "Comment not found" });
       return;
     } else {
+
       res
         .status(HttpStatus.InternalServerError)
         .send({ message: "Internal Server Error" });
