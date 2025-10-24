@@ -11,17 +11,17 @@ import {postService} from "../../../posts/application/postService";
 
 
 export async function getCommentListHandler(
-  req: Request<{postId: string}, {}, {}, ParsedQs>,
+  req: Request<{}, {}, {}, ParsedQs>,
   res: Response,
 ) {
 
-  const postId = req.params.postId;
-
-  const post = await postService.findByIdOrFail(postId);
-  if (!post) {
-    res.status(HttpStatus.NotFound).send({message: "Post not found"} )
-    return;
-  }
+  // const postId = req.params.postId;
+  //
+  // const post = await postService.findByIdOrFail(postId);
+  // if (!post) {
+  //   res.status(HttpStatus.NotFound).send({message: "Post not found"} )
+  //   return;
+  // }
   console.log("Вызван getCommentListHandler", req.query);
   try {
 

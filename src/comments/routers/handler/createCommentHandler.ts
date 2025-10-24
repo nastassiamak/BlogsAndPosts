@@ -17,9 +17,10 @@ export async function createCommentHandler(
 
     const postId = req.params.postId;
     if (!postId) {
-      return res.status(HttpStatus.BadRequest).json({
+      res.status(HttpStatus.BadRequest).json({
         errorsMessages: [{ field: 'postId', message: 'PostId is required' }]
       });
+      return;
     }
 
     const postExists = await postService.findByIdOrFail(postId);
@@ -50,7 +51,7 @@ export async function createCommentHandler(
     };
 
     res.status(HttpStatus.Created).send(commentOutput);
-    return
+
   } catch (error) {
     console.error("Error in createCommentHandler:", error);
     if (error instanceof RepositoryNotFoundError) {

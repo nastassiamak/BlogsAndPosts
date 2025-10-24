@@ -2,6 +2,8 @@ import {body, param} from "express-validator";
 import {NextFunction, Request, Response} from "express";
 import {postService} from "../../posts/application/postService";
 import {commentService} from "../application/commentService";
+import {RepositoryNotFoundError} from "../../core/errors/repositoryNotFoundError";
+import {HttpStatus} from "../../core/types/httpStatus";
 
 
 // Middleware для проверки существования поста после базовой валидации параметра
@@ -9,23 +11,17 @@ export async function checkPostExists(
     req: Request<{ postId: string }>,
     res: Response,
     next: NextFunction
-): Promise<void> {
-  const { postId } = req.params;
-
+) {
   try {
-    const post = await postService.findByIdOrFail(postId);
-    if (!post) {
-      res.status(404).json({ message: "Post not found" });
-      return;
-    }
-
-    // // Можно положить в req, если понадобится дальше
-    // req.post = post;
+    await postService.findByIdOrFail(req.params.postId);
     next();
   } catch (err) {
-    // Обработка ошибок базы или прочих
-    console.error(err);
-    res.status(500).json({ message: "Server error" });
+    if (err instanceof RepositoryNotFoundError) {
+      res.status(HttpStatus.NotFound).json({ message: "Post not found" });
+    } else {
+      console.error(err);
+      res.status(HttpStatus.InternalServerError).json({ message: "Server error" });
+    }
   }
 }
 
@@ -34,37 +30,35 @@ export async function checkCommentExists(
     req: Request<{ commentId: string }>,
     res: Response,
     next: NextFunction
-): Promise<void> {
+) {
   const { commentId } = req.params;
 
   try {
-    const comment = await commentService.findByIdOrFail(commentId);
-    if (!comment) {
-      res.status(404).json({ message: "Comment not found" });
-      return;
-    }
-
-    //req.comment = comment;
+    await commentService.findByIdOrFail(commentId);
     next();
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Server error" });
+    if (err instanceof RepositoryNotFoundError) {
+      res.status(HttpStatus.NotFound).json({ message: "Post not found" });
+    } else {
+      console.error(err);
+      res.status(HttpStatus.InternalServerError).json({ message: "Server error" });
+    }
   }
 }
 
-// export const postIdParamValidator = param("postId")
-//     .exists()
-//     .withMessage("postId is required")
-//     .isMongoId()
-//     .withMessage("postId must be a valid ObjectId");
-//
-//
-// export const commentIdParamValidator = param("commentId")
-//     .exists()
-//     .withMessage("commentId is required")
-//     .isMongoId()
-//     .withMessage("commentId must be a valid ObjectId");
-//
+export const postIdParamValidator = param("postId")
+    .exists()
+    .withMessage("postId is required")
+    .isMongoId()
+    .withMessage("postId must be a valid ObjectId");
+
+
+export const commentIdParamValidator = param("commentId")
+    .exists()
+    .withMessage("commentId is required")
+    .isMongoId()
+    .withMessage("commentId must be a valid ObjectId");
+
 
 
 
