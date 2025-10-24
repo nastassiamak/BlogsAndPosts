@@ -9,22 +9,26 @@ export async function updateCommentHandler(
   res: Response,
 ) {
   try {
-    const user = req.user!;
+    const user = req.user;
+    if (!user) {
+      return res.status(HttpStatus.Unauthorized).json({ message: "Unauthorized" });
+    }
     const id = req.params.id;
     const updateData = req.body;
 
     const comment = await commentService
         .findByIdOrFail(id);
 
-    // if (comment.commentatorInfo.userId !== user._id.toString()) {
-    //   res.status(HttpStatus.Forbidden).json({ message: "Forbidden" });
-    //   return;
-    // }
+    if (!comment) {
+      res.status(HttpStatus.NotFound).json({ message: "Comment not found" })
+      return;
+    }
 
-    // if (!comment) {
-    //   res.status(HttpStatus.NotFound).json({ message: "Comment not found" })
-    //   return;
-    // }
+    if (comment.commentatorInfo.userId !== user._id.toString()) {
+      res.status(HttpStatus.Forbidden).json({ message: "Forbidden" });
+      return;
+    }
+
     await commentService.update(id, updateData);
     res.sendStatus(HttpStatus.NoContent);
   } catch (error) {
