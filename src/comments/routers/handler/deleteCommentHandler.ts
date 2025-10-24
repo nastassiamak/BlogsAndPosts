@@ -16,10 +16,6 @@ export async function deleteCommentHandler(
 
     const id = req.params.id;
     const comment = await commentService.findByIdOrFail(id);
-    if (!comment) {
-      res.status(HttpStatus.NotFound).json({ error: "Could not find a comment" });
-      return;
-    }
 
     if (comment.commentatorInfo.userId !== user._id.toString()) {
        res.status(HttpStatus.Forbidden).json({ message: "Forbidden" });
