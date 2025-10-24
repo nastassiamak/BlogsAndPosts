@@ -16,11 +16,11 @@ export async function createCommentHandler(
     }
 
     const postId = req.params.postId;
-    // if (!postId) {
-    //   return res.status(HttpStatus.BadRequest).json({
-    //     errorsMessages: [{ field: 'postId', message: 'PostId is required' }]
-    //   });
-    // }
+    if (!postId) {
+      return res.status(HttpStatus.BadRequest).json({
+        errorsMessages: [{ field: 'postId', message: 'PostId is required' }]
+      });
+    }
 
     const postExists = await postService.findByIdOrFail(postId);
     if (!postExists) {
