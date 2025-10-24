@@ -5,19 +5,19 @@ import {userService} from "../users/application/userService";
 
 export async function authMiddleware(req: Request, res: Response, next: NextFunction) {
     if (!req.headers.authorization) {
-        res.status(401).json({ message: "Unauthorized" });
+        res.status(HttpStatus.Unauthorized).json({ message: "Unauthorized" });
         return;
     }
 
     const token = req.headers.authorization.split(' ')[1];
     if (!token) {
-        res.status(HttpStatus.Unauthorized)
+        res.status(HttpStatus.Unauthorized).json({ message: "Unauthorized" });
         return;
     }
 
     const userIdFromToken = await jwtService.getUserIdByToken(token);
     if (!userIdFromToken) {
-        res.status(HttpStatus.Unauthorized)
+        res.status(HttpStatus.Unauthorized).json({ message: "Unauthorized" });
         return;
     }
 
