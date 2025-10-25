@@ -3,8 +3,8 @@ import { HttpStatus } from "../core/types/httpStatus";
 import {userService} from "../users/application/userService";
 import {jwtService} from "./JWT/jwtService";
 import {mapToUserOutput} from "../users/routers/mappers/mapToUserOutput";
-import {BusinessRuleError} from "../core/errors/businessRuleError";
-import {RepositoryNotFoundError} from "../core/errors/repositoryNotFoundError";
+import {JwtPayload} from "./JWT/JwtPayload";
+
 
 
 export async function loginHandler(req: Request, res: Response) {
@@ -21,7 +21,11 @@ export async function loginHandler(req: Request, res: Response) {
     }
 
     // Можно при желании преобразовать user к виду для токена
-    const userPayload = mapToUserOutput(user);
+    const userPayload: JwtPayload = {
+      userId: user._id.toString(),
+      login: user.login,
+      email: user.email
+    };
 
     const token = await jwtService.generateToken(userPayload);
 

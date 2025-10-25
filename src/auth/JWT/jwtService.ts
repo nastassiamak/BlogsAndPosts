@@ -1,12 +1,12 @@
 import jwt from "jsonwebtoken";
 import {SETTINGS} from "../../core/settings/settings";
-import {UserDataOutput} from "../../users/routers/output/userDataOutput";
+import {MeViewModel} from "./me";
 
 export const jwtService = {
-    async generateToken(user: UserDataOutput) {
+    async generateToken(user: MeViewModel) {
         const token =
             jwt
-                .sign({userId: user.id}, SETTINGS.JWT_SECRET, { expiresIn: "1h" });
+                .sign({userId: user.userId}, SETTINGS.JWT_SECRET, { expiresIn: "1h" });
         return token;
     },
 

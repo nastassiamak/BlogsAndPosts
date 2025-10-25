@@ -17,7 +17,7 @@ export async function deleteCommentHandler(
     const id = req.params.id;
     const comment = await commentService.findByIdOrFail(id);
 
-    if (comment.commentatorInfo.userId !== user._id.toString()) {
+    if (comment.commentatorInfo.userId !== user.userId) {
        res.status(HttpStatus.Forbidden).json({ message: "Forbidden" });
        return;
     }

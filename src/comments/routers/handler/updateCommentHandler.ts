@@ -25,7 +25,7 @@ export async function updateCommentHandler(
       return;
     }
 
-    if (comment.commentatorInfo.userId !== user._id.toString()) {
+    if (comment.commentatorInfo.userId !== user.userId) {
       res.status(HttpStatus.Forbidden).json({ message: "Forbidden" });
       return;
     }

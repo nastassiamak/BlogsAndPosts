@@ -34,7 +34,7 @@ export async function createCommentHandler(
     const commentInput = {
       content,
       commentatorInfo: {
-        userId: user._id.toString(),
+        userId: user.userId,
         userLogin: user.login,
       },
       createdAt: new Date().toISOString(),

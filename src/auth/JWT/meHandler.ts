@@ -1,5 +1,4 @@
 import {Request, Response} from 'express';
-import {MeViewModel} from "./me";
 import {HttpStatus} from "../../core/types/httpStatus";
 import {userService} from "../../users/application/userService";
 import {jwtService} from "./jwtService";

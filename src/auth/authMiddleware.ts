@@ -2,6 +2,9 @@ import { Request, Response, NextFunction } from "express";
 import {jwtService} from "./JWT/jwtService";
 import {HttpStatus} from "../core/types/httpStatus";
 import {userService} from "../users/application/userService";
+import {JwtPayload} from "./JWT/JwtPayload";
+import {mapToUserOutput} from "../users/routers/mappers/mapToUserOutput";
+import {mapUserToJwtPayload} from "./mappers/mapUserToJwtPayload";
 
 export async function authMiddleware(req: Request, res: Response, next: NextFunction) {
     if (!req.headers.authorization) {
@@ -21,12 +24,10 @@ export async function authMiddleware(req: Request, res: Response, next: NextFunc
         return;
     }
 
-    // const user = await userService.findByIdOrFail(userIdFromToken)
-    // if (!user) {
-    //     res.status(HttpStatus.Unauthorized)
-    //     return;
-    // }
-    const user = await userService.findByIdOrFail(userIdFromToken);
+
+
+    const userFind = await userService.findByIdOrFail(userIdFromToken);
+    const user: JwtPayload = mapUserToJwtPayload(userFind);
     req.user = user;
 
     next();
