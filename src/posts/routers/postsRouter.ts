@@ -14,12 +14,13 @@ import { deletePostHandler } from "./handlers/deletePostHandler";
 import { postsPaginationValidation } from "./postsPaginationValidation";
 import {
   checkPostExists,
-  commentCreateInputValidation, postIdParamValidator,
+  commentCreateInputValidation,
+  postIdParamValidator,
 } from "../../comments/routers/commentInputDtoValidationMiddleware";
 import { createCommentHandler } from "../../comments/routers/handler/createCommentHandler";
 import { getCommentListHandler } from "../../comments/routers/handler/getCommentListHandler";
 import { commentsPaginationValidation } from "../../comments/routers/commentsPaginationValidation";
-import {authMiddleware} from "../../auth/authMiddleware";
+import { authMiddleware } from "../../auth/authMiddleware";
 
 export const postsRouter = Router({});
 
@@ -32,7 +33,7 @@ postsRouter
   )
   .get("/:id", idValidation, inputValidationResultMiddleware, getPostHandler)
 
-    .get(
+  .get(
     "/:postId/comments",
     postIdParamValidator,
     checkPostExists,

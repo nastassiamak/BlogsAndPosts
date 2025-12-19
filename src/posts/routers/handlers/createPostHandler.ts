@@ -4,8 +4,8 @@ import { postService } from "../../application/postService";
 import { mapToPostOutput } from "../mappers/mapToPostOutput";
 import { HttpStatus } from "../../../core/types/httpStatus";
 import { RepositoryNotFoundError } from "../../../core/errors/repositoryNotFoundError";
-import { blogsRepository } from "../../../blogs/repositories/blogsRepository";
-import { blogService } from "../../../blogs/application/blogService";
+import { blogsQueryRepository } from "../../../blogs/repositories/blogsQueryRepository";
+import { postsQueryRepository } from "../../repositories/postsQueryRepository";
 
 export async function createPostHandler(
   req: Request<{}, {}, PostCreateInput>,
@@ -13,7 +13,7 @@ export async function createPostHandler(
 ) {
   try {
     // Проверяем, что блог с таким blogId из тела запроса существует
-    const blog = await blogService.findByIdOrFail(req.body.blogId);
+    const blog = await blogsQueryRepository.findByIdOrFail(req.body.blogId);
 
     // Добавляем имя блога и дату создания в тело поста
     const postData = {
@@ -23,7 +23,8 @@ export async function createPostHandler(
     };
 
     const createdPostId = await postService.create(postData);
-    const createdPost = await postService.findByIdOrFail(createdPostId);
+    const createdPost =
+      await postsQueryRepository.findByIdOrFail(createdPostId);
 
     const postOutput = mapToPostOutput(createdPost);
     res.status(HttpStatus.Created).send(postOutput);

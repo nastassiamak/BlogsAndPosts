@@ -16,7 +16,6 @@ export async function updateBlog(
 ): Promise<void> {
   const testBlogData: BlogUpdateInput = {
     id,
-
     ...getBlogDto(),
     ...blogDto,
   };

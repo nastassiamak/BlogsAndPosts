@@ -3,7 +3,7 @@ import { HttpStatus } from "../../../core/types/httpStatus";
 import { mapToBlogOutput } from "../mappers/mapToBlogOutput";
 import { blogService } from "../../application/blogService";
 import { RepositoryNotFoundError } from "../../../core/errors/repositoryNotFoundError";
-//import { errorsHandler } from "../../../core/errors/errorsHandler";
+import { blogsQueryRepository } from "../../repositories/blogsQueryRepository";
 
 export async function getBlogHandler(
   req: Request<{ id: string }>,
@@ -11,7 +11,7 @@ export async function getBlogHandler(
 ) {
   try {
     const id = req.params.id;
-    const blog = await blogService.findByIdOrFail(id);
+    const blog = await blogsQueryRepository.findByIdOrFail(id);
 
     const blogOutput = mapToBlogOutput(blog);
 

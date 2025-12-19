@@ -8,12 +8,12 @@ import { UserSortField } from "../input/userSortField";
 import { userService } from "../../application/userService";
 import { mapToUserListPaginatedOutput } from "../mappers/mapToUserListPaginatedOutput";
 import { BusinessRuleError } from "../../../core/errors/businessRuleError";
+import {usersQueryRepository} from "../../repositories/usersQueryRepository";
 
 export async function getUserListHandler(
   req: Request<{}, {}, {}, ParsedQs>,
   res: Response,
 ) {
-
   console.log("Вызван getUserListHandler", req.query);
   try {
     // Парсим параметры из query и задаём дефолты
@@ -33,7 +33,7 @@ export async function getUserListHandler(
     const queryWithDefaults = setDefaultSortAndPaginationIfNotExist(queryInput);
 
     // Вызываем метод репозитория для получения данных с пагинацией
-    const paginatedPosts = await userService.findMany(queryWithDefaults);
+    const paginatedPosts = await usersQueryRepository.findMany(queryWithDefaults);
 
     const pagesCount = Math.ceil(
       paginatedPosts.totalCount / queryWithDefaults.pageSize,

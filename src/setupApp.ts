@@ -9,7 +9,7 @@ import {
 } from "./core/paths/paths";
 import { blogsRouter } from "./blogs/routers/blogsRouter";
 import { testingRouter } from "./testing/routers/testingRouter";
-import { postsRouter } from "./posts/routers/postRouter";
+import { postsRouter } from "./posts/routers/postsRouter";
 import { usersRouter } from "./users/routers/usersRouter";
 import { authRouter } from "./auth/authRouter";
 import { setupSwagger } from "./core/swagger/setupSwagger";

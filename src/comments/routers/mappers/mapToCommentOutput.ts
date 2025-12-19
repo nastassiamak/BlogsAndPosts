@@ -3,7 +3,7 @@ import { CommentDataOutput } from "../output/commentDataOutput";
 import { Comments } from "../../domain/comment";
 
 export function mapToCommentOutput(
-    comment: WithId<Comments>,
+  comment: WithId<Comments>,
 ): CommentDataOutput {
   return {
     id: comment._id.toString(),

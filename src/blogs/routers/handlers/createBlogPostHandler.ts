@@ -5,6 +5,8 @@ import { postService } from "../../../posts/application/postService";
 import { HttpStatus } from "../../../core/types/httpStatus";
 import { RepositoryNotFoundError } from "../../../core/errors/repositoryNotFoundError";
 import { blogsRepository } from "../../repositories/blogsRepository";
+import { blogsQueryRepository } from "../../repositories/blogsQueryRepository";
+import { postsQueryRepository } from "../../../posts/repositories/postsQueryRepository";
 
 export async function createBlogPostHandler(
   req: Request<{ blogId: string }, {}, PostCreateInput>,
@@ -13,7 +15,7 @@ export async function createBlogPostHandler(
   const blogId = req.params.blogId;
   try {
     // Проверяем, что блог существует
-    const blog = await blogsRepository.findByIdOrFail(blogId);
+    const blog = await blogsQueryRepository.findByIdOrFail(blogId);
     const postData = req.body;
 
     const createdPostId = await postService.create({
@@ -22,7 +24,8 @@ export async function createBlogPostHandler(
       blogName: blog.name,
       createdAt: new Date().toISOString(),
     });
-    const createdPost = await postService.findByIdOrFail(createdPostId);
+    const createdPost =
+      await postsQueryRepository.findByIdOrFail(createdPostId);
 
     const postOutput = mapToPostOutput(createdPost);
 
@@ -31,7 +34,6 @@ export async function createBlogPostHandler(
     if (error instanceof RepositoryNotFoundError) {
       res.status(HttpStatus.NotFound).send({ message: "Blog not found" });
     }
-
     console.error("Error in createBlogPostHandler:", error);
     res.status(HttpStatus.InternalServerError).send("Internal Server Error");
   }

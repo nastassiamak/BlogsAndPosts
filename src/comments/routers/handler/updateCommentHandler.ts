@@ -17,11 +17,10 @@ export async function updateCommentHandler(
     const id = req.params.id;
     const updateData = req.body;
 
-    const comment = await commentService
-        .findByIdOrFail(id);
+    const comment = await commentService.findByIdOrFail(id);
 
     if (!comment) {
-      res.status(HttpStatus.NotFound).json({ message: "Comment not found" })
+      res.status(HttpStatus.NotFound).json({ message: "Comment not found" });
       return;
     }
 
@@ -37,7 +36,6 @@ export async function updateCommentHandler(
       res.status(HttpStatus.NotFound).send({ message: "Comment not found" });
       return;
     } else {
-
       res
         .status(HttpStatus.InternalServerError)
         .send({ message: "Internal Server Error" });

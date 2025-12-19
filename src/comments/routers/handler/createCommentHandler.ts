@@ -2,12 +2,11 @@ import { Request, Response } from "express";
 import { commentService } from "../../application/commentService";
 import { HttpStatus } from "../../../core/types/httpStatus";
 import { RepositoryNotFoundError } from "../../../core/errors/repositoryNotFoundError";
-import {CommentAttributes} from "../../application/dto/commentAttributes";
-import {postService} from "../../../posts/application/postService";
+import { CommentAttributes } from "../../application/dto/commentAttributes";
+import { postService } from "../../../posts/application/postService";
+import { postsQueryRepository } from "../../../posts/repositories/postsQueryRepository";
 
-export async function createCommentHandler(
-    req: Request,
-    res: Response) {
+export async function createCommentHandler(req: Request, res: Response) {
   try {
     const user = req.user;
     if (!user) {
@@ -18,14 +17,14 @@ export async function createCommentHandler(
     const postId = req.params.postId;
     if (!postId) {
       res.status(HttpStatus.BadRequest).json({
-        errorsMessages: [{ field: 'postId', message: 'PostId is required' }]
+        errorsMessages: [{ field: "postId", message: "PostId is required" }],
       });
       return;
     }
 
-    const postExists = await postService.findByIdOrFail(postId);
+    const postExists = await postsQueryRepository.findByIdOrFail(postId);
     if (!postExists) {
-      res.status(HttpStatus.NotFound).send({message: "Post not found"} )
+      res.status(HttpStatus.NotFound).send({ message: "Post not found" });
       return;
     }
 
@@ -34,14 +33,15 @@ export async function createCommentHandler(
     const commentInput = {
       content,
       commentatorInfo: {
-        userId: user.userId,
+        userId: user,
         userLogin: user.login,
       },
       createdAt: new Date().toISOString(),
     };
 
     const createdCommentId = await commentService.create(postId, commentInput);
-    const createdComment = await commentService.findByIdOrFail(createdCommentId);
+    const createdComment =
+      await commentService.findByIdOrFail(createdCommentId);
 
     const commentOutput = {
       id: createdComment._id.toString(),
@@ -51,14 +51,15 @@ export async function createCommentHandler(
     };
 
     res.status(HttpStatus.Created).send(commentOutput);
-
   } catch (error) {
     console.error("Error in createCommentHandler:", error);
     if (error instanceof RepositoryNotFoundError) {
       res.status(HttpStatus.NotFound).send({ message: "PostId Not Found" });
       return;
     }
-    res.status(HttpStatus.InternalServerError).send({ message: "Internal Server Error" });
+    res
+      .status(HttpStatus.InternalServerError)
+      .send({ message: "Internal Server Error" });
     return;
   }
 }

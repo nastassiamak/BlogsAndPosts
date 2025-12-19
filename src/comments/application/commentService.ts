@@ -7,13 +7,14 @@ import { query } from "express-validator";
 import { CommentAttributes } from "./dto/commentAttributes";
 import { postService } from "../../posts/application/postService";
 import { userService } from "../../users/application/userService";
-import {RepositoryNotFoundError} from "../../core/errors/repositoryNotFoundError";
-import {CommentUpdateInput} from "../routers/input/commentUpdateInput";
-import {resolve} from "node:dns";
+import { RepositoryNotFoundError } from "../../core/errors/repositoryNotFoundError";
+import { CommentUpdateInput } from "../routers/input/commentUpdateInput";
+import { resolve } from "node:dns";
+import { postsQueryRepository } from "../../posts/repositories/postsQueryRepository";
 
 export const commentService = {
   async findMany(
-      postId: string,
+    postId: string,
     queryDto: CommentQueryInput,
   ): Promise<CommentListPaginatedOutput> {
     return await commentsRepository.findMany(postId, queryDto);
@@ -23,31 +24,31 @@ export const commentService = {
     return commentsRepository.findByIdOrFail(id);
   },
 
-    async create(postId: string, dto: CommentAttributes): Promise<string> {
-        // Проверяем, что пост существует
-        const post = await postService.findByIdOrFail(postId);
-        if (!post) {
-            throw new Error("Post not found");
-        }
+  async create(postId: string, dto: CommentAttributes): Promise<string> {
+    // Проверяем, что пост существует
+    const post = await postsQueryRepository.findByIdOrFail(postId);
+    if (!post) {
+      throw new Error("Post not found");
+    }
 
-        // Проверяем, что пользователь существует
-        const user = await userService.findByIdOrFail(dto.commentatorInfo.userId);
-        if (!user) {
-            throw new Error("User not found");
-        }
+    // Проверяем, что пользователь существует
+    const user = await userService.findByIdOrFail(dto.commentatorInfo.userId);
+    if (!user) {
+      throw new Error("User not found");
+    }
 
-        const newComment: Comments = {
-            postId: postId,
-            content: dto.content,
-            commentatorInfo: {
-                userId: user._id.toString(),
-                userLogin: user.login,
-            },
-            createdAt: new Date().toISOString(),
-        };
+    const newComment: Comments = {
+      postId: postId,
+      content: dto.content,
+      commentatorInfo: {
+        userId: user._id.toString(),
+        userLogin: user.login,
+      },
+      createdAt: new Date().toISOString(),
+    };
 
-        return await commentsRepository.createComment(newComment);
-    },
+    return await commentsRepository.createComment(newComment);
+  },
 
   async update(id: string, dto: CommentUpdateInput): Promise<void> {
     return await commentsRepository.updateComment(id, dto);

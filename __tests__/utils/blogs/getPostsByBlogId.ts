@@ -13,7 +13,7 @@ export async function getPostsByBlogId(
     .get(`${BLOGS_PATH}/${blogId}${POSTS_PATH}`)
     .expect(HttpStatus.Ok);
   console.log(
-    "Sending POST with body:",
+    "Sending GET with body:",
     JSON.stringify(postResponse.body, null, 2),
   );
   return postResponse.body;

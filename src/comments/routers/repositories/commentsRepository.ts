@@ -7,12 +7,12 @@ import { ObjectId, WithId } from "mongodb";
 import { RepositoryNotFoundError } from "../../../core/errors/repositoryNotFoundError";
 import { Comments } from "../../domain/comment";
 import { CommentAttributes } from "../../application/dto/commentAttributes";
-import {CommentUpdateInput} from "../input/commentUpdateInput";
-import {testingRouter} from "../../../testing/routers/testingRouter";
+import { CommentUpdateInput } from "../input/commentUpdateInput";
+import { testingRouter } from "../../../testing/routers/testingRouter";
 
 export const commentsRepository = {
   async findMany(
-      postId: string,
+    postId: string,
     queryDto: CommentQueryInput,
   ): Promise<CommentListPaginatedOutput> {
     console.log("commentsRepository.findMany started with queryDto:", queryDto);
@@ -24,7 +24,7 @@ export const commentsRepository = {
     } = queryDto;
 
     const skip = (pageNumber - 1) * pageSize;
-    const filter: any = {postId};
+    const filter: any = { postId };
     const direction = sortDirection === "desc" ? -1 : 1;
 
     const totalCount = await commentCollection.countDocuments(filter);
@@ -67,9 +67,9 @@ export const commentsRepository = {
       },
     );
     if (updateResult.matchedCount < 1) {
-      throw new RepositoryNotFoundError('Comment not exists');
+      throw new RepositoryNotFoundError("Comment not exists");
     }
-    return ;
+    return;
   },
 
   async deleteComment(id: string): Promise<void> {

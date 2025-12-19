@@ -5,7 +5,6 @@ import { PostDataOutput } from "../output/postDataOutput";
 
 export function mapToPostOutput(post: WithId<Post>): PostDataOutput {
   return {
-
     id: post._id.toString(),
     title: post.title,
     shortDescription: post.shortDescription,

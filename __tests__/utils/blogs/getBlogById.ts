@@ -2,7 +2,6 @@
 import request from "supertest";
 import { Express } from "express";
 import { BLOGS_PATH } from "../../../src/core/paths/paths";
-import { generateAdminAuthToken } from "../generateAdminAuthToken";
 import { HttpStatus } from "../../../src/core/types/httpStatus";
 
 import { BlogDataOutput } from "../../../src/blogs/routers/output/blogDataOutput";

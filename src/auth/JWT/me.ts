@@ -1,5 +1,5 @@
 export interface MeViewModel {
-    userId: string;
-    login: string;
-    email: string;
+  userId: string;
+  login: string;
+  email: string;
 }

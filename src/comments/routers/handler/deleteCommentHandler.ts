@@ -11,15 +11,15 @@ export async function deleteCommentHandler(
     const user = req.user;
     if (!user) {
       res.status(HttpStatus.Unauthorized).json({ message: "Unauthorized" });
-      return
+      return;
     }
 
     const id = req.params.id;
     const comment = await commentService.findByIdOrFail(id);
 
     if (comment.commentatorInfo.userId !== user.userId) {
-       res.status(HttpStatus.Forbidden).json({ message: "Forbidden" });
-       return;
+      res.status(HttpStatus.Forbidden).json({ message: "Forbidden" });
+      return;
     }
     await commentService.delete(id);
 
@@ -33,6 +33,6 @@ export async function deleteCommentHandler(
         .status(HttpStatus.InternalServerError)
         .send({ message: "Internal Server Error" });
     }
-    return
+    return;
   }
 }

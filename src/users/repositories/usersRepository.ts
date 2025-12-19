@@ -8,7 +8,6 @@ import { UserDataOutput } from "../routers/output/userDataOutput";
 import { mapToUserOutput } from "../routers/mappers/mapToUserOutput";
 
 export const usersRepository = {
-
   async findMany(queryDto: UserQueryInput): Promise<UserListPaginatedOutput> {
     console.log("usersRepository.findMany started with queryDto:", queryDto);
 
@@ -65,6 +64,7 @@ export const usersRepository = {
       $or: [{ email: loginOrEmail }, { login: loginOrEmail }],
     });
     return user;
+
   },
 
   async findByIdOrFail(id: string): Promise<WithId<User>> {

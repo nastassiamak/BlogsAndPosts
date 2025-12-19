@@ -6,14 +6,6 @@ import { BlogAttributes } from "./dtos/blogAttributes";
 import { BlogListPaginatedOutput } from "../routers/output/blogListPaginatedOutput";
 
 export const blogService = {
-  async findMany(queryDto: BlogQueryInput): Promise<BlogListPaginatedOutput> {
-    return blogsRepository.findMany(queryDto);
-  },
-
-  async findByIdOrFail(id: string): Promise<WithId<Blog>> {
-    return blogsRepository.findByIdOrFail(id);
-  },
-
   async create(dto: BlogAttributes): Promise<string> {
     const newBlog: Blog = {
       name: dto.name,

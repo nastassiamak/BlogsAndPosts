@@ -1,9 +1,8 @@
 import { Request, Response } from "express";
-import { postService } from "../../application/postService";
 import { mapToPostOutput } from "../mappers/mapToPostOutput";
 import { HttpStatus } from "../../../core/types/httpStatus";
 import { RepositoryNotFoundError } from "../../../core/errors/repositoryNotFoundError";
-//import { errorsHandler } from "../../../core/errors/errorsHandler";
+import { postsQueryRepository } from "../../repositories/postsQueryRepository";
 
 export async function getPostHandler(
   req: Request<{ id: string }>,
@@ -11,7 +10,7 @@ export async function getPostHandler(
 ) {
   try {
     const id = req.params.id;
-    const post = await postService.findByIdOrFail(id);
+    const post = await postsQueryRepository.findByIdOrFail(id);
 
     const postOutput = mapToPostOutput(post);
 

@@ -3,7 +3,7 @@ import { HttpStatus } from "../../../core/types/httpStatus";
 import { mapToBlogOutput } from "../mappers/mapToBlogOutput";
 import { BlogCreateInput } from "../input/blogCreateInput";
 import { blogService } from "../../application/blogService";
-
+import { blogsQueryRepository } from "../../repositories/blogsQueryRepository";
 
 export async function createBlogHandler(
   req: Request<{}, {}, BlogCreateInput>,
@@ -12,7 +12,8 @@ export async function createBlogHandler(
   try {
     const createdBlogId = await blogService.create(req.body);
 
-    const createdBlog = await blogService.findByIdOrFail(createdBlogId);
+    const createdBlog =
+      await blogsQueryRepository.findByIdOrFail(createdBlogId);
 
     const blogOutput = mapToBlogOutput(createdBlog);
 

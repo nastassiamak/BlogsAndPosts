@@ -1,12 +1,12 @@
 import { PostSortField } from "../input/postSortField";
 import { SortDirection } from "../../../core/types/sortDirection";
 import { Request, Response } from "express";
-import { postService } from "../../application/postService";
 import { HttpStatus } from "../../../core/types/httpStatus";
 import { RepositoryNotFoundError } from "../../../core/errors/repositoryNotFoundError";
 import { ParsedQs } from "qs";
 import { setDefaultSortAndPaginationIfNotExist } from "../../../core/helpers/setDefaultSortAndPagination";
 import { mapToPostListPaginatedOutput } from "../mappers/mapToPostListPaginatedOutputUtil";
+import { postsQueryRepository } from "../../repositories/postsQueryRepository";
 
 export async function getPostListHandler(
   req: Request<{}, {}, {}, ParsedQs>,
@@ -29,7 +29,8 @@ export async function getPostListHandler(
     const queryWithDefaults = setDefaultSortAndPaginationIfNotExist(queryInput);
 
     // Вызываем метод репозитория для получения данных с пагинацией
-    const paginatedPosts = await postService.findMany(queryWithDefaults);
+    const paginatedPosts =
+      await postsQueryRepository.findMany(queryWithDefaults);
 
     const pagesCount = Math.ceil(
       paginatedPosts.totalCount / queryWithDefaults.pageSize,

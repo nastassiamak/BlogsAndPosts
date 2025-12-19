@@ -7,8 +7,6 @@ import { clearDb } from "../../utils/clearDb";
 import { AUTH_PATH, USERS_PATH } from "../../../src/core/paths/paths";
 
 import { HttpStatus } from "../../../src/core/types/httpStatus";
-import {createUser} from "../../utils/users/createdUser";
-import {getUserDto} from "../../utils/users/getUserDto";
 
 describe("User API", () => {
   const app = express();
@@ -35,22 +33,23 @@ describe("User API", () => {
   /* Тесты для POST /users */
   describe("POST /users", () => {
     it("should create a new user and return 201 with user data", async () => {
+      const uniqueSuffix = Date.now().toString().slice(-5);
 
-      const [user] = await Promise.all([
-          createUser(app, {
-            ...getUserDto(),
-          })
-      ])
+      const newUser = {
+        login: `user${uniqueSuffix}`,
+        password: "Password123",
+        email: `user${uniqueSuffix}@example.com`,
+      };
 
       const response = await request(app)
         .post(USERS_PATH)
         .set("Authorization", adminToken) // если требуется авторизация
-        .send(user)
+        .send(newUser)
         .expect(HttpStatus.Created); // 201
 
       expect(response.body).toHaveProperty("id");
-      expect(response.body).toHaveProperty("login", user.login);
-      expect(response.body).toHaveProperty("email", user.email);
+      expect(response.body).toHaveProperty("login", newUser.login);
+      expect(response.body).toHaveProperty("email", newUser.email);
       expect(response.body).toHaveProperty("createdAt");
     });
 
@@ -77,11 +76,11 @@ describe("User API", () => {
     });
 
     it("should return 401 Unauthorized if no auth provided", async () => {
-      const newUser = await Promise.all([
-          createUser(app, {
-            ...getUserDto(),
-          })
-      ])
+      const newUser = {
+        login: "user123",
+        password: "Password123",
+        email: "user123@example.com",
+      };
 
       await request(app)
         .post(USERS_PATH)
@@ -159,11 +158,11 @@ describe("User API", () => {
 
     // Создаём пользователя перед тестами удаления
     beforeEach(async () => {
-      const userDto = await Promise.all([
-        createUser(app, {
-          ...getUserDto(),
-        })
-      ])
+      const userDto = {
+        login: `user${Date.now().toString().slice(-5)}`,
+        email: `user${Date.now().toString().slice(-5)}@example.com`,
+        password: "Password123",
+      };
 
       const res = await request(app)
         .post(USERS_PATH)
@@ -244,7 +243,7 @@ describe("User API", () => {
         const res = await request(app).post(AUTH_PATH).send(input).expect(404);
 
         expect(Array.isArray(res.body.errorsMessages)).toBe(false);
-       // expect(res.body.errorsMessages.length).toBeGreaterThan(0);
+        // expect(res.body.errorsMessages.length).toBeGreaterThan(0);
       }
     });
 

@@ -11,6 +11,7 @@ import { HttpStatus } from "../../../core/types/httpStatus";
 import { mapToBlogOutput } from "../mappers/mapToBlogOutput";
 import { WithId } from "mongodb";
 import { Blog } from "../../domain/blog";
+import { blogsQueryRepository } from "../../repositories/blogsQueryRepository";
 
 export async function getBlogListHandler(
   req: Request<{}, {}, {}, ParsedQs>,
@@ -36,7 +37,7 @@ export async function getBlogListHandler(
     const queryWithDefaults = setDefaultSortAndPaginationIfNotExist(queryInput);
 
     // // Получаем пагинированный результат из сервиса - с данными из БД
-    const paginatedBlogs = await blogService.findMany(queryInput);
+    const paginatedBlogs = await blogsQueryRepository.findMany(queryInput);
 
     // Считаем pagesCount, если в сервисе не отдаётся
     const pagesCount = Math.ceil(

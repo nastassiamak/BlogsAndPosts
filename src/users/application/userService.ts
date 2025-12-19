@@ -7,12 +7,13 @@ import bcrypt from "bcrypt";
 import { UserCreateInput } from "../routers/input/userCreateInput";
 import { userCollection } from "../../db/mongoDb";
 import { BusinessRuleError } from "../../core/errors/businessRuleError";
-import {RepositoryNotFoundError} from "../../core/errors/repositoryNotFoundError";
+import { RepositoryNotFoundError } from "../../core/errors/repositoryNotFoundError";
+import {usersQueryRepository} from "../repositories/usersQueryRepository";
 
 export const userService = {
-  async findMany(queryDto: UserQueryInput): Promise<UserListPaginatedOutput> {
-    return await usersRepository.findMany(queryDto);
-  },
+  // async findMany(queryDto: UserQueryInput): Promise<UserListPaginatedOutput> {
+  //   return await usersRepository.findMany(queryDto);
+  // },
 
   async create(input: UserCreateInput): Promise<string> {
     // Проверка уникальности логина
@@ -49,20 +50,13 @@ export const userService = {
     return await bcrypt.hash(password, salt);
   },
 
-  async findByLoginOrEmail(loginOrEmail: string) {
-    const res = await usersRepository.findByLoginOrEmail(loginOrEmail);
-    if (!res) {
-      throw new RepositoryNotFoundError("User not exists");
-    }
-    return res;
-  },
 
   async checkCredentials(
-      loginOrEmail: string,
-      password: string,
+    loginOrEmail: string,
+    password: string,
   ): Promise<WithId<User> | null> {
     try {
-      const user = await userService.findByLoginOrEmail(loginOrEmail);
+      const user = await usersQueryRepository.findByLoginOrEmail(loginOrEmail);
 
       const isMatch = await bcrypt.compare(password, user.password);
       if (!isMatch) {

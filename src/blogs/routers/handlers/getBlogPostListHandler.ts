@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
-import { postService } from "../../../posts/application/postService";
 import { ParsedQs } from "qs";
 import { SortDirection } from "../../../core/types/sortDirection";
 import { PostSortField } from "../../../posts/routers/input/postSortField";
 import { HttpStatus } from "../../../core/types/httpStatus";
 import { RepositoryNotFoundError } from "../../../core/errors/repositoryNotFoundError";
-import { blogService } from "../../application/blogService";
+import { blogsQueryRepository } from "../../repositories/blogsQueryRepository";
+import { postsQueryRepository } from "../../../posts/repositories/postsQueryRepository";
 
 export async function getBlogPostListHandler(
   req: Request<{ blogId: string }, {}, {}, ParsedQs>,
@@ -18,7 +18,7 @@ export async function getBlogPostListHandler(
     req.query,
   );
   try {
-    const blogId = await blogService.findByIdOrFail(req.params.blogId);
+    const blogId = await blogsQueryRepository.findByIdOrFail(req.params.blogId);
     console.log("Получен запрос на blogId:", blogId);
     const rawPageNumber = req.query.pageNumber as string | undefined;
     const rawPageSize = req.query.pageSize as string | undefined;
@@ -35,13 +35,7 @@ export async function getBlogPostListHandler(
     const sortDirection =
       rawSortDir === "asc" ? SortDirection.Asc : SortDirection.Desc;
 
-    // const pageNumber = req.query.pageNumber ? Number(req.query.pageNumber) : 1;
-    // const pageSizeRaw = req.query.pageSize ? Number(req.query.pageSize) : 10;
-    // const pageSize = pageSizeRaw > 0 ? pageSizeRaw : 10;
-    // const sortBy = (req.query.sortBy as PostSortField) || PostSortField.CreatedAt;
-    // const sortDirection = (req.query.sortDirection as string) === "asc" ? SortDirection.Asc : SortDirection.Desc
-
-    const paginatedPosts = await postService.findPostsByBlogId(
+    const paginatedPosts = await postsQueryRepository.findPostsByBlog(
       { pageNumber, pageSize, sortBy, sortDirection },
       blogId._id.toString(),
     );
@@ -56,41 +50,7 @@ export async function getBlogPostListHandler(
       items: paginatedPosts.items,
     };
 
-    res.status(200).json(response);
-
-    // const blog = await blogService.findByIdOrFail(blogId);
-    // const queryInput = { ...parseBlogPostQuery(req.query), blogId };
-    //
-    // const queryWithDefaults = setDefaultSortAndPaginationIfNotExist(queryInput);
-    // console.log("Параметры запроса:", queryWithDefaults);
-    //
-    // // Получаем данные с пагинацией
-    // const paginatedPosts = await postService.findPostsByBlogId(
-    //   queryWithDefaults,
-    //     blog._id.toString(),
-    // );
-    //
-    // const safePageSize =
-    //     queryWithDefaults.pageSize > 0 ? queryWithDefaults.pageSize : 10;
-    //
-    // const pagesCount =
-    //     Math.ceil(paginatedPosts.totalCount / safePageSize);
-    // // const pagesCount =
-    // //     Math.ceil(paginatedPosts.totalCount / queryWithDefaults.pageSize);
-    //
-    // // Формируем итоговый ответ с пагинацией и преобразованными постами
-    // const responsePayload = mapToBlogPostListPaginatedOutput(
-    //
-    //     queryWithDefaults.pageNumber,
-    //     pagesCount,
-    //     queryWithDefaults.pageSize,
-    //     paginatedPosts.totalCount,
-    //     paginatedPosts.items,
-    // );
-    //
-    // console.log("Формируем ответ:", responsePayload);
-    //
-    // res.status(HttpStatus.Ok).send(responsePayload);
+    res.status(HttpStatus.Ok).json(response);
   } catch (error) {
     if (error instanceof RepositoryNotFoundError) {
       res.status(HttpStatus.NotFound).send({ message: "Blog not found" });
